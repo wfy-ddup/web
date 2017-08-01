@@ -1,3 +1,7 @@
+/**
+* 本方法为百度结果,根据个人的需求加以修改
+*/
+
 /*一张图片异步进行加载，百分比随着图片的加载进度而来*/
 var s = {
   s.loadFinished = true
@@ -13,15 +17,18 @@ loading = {
   progress = '',
   lt = 0,
   rt = 0;
+  //ajax的event对象的onload属性
   xhr.onload = function(event) {
     if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {} else {}
   }
+  //ajax的event对象的onprogress属性
   xhr.onprogress = function(event) {
     if (event.lengthComputable) {
       progress = Math.round(100 * event.loaded / event.total);
       divStauts.innerHTML = progress + "%";
       lt = progress / 100 * 360;
       rt = lt - 180;
+      // 这里是在页面上实现随进度加载的圆环百分比进度条
       if (rt <= 0) {
         rtE.style.transform = "rotateZ(" + (lt) + "deg)";
       } else {

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style/style.css">
+  <script type="text/javascript" src="js/vue.min.js"></script>
+  <title>购物车计算</title>
+</head>
+<body>
+  <div id="box" class="pa10">
+
+    <div class="shop_car">
+
+      <p class="fz16 tac lh26 fwb cor_01 mb10">购物车</p>
+      <p class="fz16 tac lh26 fwb cor_01 mb10">{{title}}</p>
+      <!-- table -->
+      <table class="table_01">
+        <colgroup>
+          <col style="width: 40%;">
+          <col style="width: 15%;">
+          <col style="width: 15%;">
+          <col style="width: 15%;">
+          <col style="width: 15%;">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>商品名称</th>
+            <th>单价</th>
+            <th>数量</th>
+            <th>金额</th>
+            <th>删除</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item,index) in productList">
+            <td>
+              <div class="ov">
+                <span class="check_btn" v-bind:class="{'checked':item.checked}" @click="selectProduct(item)"></span>
+                <span class="product_img"><img v-bind:src="item.productImage"  alt="" class="wp100 hp100"></span>
+                <div class="ov">
+                  <p class="fz14 cor_1 mb5" v-text="item.productName"></p>
+                  <div class="ov gift">
+                    <span class="txt">赠品:</span>
+                    <div class="ov">
+                      <span class="gift_name"  v-for="part in item.parts" v-text="part.partName"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="tac fz16 cor_02">{{item.productPrice | formatMoney}}</td>
+            <td class="tac">
+              <span class="reduce_btn" v-on:click="changeMoney(item,-1)">-</span>
+              <input type="text" value="0" class="ipt_01" disabled v-model="item.productQuentity">
+              <span class="reduce_btn" @click="changeMoney(item,1)">+</span>
+            </td>
+            <td class="tac fz16 cor_04">{{item.productPrice*item.productQuentity | money("元")}}</td>
+            <td class="tac">
+              <span class="del_btn_01" v-on:click="delConfirm(item)">删除</span>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="all_check" :class="{'checked':checkAllFlag}" @click="checkAll(true)"></span>
+              <span class="all_check_btn all_btn">全选</span>
+              <span class="all_check_btn no_btn" @click="checkAll(false)">取消全选</span>
+            </td>
+            <td colspan="3" class="tac fz18 cor_04">总计:<span class="fz18">{{totalMoney | money("元")}}</span></td>
+            <td>
+              <div class="go_calc">去结算</div>
+            </td>
+          </tr>
+        </tbody>
+      </table><!-- table -->
+
+    </div>
+    <!-- 弹框 -->
+    <div class="fixed_box" v-bind:class="{'fixed_show':delFlag}">
+      <div class="waring_box">
+        <div class="operation_pop">
+          <span class="close_btn" @click="delFlag = false">&times;</span>
+          <p class="operation_title">删除此商品</p>
+        </div>
+        <div class="h168 tac">
+          <div class="sure_btn bg_04 mr50" @click="delProduct">确定</div>
+          <div class="sure_btn bg_03" @click="delFlag = false">取消</div>
+        </div>
+      </div>
+    </div><!-- 弹框 -->
+
+  </div><!--box-->
+<script type="text/javascript" src="js/vue-resource.js"></script>
+<script type="text/javascript" src="js/vue-shopCar.js"></script>
+</body>
+</html>

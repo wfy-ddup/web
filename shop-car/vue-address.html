@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style/style.css">
+  <script type="text/javascript" src="js/vue.min.js"></script>
+  <title>地址选配</title>
+</head>
+<body>
+  <div id="box" class="pa10">
+    <div class="progress">
+      <ul class="wp100 cf">
+        <li class="progress_each rrived">地址确认<i class="bottom_cyclo"></i></li>
+        <li class="progress_each">查看订单<i class="bottom_cyclo"></i></li>
+        <li class="progress_each">支付<i class="bottom_cyclo"></i></li>
+        <li class="progress_each">确认订单<i class="bottom_cyclo"></i></li>
+      </ul>
+    </div>
+    <p class="fz16 tac lh26 fwb cor_01 mt35 mb35">配送地址</p>
+    <div class="dib_fl pb40 re">
+      <a href="javascript:;" class="load_more" v-on:click="limitNum = addressList.length">more ↓</a>
+      <div class="wp25 dib mt20 vt" v-for="(item,index) in filterAddress">
+        <div class="inside" v-bind:class="{'hover':currentIndex == index}" @click="currentIndex = index">
+          <p class="fz14 cor_02 mb5">{{item.userName}}</p>
+          <p class="fz14 cor_03 mb15 ell">{{item.streetName}}</p>
+          <p class="fz14 cor_03 mb5">{{item.tel}}</p>
+          <p class="default cor_04" v-if="item.isDefault">默认地址</p>
+          <p class="set_default cor_04" v-if="!item.isDefault" v-on:click="setDefault(item.addressId)">设置默认</p>
+          <span class="edit">编辑</span>
+          <span class="delete" v-on:click="deletAddress(index)">删除</span>
+        </div>
+      </div>
+      <div class="wp25 dib mt20 vt">
+        <div class="inside tac">
+          <div class="dib mt10">
+            <span class="append_symbol">
+              <i class="col_line"></i>
+              <i class="row_line"></i>
+            </span><br>
+            <span class="fz14 dib cor_02">添加新地址</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="fz16 tac lh26 fwb cor_01 mt35 mb35">配送地址</p>
+
+    <div class="dib_fl tac">
+      <div class="wp25 dib mt20 vt">
+        <div class="inside" v-bind:class="{'selected':shoppingMethods == 1}" @click="shoppingMethods = 1" style="height: auto">
+          <p class="fz16 cor_01 mb5">标准配送</p>
+          <p class="fz16 cor_01">Free</p>
+        </div>
+      </div>
+      <div class="wp25 dib mt20 vt">
+        <div class="inside" v-bind:class="{'selected':shoppingMethods == 2}" @click="shoppingMethods = 2" style="height: auto">
+          <p class="fz16 cor_01 mb5">高级配送</p>
+          <p class="fz16 cor_01">180</p>
+        </div>
+      </div>
+    </div>
+    
+  </div><!--box-->
+<script type="text/javascript" src="js/vue-resource.js"></script>
+<script type="text/javascript" src="js/vue-address.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="style/style.css">
+  <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+</head>
+<body>
+<script>
+  $(function(){
+    var $list = $(".list");
+    var addBtn = $(".add-btn");
+    var $text = $(".text");
+    var dataList = ["商品1","商品2"];
+    var str = "";
+    for(var i = 0; i < dataList.length; i++){
+      str += '<li class="item"><p>'+dataList[i]+'</p><div><button class="del">删除</button></div></li>'
+    }
+    $list.html(str);
+    addBtn.click(function(){
+      $('<li class="item"><p>'+$text.val()+'</p><div><button class="del">删除</button></div></li>').appendTo($list);
+    });
+    $list.delegate(".del","click",function(){
+      $(this).parents(".item").remove();
+    })
+  });
+</script>
+  <div class="box">
+    <div class="">
+      <input class="text" type="text">
+      <button class="add-btn">添加</button>
+    </div>
+    <ul class="list">
+      <li class="item">
+        <p>123</p>
+        <div>
+          <button class="del">删除</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+</body>
+</html>

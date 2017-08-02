@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="style/style.css">
+  <script type="text/javascript" src="js/vue.min.js"></script>
+</head>
+<body>
+  <div class="box">
+    <div class="">
+      <input class="text" type="text" v-model="val">
+      <button class="add-btn" @click="add()">添加</button>
+    </div>
+    <ul class="list">
+      <li class="item" v-for="(data,index) in listData" v-bind:index="index">
+        <p>{{data}}</p>
+        <div>
+          <button class="del" v-on:click="del(index)">删除</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+<script>
+  // model => view    view => model   mvvm 实现 v-model
+  new Vue({
+    el:".box",
+    data:{
+      val:"",
+      listData:["商品1","商品2"]
+    },
+    methods:{
+      del:function(index){
+        this.listData.splice(index,1)
+      },
+      add:function(){
+        // 通过this访问vue里面的数据
+        console.log(this.val);
+        if(this.val==""){return false}
+        this.listData.push(this.val);
+        this.val = "";
+      }
+    }
+  });
+</script>
+</body>
+</html>

@@ -3,4 +3,7 @@
 
 2048test  2048游戏
 preload-picture  图片预加载功能
+
+----
+vue项目从视频上得来
 shop-car js,vue实现的购物车功能 vue实现的购物车选配地址

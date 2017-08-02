@@ -25,7 +25,7 @@ new Vue({
     cartView:function(){
       //  es6 语法 
       let _this = this;
-      this.$http.get("json/data.json",{"id":123}).then(res => {
+      this.$http.get("data/data.json",{"id":123}).then(res => {
          this.productList = res.body.result.list;
       });
     },

@@ -1,0 +1,42 @@
+命令行 
+cd 磁盘名  cd D: -->  切换目录到D盘
+cd 文件夹  cd www -->进入到www文件下
+$ pwd 用于显示当前的文件目录
+
+git add readme.txt     readme.txt文件添加到暂存区
+git commit -m  "注释"  git commit -m 把文件提交到git厂库
+git status   查看是否还有文件没有提交
+git diff 文件名      查看更改的内容
+git commit -a -m     全部提交
+git log  显示操作日志
+
+git reset --hard HEAD^  退回到上一个版本   ***没有尝试成功
+cat 文件名      查看文件内容
+git reflog      查看文件版本号
+
+
+
+
+git remote add origin https://github.com/wfy-ddup/web.git  推送到远程仓库的地址
+git push -u origin master 推送项目到远程
+
+提示填写githab用户名密码
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

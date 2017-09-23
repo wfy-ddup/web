@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <script src="../js/jquery.min.1.1.js"></script>
+  <style>
+    .btn_01 {
+      padding: 0 15px;
+    }
+    .test_ipt {
+      width: 200px;
+      background: #cdcdcd;
+    }
+    .mb15 { margin-bottom: 15px; }
+    .bb1 {
+      border-bottom: 1px solid #ccc;
+    }
+  </style>
+  <script>
+/**
+  js 实现TODOlist
+*/
+/*
+  $(function(){
+    var listData = ["内容1","内容2","内容3"];
+    var $list = $(".ul_list");
+    var $addBtn = $(".btn_01");
+    var $text = $(".test_ipt");
+
+
+    // 数据展示
+    var str = "";
+    for(var i = 0; i < listData.length; i++){
+      str += '<li class="mb15 bb1"><p>'+listData[i]+'</p><button class="del_btn">删除</button></li>'
+    }
+    $list.html(str);
+
+    // 绑定事件
+    $addBtn.on("click",function(){
+      var val = $text.val();
+      $('<li class="mb15 bb1"><p>'+val+'</p><button class="del_btn">删除</button></li>').appendTo($list);
+      $text.val('');
+    });
+
+    $list.delegate(".del_btn","click",function(){
+      $(this).parents("li").remove();
+    })
+    // $list.on("click",".del_btn",function(){
+    //   $(this).parents("li").remove();
+    // })
+  });*/
+</script>
+</head>
+<body>
+  <div id="todo"  class="box">
+    <!-- <div id="app" @click="v_show">{{message}}</div> -->
+    <div class="todolist">
+      <input type="text" class="test_ipt" v-model="val"><button @click="add">添加</button>
+    </div>
+    <div class="list">
+      <ul class="ul_list">
+        <li class="mb15 bb1" v-for="(item,index) in listData" :key="index">
+          <p>{{item}}</p>
+          <button class="del_btn" v-on:click="del(index)">删除</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+<!-- 
+  v-bind 简写 : =>  给标签绑定属性
+  v-on   简写 @ =>  绑定事件
+  v-for   =>  循环
+  v-if    =>  判断
+  v-show  =>  是否渲染
+  v-model =>  mvvm
+ -->
+<script>
+  /*vue 实现*/
+  new Vue({
+    el:"#todo",
+    data:{
+      val:"123",
+      listData:["内容1","内容2","内容3"]
+    },
+    methods:{
+      del:function(index){
+        this.listData.splice(index,1)
+      },
+      add:function(){
+        this.listData.push(this.val)
+        this.val=""
+      }
+    }
+  });
+</script>
+</body>
+
+</html>

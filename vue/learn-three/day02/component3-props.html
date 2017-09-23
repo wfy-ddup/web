@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <script type="text/javascript" src="../js/vue-resource.js"></script>
+  <style>
+    .header {
+      display: flex;
+    }
+    .header-tit {
+      flex:1;
+    }
+  </style>
+</script>
+</head>
+<body>
+  <div id="app"  class="box">
+    <!-- <v-header title="首页">
+      <a slot="left" href="">mune</a>
+      <a slot="right" href="">消息</a>
+    </v-header> -->
+    <v-header>
+      <a slot="left" href="">mune</a>
+      <a slot="right" href="">消息</a>
+    </v-header>
+    <v-content>
+      <v-list v-bind:list-data="listData"></v-list>
+    </v-content>
+  </div>
+
+
+<!-- 组件 -->
+  <template id="header">
+    <ul class="header">
+      <li class="header-left">
+        <slot name="left"></slot>
+      </li>
+      <!-- <li title="首页"></li> -->
+      <li class="header-tit">
+        {{title}}{{lastTitle}}
+      </li>
+      <li class="header-btn">
+        <slot name="right"></slot>
+      </li>
+    </ul>
+  </template>
+  
+  <template id="list">
+    <ul>
+      <li v-for="(ele,index) in listData" :key="index">{{ele.name}}</li>
+    </ul>
+  </template>
+
+  <template id="content">
+    <div class="content">
+      <slot></slot>
+    </div>
+  </template>
+  
+  <script>
+    var header = {
+      template:"#header",
+      // props:["title"]
+      props:{
+        title:{
+          type:String,
+          default:"首页"
+        },
+        lastTitle:{
+          type:Number,
+          default:1
+        }
+      }
+    }
+    var list = {
+      template:"#list",
+      //props:["list-data"]
+      props:{listData:Array}
+    }
+    var content = {
+      template:"#content"
+    }
+    Vue.component("v-header",header);
+    Vue.component("v-list",list);
+    Vue.component("v-content",content)
+    new Vue({
+      el:"#app",
+      data:{
+        listData:[]
+      },
+      mounted(){
+        this.listData = [{name:"脉动"},{name:"一包"}]
+      }
+    });
+    /**
+     * 组件传递数据  在创建组建的时候传值 在引用组组件的时候绑定值
+     * 1 在组件上面添加属性 :list-data(不能用驼峰命名)   :list-data="listData" h后面的命名为前边的驼峰命名
+     * 2 在组件内接受数据 在最贱创建中 接受  用 props:["组件上的驼峰命名"]
+     * props可以可以是一个对象  props:{listData:Array}   props:{属性名:数据类型}
+     * props 可以是一个对象 props:{title:{type:String,default:"默认值"}}
+     *                      props:{
+     *                        title:{
+     *                          type:String,
+     *                          default:"首页"
+     *                        }
+     *                      }
+     */
+  </script>
+</body>
+
+</html>

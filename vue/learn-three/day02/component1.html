@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <script type="text/javascript" src="../js/vue-resource.js"></script>
+</script>
+</head>
+<body>
+  <div id="app"  class="box">
+    <v-header></v-header>
+    <div><input type="text" v-model="val"></div>
+    <v-content></v-content>
+    <v-footer class=""></v-footer>
+  </div>
+  <script>
+    // 方式一 创建组件
+    // 创建组件
+    var header = Vue.extend({
+      template:"<h1>头部</h1>"
+    })
+    // 注册组件
+    Vue.component("v-header",header);
+
+    // 方式二 创建组件  快速创建
+    // 最常用的
+    var footer = {
+      template:"<h1>底部</h1>"
+    }
+    Vue.component("v-footer",footer);
+
+    // 方法三
+    // 创建并注册
+    Vue.component("v-content",{
+      template:"<div class='content'>内容</div>"
+    });
+
+
+    new Vue({
+      el:"#app",
+      data:{
+        val:"123"
+      }
+
+    })
+  </script>
+</body>
+
+</html>

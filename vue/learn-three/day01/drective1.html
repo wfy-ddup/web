@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <script src="../js/jquery.min.1.1.js"></script>
+  <style>
+    .btn_01 {
+      padding: 0 15px;
+    }
+    .test_ipt {
+      width: 200px;
+      background: #cdcdcd;
+    }
+    .mb15 { margin-bottom: 15px; }
+    .bb1 {
+      border-bottom: 1px solid #ccc;
+    }
+    [v-cloak]{display:none;}
+  </style>
+</head>
+<body>
+  <div id="todo"  class="box">
+    <input type="text" v-model="val">
+    <p v-cloak>{{val}}</p>
+    <p>{{htmlStr}}</p>
+    <p v-text="htmlStr"></p>
+    <p v-html="htmlStr"></p>
+    <p v-pre>{{htmlStr}}</p>
+  </div>
+
+<script>
+/*
+  v-text 可以绑定内容 要给每个表亲单独绑定
+  v-cloak 可以给父级现不现实
+  v-html  安全数据绑定 可以解析HTML标签
+  v-pre   不解析数据
+*/
+  /*vue 实现*/
+  new Vue({
+    el:"#todo",
+    data:{
+      val:"123",
+      htmlStr:"<a href='www.baidu.com'>去百度</a>",
+      listData:["内容1","内容2","内容3"]
+    }
+  });
+</script>
+</body>
+
+</html>

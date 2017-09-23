@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <script type="text/javascript" src="../js/vue-resource.js"></script>
+</script>
+</head>
+<body>
+  <div id="app"  class="box">
+    <div><input type="text" v-model="val"></div>
+  </div>
+  <script>
+    new Vue({
+      el:"#app",
+      data:{
+        val:"123"
+      },
+      beforeCreate:function(){
+        console.log("beforeCreata");
+      },
+      created:function(){
+        console.log("created");
+      },
+      mounted:function(){
+        console.log("mounted");
+      },
+      beforeMount:function(){
+        console.log("beforeMount");
+      },
+      // 数据改变之前
+      beforeUpdate:function(){
+        console.log("beforeUpdate");
+      },
+      // 数据改变后
+      updated:function(){
+        console.log("updated");
+      }
+
+    })
+  </script>
+</body>
+
+</html>

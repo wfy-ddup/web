@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <script src="../js/vue-resource.js"></script>
+</head>
+<body>
+  <div id="app"  class="box">
+<!--     firstName:<input type="text" v-model="firstName"><br>
+    lastName:<input type="text" v-model="lastName"><br>
+    fullName:<p v-text="fullName"></p> -->
+    <div>
+      <em>总金额：{{totalPrice}}</em>
+    </div>
+    <ul>
+      <li v-for="(data,index) in carData" :key="index">
+        <p>名称：{{data.name}}</p>
+        <p>单价：{{data.price}}</p>
+        <p>数量：<input type="number" v-model="data.num"></p>
+      </li>
+    </ul>
+  </div>
+
+<script>
+
+  /*vue 实现*/
+  new Vue({
+    el:"#app",
+    data:{
+      carData:[{"name":"衬衫","price":1000,"num":10,},{"name":"衬衫2","price":200,"num":10,},{"name":"衬衫3","price":300,"num":10,}],
+    },
+    computed:{
+      totalPrice:function(){
+        var sum = 0;
+        this.carData.forEach((item,index)=>{
+          sum += item.price*item.num;
+        });
+        return sum;
+      }
+    }
+  });
+  
+</script>
+</body>
+
+</html>

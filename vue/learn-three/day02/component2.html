@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <script type="text/javascript" src="../js/vue-resource.js"></script>
+</script>
+</head>
+<body>
+  <div id="app"  class="box">
+    <v-header></v-header>
+    <div><input type="text" v-model="val"></div>
+    <v-prolist></v-prolist>
+    <v-prolist></v-prolist>
+    <v-prolist></v-prolist>
+    <v-footer class=""></v-footer>
+  </div>
+  <!-- 创建模板 -->
+  <template id="header">
+    <ul>
+      <li><</li>
+      <li>头部</li>
+      <li>购物车</li>
+    </ul>
+  </template>
+
+  <template id="pro_list">
+      <ul>
+        <li>商品1</li>
+        <li>商品2</li>
+        <li>商品3</li>
+      </ul>
+  </template>
+  <script>
+
+    // 方式二 创建组件  快速创建
+    // 最常用的
+    // 在实例中注册
+    var footer = {
+      template:"<h1>底部</h1>"
+    }
+
+    var header = {
+      template:"#header"
+    }
+
+    var proList = {
+      template:"#pro_list"
+    }
+    // 全局注册  全局注册在任何地方都能用
+    //Vue.component("v-header",header);
+
+    new Vue({
+      el:"#app",
+      data:{
+        val:"123"
+      },
+      // 局部注册 局部注册只能在 当前可以用
+      components:{
+        "v-footer":footer,
+        "v-header":header,
+        "v-prolist":proList
+      }
+
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <script type="text/javascript" src="../js/vue-resource.js"></script>
+</script>
+</head>
+<body>
+  <div id="app"  class="box">
+    <p>电脑数量:{{number}}</p>
+    <v-button>添加数量</v-button>
+  </div>
+  <template id="button">
+    <a href="javascript:;" @click="btnClick"><slot>增加</slot></a>
+  </template>
+  <script>
+    var button = {
+      template:"#button",
+      methods:{
+        // 点击触发btnClick函数
+        btnClick(){
+          // 通过全局事件总线 触发addEvent 事件    并且可以传递一个参数
+          Event.$emit("addEvent",2)
+        }
+      }
+    }
+
+    Vue.component("v-button",button);
+
+    // 创建全局事件总线
+    var Event = new Vue();
+
+    new Vue({
+      el:"#app",
+      data:{
+        number:20
+      },
+      mounted(){
+        // 绑定全局事件
+        // 监听addEvent事件的触发 
+        Event.$on("addEvent",(num)=>{
+          // 触发执行函数
+          this.number += num;
+        })
+      }
+    })
+  </script>
+</body>
+
+</html>

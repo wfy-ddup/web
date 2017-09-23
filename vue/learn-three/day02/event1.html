@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <script type="text/javascript" src="../js/vue-resource.js"></script>
+</script>
+</head>
+<body>
+  <div id="app"  class="box">
+    <div @click="divClick">
+      <!-- vue 中需要主动传递 $event 事件对象 -->
+      <button v-on:click="btnClick($event)" data-name="wfy">事件</button>
+    </div>
+  </div>
+<script>
+  /*vue 实现*/
+  new Vue({
+    el:"#app",
+    data:{
+      val:"123",
+      listData:["内容1","内容2","内容3"]
+    },
+    // https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=1&cb=jQueryCallback
+    methods:{
+      btnClick:function(ev){
+        console.log(ev);       // target属性中含有 标签中的 自定义属性
+        ev.cancelBubble=true;  // 阻止事件冒泡
+        console.log(11);
+      },
+      divClick:function(){
+        alert(22);
+      }
+    }
+  });
+</script>
+</body>
+
+</html>

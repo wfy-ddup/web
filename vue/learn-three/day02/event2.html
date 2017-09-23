@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <script type="text/javascript" src="../js/vue-resource.js"></script>
+</script>
+</head>
+<body>
+  <div id="app"  class="box">
+    <div>
+      <!-- v-on:keyup 绑定键盘事件 -->
+      <!-- <input type="text" v-model="val" @keyup="fnSearch()"><button @click="fnSearch">搜索</button> -->
+
+      <!-- 
+            绑定键盘事件需要传递 事件  与  阻止冒泡 相同 传入事件
+            这样传递 点击事件就无法使用了
+       -->
+      <!-- <input type="text" v-model="val" @keyup="fnSearch($event)"><button @click="fnSearch">搜索</button> -->
+
+      <!-- 
+            直接绑定 按键编号 
+            @keyup.enter
+            @keyup.13
+       -->
+      <!-- <input type="text" v-model="val" @keyup.13="fnSearch($event)"><button @click="fnSearch">搜索</button><br>-->
+      <input type="text" v-model="val" @keyup="iptStopSearch"><button @click="iptStopSearch">搜索</button>
+    </div>
+    <ul>
+      <li v-for="(ele,index) in listData" :key="index">{{ele}}</li>
+    </ul>
+  </div>
+<script>
+  /*vue 实现*/
+  new Vue({
+    el:"#app",
+    data:{
+      val:"wfy",
+      listData:''
+    },
+    // 第一次搜索
+    // mounted:function(){
+    //   this.fnSearch(ev)
+    // },
+    // https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=1&cb=jQueryCallback
+    methods:{
+      fnSearch:function(ev){
+
+        // 键盘事件
+        // console.log(ev.keyCode);     // ev.keyCode 获取按键的编号
+        // if(ev.keyCode!=13){ return false }
+
+        console.log(ev);
+
+
+        // 发起jsonp
+        this.$http.jsonp("https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd="+this.val,{
+          // 修改jsonp回调函数的名   jsonp:"cb"
+          jsonp:"cb"
+        }).then((res)=>{
+          this.listData = res.data.s;   // 保存搜索的数据
+          console.log(res);
+        })
+      },
+
+
+      // 函数的节流
+      iptStopSearch:function(){
+        console.log(this.data);
+        // 先把上次的请求清除掉
+        // 如果在500 毫秒之内 这将上次的请求清除掉
+        clearTimeout(this.timer);
+
+
+        // 延迟500毫秒执行
+        this.timer = setTimeout(()=>{
+          this.$http.jsonp("https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd="+this.val,{
+          jsonp:"cb"
+        }).then((res)=>{
+          this.listData = res.data.s;
+        })
+        },500)
+        
+      }
+    }
+  });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <script type="text/javascript" src="../js/vue-resource.js"></script>
+</script>
+</head>
+<body>
+  <div id="app"  class="box">
+    <p>电脑数量:{{number}}</p>
+    <!-- <v-button>{{str}}</v-button> -->
+    <v-button @to-parent="addNum">点击增加</v-button>
+  </div>
+  <template id="btn">
+    <a href="javascript:;" v-on:click="btnClick"><slot>按钮</slot></a>
+  </template>
+  <script>
+    // 子组件 向 父组件 传递事件
+    // 子组件 template 标签为子组件  <template>只能有一层父级 可以有多层子集</tempalte>
+    // 父组件 在html中引用的 如 v-header
+    // 
+    // 传递事件
+    // 1 先在子组件的 标签中 绑定一个方法  该方法要定义在 创建组件时对象的 methods对象中
+    //    如 var header = {
+    //        template:"#header",
+    //        methods:{
+    //          btnClick(){...}
+    //        }
+    //      }
+    //  2 在父组件同样绑定一个 自定义事件 该事件调用 new Vue({}) 对象中的 methods 对象中 能改变数据的方法
+    //    如  <v-header @sum-click="addNum"></v-header>
+    //    new Vue({
+    //      el:"...",
+    //      data:{
+    //        num:20,
+    //        ...
+    //      },
+    //      methods:{
+    //        addNum(){
+    //          this.num++
+    //        }
+    //      }
+    //    })
+    //    
+    //  3 要在方法中绑定事件的传递 , 使得在点击子组件时，将事件传递给父组件
+    //  如 var header = {
+    //           template:"#header",
+    //           methods:{
+    //             btnClick(){
+    //              ...
+    //              this.$emit("to-parent")
+    //             }
+    //           }
+    //         }
+    var button = {
+      template:"#btn",
+      // props:{
+      //   str:{
+      //     type:String,
+      //     default:"点击增加"
+      //   }
+      // }
+      methods:{
+        btnClick(){
+          // 改变父级的数据
+          this.$emit("to-parent")  // 触发父组件的的事件
+        }
+      }
+    }
+
+
+    Vue.component("v-button",button);
+
+    new Vue({
+      el:"#app",
+      data:{
+        number:20
+      },
+      methods:{
+        addNum(){
+          this.number++
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

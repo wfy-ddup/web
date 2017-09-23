@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <script src="../js/vue-resource.js"></script>
+  <style>
+    .btn_01 {
+      padding: 0 15px;
+    }
+    .test_ipt {
+      width: 200px;
+      background: #cdcdcd;
+    }
+    .mb15 { margin-bottom: 15px; }
+    .bb1 {
+      border-bottom: 1px solid #ccc;
+    }
+    [v-cloak]{display:none;}
+  </style>
+</head>
+<body>
+  <div id="app"  class="box">
+    <div class="content">
+      <ul>
+        <li v-for="(data,index) in listData" :key="index">
+          <img width="100px" :src="data.goodsListImg" alt="">
+          <p>名称：{{data.goodsName|reverseStr}}</p>
+          <p>价格：{{data.price}}</p>
+          <p class="">上架时间{{1925431524572|parseTime}}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+<script>
+
+  /*vue 实现*/
+  new Vue({
+    el:"#app",
+    data:{
+      listData:'',
+      classData:''
+    },
+    mounted:function(){
+      // this.$http => vue.resource
+      this.changeClass(0)
+    },
+    methods:{
+      changeClass:function(id){
+        this.$http.jsonp("http://datainfo.duapp.com/shopdata/getGoods.php?classID="+id).then((res)=>{
+          this.listData = res.data;
+        });
+      },
+    },
+    filters:{
+      reverseStr:function(str){
+        var arr = str.split("");
+        var newArr = arr.reverse();
+        var newStr = newArr.join("")
+        return newStr
+      }
+    }
+  });
+  // 全局过滤器
+  // {{数据|方法名}}
+  Vue.filter("parseTime",function(t){
+    var time = new Date(t);
+    var y = time.getFullYear();
+    var m = time.getMonth()+1;
+    var d = time.getDay();
+
+    var str = y+'-'+m+'-'+d;
+    return str;
+  });
+</script>
+</body>
+
+</html>

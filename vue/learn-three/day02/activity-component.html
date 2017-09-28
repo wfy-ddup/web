@@ -12,7 +12,7 @@
   <div id="app"  class="box">
     <button @click="list='v-list1'">list1</button>
     <button @click="list='v-list2'">list2</button>
-    <keep-alive><<component :is="list"></component>/keep-alive>
+    <keep-alive><component :is="list"></component></keep-alive>
   </div>
 
   <script>

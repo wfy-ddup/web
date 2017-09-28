@@ -66,6 +66,7 @@
   });
   // 全局过滤器
   // {{数据|方法名}}
+  // 最好将全局注册的 过滤器放在 局部注册的之前
   Vue.filter("parseTime",function(t){
     var time = new Date(t);
     var y = time.getFullYear();

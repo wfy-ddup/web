@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>Dom_04</title>
+</head>
+<body>
+<div class="box">
+  <div class="independent_block">
+    <p class='fz20'>文档写入</p>
+    <p class="ti2em fz16">将输入流写入到网页的能力。有四个方法：write() writeln() open() close()</p>
+    <p class="ti2em fz16">write(),writeln()方法接受一个字符串参数，输入流中的文本。write()会原样写入，而writeln()则会在末尾添加一个换行符\n</p>
+    <div class="content" id="content0"></div>
+    <button onclick="appendTime()">加入时间</button><br /><br />
+    <button onclick="errorUse()">错误</button>
+    <script type="text/javascript">
+      function appendTime(){
+        document.write( "<strong> time:" + (new Date()).toString() + "</strong>" );
+      }
+      function errorUse(){
+        try{
+          document.getElementById('content0').write("time:" + (new Date()).toString());
+        }catch(e){
+          alert(e.name + ":" +e.message);
+        }
+      }
+    </script>
+    <p class="fz20 cor_1 ti2em">write()方法，属于document对象，不能作用于其他元素对象，如：document.getElementById("id-name").write('字符串')会报错，write()是属于document对象</p>
+  </div>
+
+  <div class="independent_block">
+    <p class="fz16">write()虽然是document对象的属性，但可以在页面元素中引入,可已在页面插入javascript</p>
+    <p class="">
+       如：<br />&lt;script type="text/javascript"> <br />
+        document.write("&lt;script type=\"text/javascript\" src=\"\">"+"&lt;\/script>" );<br />
+      &lt;/script>
+    </p>
+    <script type="text/javascript">
+      document.write("<script type=\"text/javascript\" src=\"write.js\">"+"<\/script>" );
+    </script>
+    <br />
+    <div class="">
+      <p class="fz16">如果在文档结束调用document.write(),这样输入内容会重写整个网页</p>
+      <p class="fz16 cor_1">严格型XHTML文档不支持文档的写入</p>
+      <script type="text/javascript">
+        window.onload = function(){
+          //setTimeout(function(){alert('文档要重绘了')},300);
+          //setTimeout(function(){document.write('hello world');},500);
+        }
+      </script>
+    </div>
+  </div>
+
+  <div class="independent_block">
+    <h2 id="h2">10.1.3 Element类型</h2>
+    <p class="ti2em">Element类型用于表现XML或HTML元素，提供了元素标签名，子节点及特性的访问。</p>
+    <pre>
+      nodeType 1；
+      nodeName 元素的标签名称；
+      nodeValue null；
+      parentNode Document||Element
+    </pre>
+    <p class="fz18">获取元素的名称可以通过 nodeName 与 tagName</p>
+
+    <script type="text/javascript">
+      function getNodeName(){
+        var h2 = document.getElementById('h2');
+        console.log(h2.tagName);
+        console.log(h2.tagName == h2.nodeName);
+        if(h2.nodeName.toLowerCase() == "h2"){
+          console.log(h2.innerHTML);
+        }
+      }
+    </script>
+    <button onclick="getNodeName()">tagName与nodeName</button>
+    <br />
+    <h4>HTML元素</h4>
+    <p class="ti2em">每个HTML元素中都存在下列标准的特性</p>
+    <pre>
+      id 元素在文档中的唯一标识符
+      title 元素的附加说明信息
+      lang 元素内容的语言代码
+      dir 语言方向 值为 ‘ltr’ (left-to-right,从左至右) 或 ‘rtl’ (right-to-left,从右至左)
+      className 
+    </pre>
+    <div id="myDiv" class="myDiv test01" title="Div_test" fun='test' dir="ltr">这是一个测试的div id=myDiv class=myDiv </div>
+    <script type="text/javascript">
+      function testElemProperty(){
+        var myDiv = document.getElementById('myDiv');
+        console.log(
+          "id-:"+myDiv.id+";\n"
+          +"title-:"+myDiv.title+";\n"
+          +"dir-:"+myDiv.dir+";\n"
+          +"className-:"+myDiv.className+";\n"
+          +"fun-:"+myDiv.fun+";\n"
+        );
+        myDiv.dir = 'rtl';
+
+      }
+    </script>
+    <button onclick="testElemProperty()">元素的属性</button>
+    <p class="cor_1 fz16">自定义属性不可以通过类似的方法来访问，因为自定义属性不属于元素中的标准特性</p><br />
+    <p class="fz18 fwb">取得自定义属性</p>
+    <p class="ti2em">getAttribute('属性'):可以返回标准特性和自定义属性的值，有可能返回null（当传入的参数为空时）</p>
+    <p class="ti2em">getAttribute()通常是得到自定义属性时才使用的</p>
+    <p class="ti2em">setAttribute(),设置自定义属性</p>
+    <script type="text/javascript">
+      function setAttr(){
+        document.getElementById("myDiv").setAttribute("data-name","wfy");
+      }
+    </script>
+    <button onclick="setAttr()">设置自定义属性</button>
+    <p class="ti2em">创建自定义属性 并添加到元素中</p>
+    <pre>
+      function creatAttr(){
+        var elem = document.getElementById("myDiv");
+        var attr = document.createAttribute("data-time");
+        attr.nodeValue = new date().getTime();
+        elem.setAttributeNode(attr);
+      }
+    </pre>
+    
+    <script type="text/javascript">
+      function createAttr(){
+        var elem = document.getElementById("myDiv");
+        var attr = document.createAttribute("data-time");
+        attr.nodeValue = new Date().getTime();
+        elem.setAttributeNode( attr );
+      }
+    </script>
+    <button onclick="createAttr()">通过节点属性给myDiv添加自定义属性</button>
+    <br />
+    <div id="test_class" class="test_class" style="font-size:24px;padding:15px;">test_class</div>
+    <p class="fz20 fwb">removeAttribute():彻底删除元素的特性。</p>
+    <p class="ti2em">调用这个方法不仅会清除特性的值，而且会从元素中完全删除特性</p>
+    <button onclick="deleteClass()">删除class属性</button>
+    <script type="text/javascript">
+      function deleteClass(){
+        var testClassElem = document.getElementById("test_class");
+        testClassElem.removeAttribute("class");
+      }
+    </script>
+    <br />
+    <p class="fz18">ie6之前的版本不支持removeAttribute()</p>
+  </div>
+
+  <div class="independent_block">
+    <p class="fz20">attributes 属性</p>
+    <p class="ti2em fz16">Element类型是使用attribute属性的唯一的DOM节点类型。attributes属性中包含一个NameNodeMap，与NodeList类似，动态的集合。</p>
+    <pre>
+      1.getNamedItem(name);返回nodeName属性等于name的节点；
+      2.removeNamedItem(name);从列表中移除nodeName属性等于name的节点
+      3.setNamedItem(node);向列表中添加节点，以节点的nodeName属性为索引
+      4.item(pos);返回位于数字pos位置出的节点
+    </pre>
+    <div id="test_02" class="test_div" data-time="121542" date-name="wfy" name="div">这是一个test——02 div</div>
+    <script type="text/javascript">
+      //var id = test_02.attributes.getNamedItem("id").nodeValue;
+      var id = test_02.attributes["id"].nodeValue;
+
+    </script><br />
+    <script type="text/javascript">
+
+      function getAttributes(){
+        var em = document.getElementById("test_02");
+
+        return function(elem){
+
+          var attriArray = new Array(),
+              attrs = elem.attributes,
+              len = elem.attributes.length,
+              attrname,
+              attrval;
+          for(var i = 0; i < len; i++){
+            attrname = attrs[i].nodeName;
+            attrval = attrs[i].nodeValue;
+
+            if(!attrs[i].specified){ console.log(attrs[i]) }/*specified：直接设置在html中或者使用setAttribute()设置的，则返回true*/
+
+            var obj = new Object();
+            obj[attrname] = attrval;
+            attriArray.push(obj);
+          }
+
+          console.log( attriArray );
+
+        }(em);
+
+      }
+
+    </script>
+    <pre>
+      遍历&lt;div id="test_02" data-time="121542" date-name="wfy" name="div">的所有属性
+
+      function getAttributes(){
+        var em = document.getElementById("test_02");
+
+        return function(elem){
+
+          var attriArray = new Array(),
+              attrs = elem.attributes,
+              len = elem.attributes.length,
+              attrname,
+              attrval;
+          for(var i = 0; i < len; i++){
+            attrname = attrs[i].nodeName;
+            attrval = attrs[i].nodeValue;
+
+            if(!attrs[i].specified){ console.log(attrs[i]) }
+            /*specified：直接设置在html中或者使用setAttribute()设置的，则返回true*/
+
+            var obj = new Object();
+            obj[attrname] = attrval;
+            attriArray.push(obj);
+          }
+
+          console.log( attriArray );
+
+        }(em);
+
+      }
+    </pre>
+    <button onclick="getAttributes()">遍历&lt;div id="test_02" data-time="121542" date-name="wfy" name="div">的所有属性</button>
+    <p class="cor_1 ti2em fz16">ie7及更早的版本中，element.attributes会返回所有可能的属性。</p>
+    <p class="fz18">每一个特性节点都有一个名为specified的属性，这个属性的值如果为true，则意味着是在HTML中指定的相关属性，或者是通过setAttribute()方法设置的。</p>
+
+  </div>
+
+
+
+
+</div><!--box-->
+
+</body>
+</html>

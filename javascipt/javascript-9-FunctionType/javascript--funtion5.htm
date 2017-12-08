@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>函数的属性和方法</title>
+</head>
+<body>
+<h2>函数的属性和方法</h2>
+<p>函数就是对象，因此函数也有方法和属性。</p>
+<p class="ti2em">每个函数包含两个属性：length 和 prototype。</p>  
+<p class="ti4em">length表示函数希望接受的命名参数的个数</p>
+<button onclick="FunLength()">函数也是对象，函数的length属性，表示希望接受的命名参数的个数</button>
+<pre>
+  如：
+    function sayName(name){
+      alert(name);
+    }
+    function sum(num1,num2){
+      return num1 + num2;
+    }
+    function sayHi(){
+      alert("Hi");
+    }
+
+    alert(sayName.length);
+    alert(sum.length);
+    alert(sayHi.length);
+</pre>
+<script type="text/javascript">
+  function FunLength(){
+    function sayName(name){
+      alert(name);
+    }
+    function sum(num1,num2){
+      return num1 + num2;
+    }
+    function sayHi(){
+      alert("Hi");
+    }
+
+    alert("sayName()函数的length 为："+sayName.length);
+    alert("sum()函数的length 为："+sum.length);
+    alert("sayHi()函数的length 为："+sayHi.length);
+  }
+</script>
+<br />
+<h3>函数的prototype属性，第六章介绍</h3>
+<br />
+<h3>每个函数都包含两个非继承而来的方法apply()和call()</h3>
+<p class="ti2em">用途：在特定的作用域中调用函数，实际上等于设置函数体内的this的值。</p>
+<p class="ti2em">apply()参数：一个是this，另一个是参数数组，参数以数组的方式传入</p>
+<p class="ti2em">call()参数：一个是this，另外，不止一个参数，不需要以数组的形式</p>
+<p class="ti2em">我认为call(),apply()是重新绑定函数的作用域的作用</p>
+<p>暂时的理解，看下面的例子，理解apply()是重新绑定函数的作用域</p>
+<button onclick="asApply()">apply()绑定this，使用apply()来重新绑定obj.sum()的作用域</button>
+<button onclick="noApply()">不是apply()</button>
+<pre>
+
+使用apply()来重新绑定obj.sum()的作用域
+  var obj1 = {
+    num1 : 0,
+    num2 : 1,
+    add : function(){
+      return obj2.sum.apply(this); //1 //使用apply(this)将obj2对象的方法sum()重新绑定在obj1对象下，此时作用域为 obj1
+    };
+  var obj2 = {
+    num1 : 5,
+    num2 : 10,
+    sum : function(){
+      console.log(this);
+      return this.num1 + this.num2;
+    }
+  };
+  obj1.add();  //  1
+  }
+
+不使用apply()
+  var obj1 = {
+    num1 : 0,
+    num2 : 1,
+    add :function(){
+      return obj2.sum();         // 15  //没有使用apply()
+    }
+  };
+  var obj2 = {
+    num1 : 5,
+    num2 : 10,
+    sum : function(){
+      console.log(this);
+      return this.num1 + this.num2;
+    }
+  }
+</pre>
+<script type="text/javascript">
+  function asApply(){
+    var obj1 = {
+      num1 : 0,
+      num2 : 1,
+      add : function(){
+        return obj2.sum.apply(this,arguments);
+      }
+    };
+    var obj2 = {
+      num1 : 10,
+      num2 : 5,
+      sum : function(){
+        console.log(this);
+        return this.num1 + this.num2;
+      }
+    };
+    alert( obj1.add() );
+  }
+  function noApply(){
+     var obj1 = {
+      num1 : 0,
+      num2 : 1,
+      add :function(){
+        return obj2.sum();         // 15
+      }
+    };
+    var obj2 = {
+      num1 : 5,
+      num2 : 10,
+      sum : function(){
+        console.log(this);
+        return this.num1 + this.num2;
+      }
+    };
+    alert( obj1.add() );
+  }
+</script>
+<br />
+<p class="ti2em">书上例</p>
+<pre>
+  function sum(num1,num2){
+    return num1 + num2;
+  }
+  function callSum1(num1,num2){
+    return sum.apply(this,arguments);
+  }
+  function callSum2(num1,num2){
+    return sum.apply(this,[num1,num2]);
+  }
+  alert(callSum1(10,10));   //20
+  alert(callSum2(10,10));   //20
+这里两次绑定的this都是window
+</pre>
+<p>在严格模式下，未指定环境对象而调用函数，则不会将this的值转型为window。否则this值将是undefined</p>
+<br />
+<p>call()与apply()方法的作用相同，他们的区别仅在于接受参数方式不同接受的参数不一样，apply()接受的参数是数组形式，call()接受的参数是列举出来的</p>
+<button onclick="FunCall()">call()方法</button>
+<pre>
+  function sum(num1,num2){
+    return num1 + num2;
+  }
+  function callSum(num1,num2){
+    return sum.call(this,num1,num2);  //call() 方法要传入每一个参数
+  }
+  alert(callSum(10,10));
+</pre>
+<script type="text/javascript">
+  function FunCall(){
+    function sum(num1,num2){
+      return num1 + num2;
+    }
+    function callSum(num1,num2){
+      return sum.call(this,num1,num2);
+    }
+    alert(callSum(10,10));
+  }
+</script>
+<br />
+<p>apply() 与 call()最大的好处是能扩充函数运行的作用域</p>
+<pre>
+  window.color = "red";
+  var o = { color : "blue" };
+  function sayColor(){
+    alert(this.color);  // this --> window
+  }
+  sayColor();
+  sayColor.call(this);    //this  -->  sayColor()函数执行的环境
+  sayColor.call(window);  // 将sayColor()的执行环境直接绑定到window
+  sayColor.call(o);       //将sayColor()的执行环境直接绑定到 o 对象
+</pre>
+<p>使用call(),apply()来扩充作用域，对象不需要与方法有任何的耦合。直接使用call(),apply()指定到相应的作用域中</p>
+<br />
+<h3>函数的bind()的方法</h3>
+<p class="ti2em">bind()的方法会创建一个函数的实例，其this值会被绑定到传给bind()函数的值</p>
+<button onclick="useBind()">使用bind()的方法,bind()方法需要创建一个函数，再将原函数绑定到指定的作用越</button>
+<pre>
+    window.color = "red";
+    var o = { color : "blue" };
+    function sayColor(){
+      alert(this.color);
+    }
+    var objectSayColor = sayColor.bind(o);   // 将sayColor()函数的执行环境绑定到对象o上
+</pre>
+<script type="text/javascript">
+  function useBind(){
+    window.color = "red";
+    var o = { color : "blue" };
+    function sayColor(){
+      alert(this.color);
+    }
+    var objectSayColor = sayColor.bind(o);
+    objectSayColor();
+  }
+</script>
+<br />
+<p>bind()的方法 与 call(),apply()方法的区别</p>
+<p class="ti2em">bind()方法需要创建一个函数，这个函数名保存的是该函数被绑定到指定作用域上的指针</p>
+<pre>
+      如：
+         window.color = "red";
+         var o = { color : "blue" };
+         function sayColor(){
+            alert(this.color);
+         }
+         sayColor();   //  red
+
+         var bindToObject = sayColor.bind( o );
+         bindToObject();   // blue
+</pre>
+<p class="ti2em">call(),apply()方法直接在调用时绑定</p>
+<pre>
+    如：
+      var obj1 = {
+        num1 : 0,
+        num2 : 1,
+        sum : function(){
+          alert( this.num1 + this.num2 );
+        };
+      }
+      var obj2 = {
+        num1 : 10,
+        num2 : 5,
+        add : function (){
+          alert( this.num1 + this.num2 );
+        }
+      } 
+     obj2.add.call( obj1 );   // 1
+     obj1.sum.call( obj2 );   // 15
+</pre>
+<p class="ti2em">bind()支持ie9+</p>
+<h3>函数toString(),toLocaleString(),valueOf()方法</h3>
+<p class="ti2em">toString() 与 toLocaleString()都返回的是函数的字符串形式</p>
+<p class="ti2em">valueOf()返回的是函数的本身</p>
+</body>
+</html>

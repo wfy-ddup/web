@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<title>变量、作用域、内存问题--二</title>
+<style type="text/css">
+  pre { font-size: 14px;}
+</style>
+</head>
+<body>
+ <h2>执行环境及作用域</h2>
+ <p>每个执行环境都有一个与之相关联的 变量对象 环境中所有变量和函数都保存在这对象中。</p>
+ <p>某个执行环境中的所有代码执行完毕后，该环境呗销毁，保留在其中的所有变量和函数定义也随之销毁（全局执行环境知道应用程序退出--如关闭网页或浏览器--时才能被销毁）</p>
+<hr />
+
+ <h3>作用域链</h3>
+ <button onclick="scopeChain1()">点击例1</button>
+ <pre>
+ 例1：
+    var color = "blue";
+    function changeColor(){
+      if(color === "blue"){
+        color = "red";
+      }else{
+        color = "blue";
+      }
+    }
+    changeColor();
+    alert(color);
+ </pre>
+ <script type="text/javascript">
+  function scopeChain1(){
+    var color = "blue";
+    function changeColor(){
+      if(color === "blue"){
+        color = "red";
+      }else{
+        color = "blue";
+      }
+    }
+    changeColor();
+    alert(color);
+  }
+ </script>
+ <p>函数changeColor()的作用域链包含两个对象:它自己的变量对象(其中定义着arguments对象) 和 全局环境的变量对象</p>
+ <p>如果变量在局部对象中没有则在此局部对象的外层对象中查找</p>
+ <button onclick="scopeChain2()">点击例2</button>
+ <div id="scopeChain"></div>
+ <pre>
+ 例2：
+    var color = "blue";
+
+    function changeColor(){
+      var anotherColor "red";
+
+      function swapColor(){
+        var tempColor =anotherColor;
+        anotherColor = color;
+        color = tempColor;
+          //此处可以访问到 color anotherColor tempColor
+      }
+      swapColor();    //此处可以访问到 color 和 anotherColor
+    }
+
+    changeColor();    //此处只能访问到color
+ </pre>
+ <script type="text/javascript">
+    function scopeChain2(){
+      var color = "blue";
+
+      function changeColor(){
+        var anotherColor = "red";
+
+        function swapColor(){
+          var tempColor = anotherColor;
+              anotherColor = color;
+              color =  tempColor;
+              document.getElementById("scopeChain").innerHTML +="swapColor()函数能访问到tempColor: " + tempColor +"--- anotherColor: " + anotherColor + "--- color :" + color + "---三个变量都能访问到<br/>";
+        }
+        swapColor();
+        document.getElementById("scopeChain").innerHTML +="changeColor()函数能访问到anotherColor: " + anotherColor + "---color :" + color + "---二个变量能访问到<br/>";
+      }
+      changeColor();
+      document.getElementById("scopeChain").innerHTML +="scopeChain2()函数能访问到color :" + color + "<--->一个变量能访问到";
+    }
+ </script>
+ <br />
+ <h3>延长作用域链</h3>
+ <p>有些语句可以在作用域链的前端临时添加一个变量对象，该变量对象会在代码执行后被移除。</p>
+ <p>try-catch语句的catch块</p>
+ <p>with语句</p>
+ <p>with语句会将指定的对象添加到作用域链中，catch语句，胡创建一个新的变量对象，包含着被抛出的错误对象的声明</p>
+ <button onclick="extensionScopeChain()">延长作用域链1</button>
+ <pre>
+    function buildUrl(){
+      var qs = "?debug=true";
+
+      with(location){
+        var url = href + qs;
+      }
+      return url;
+    }
+ </pre>
+ <p>with语句在buildUrl()函数中添加了location对象，location对象应该是在函数buildUrl()环境中</p>
+ <script type="text/javascript">
+    function extensionScopeChain(){
+      function buildUrl(){
+        var qs = "?debug=true";
+        with(location){
+          var url = href + qs;
+        }
+        alert(url);
+      }
+      buildUrl();
+    }
+ </script>
+ <br />
+ <h3>javascript没有块级作用域</h3>
+ <button onclick="noBlockScope()">javascript没有块级作用域</button>
+ <pre>
+    if(true){
+      var color = "red";
+    }
+    alert(color);
+
+    for(var i = 0;i < 5;){
+      i++;
+    }
+    alert(i);
+ </pre>
+ <p>块级作用域：有自己的执行环境，如if语句在c、c++、java中执行完毕就被销毁，但在javascript中在if语句中声明的变量在if语句结束后，会被添加到当前执行的环境中。在for语句中var声明的i也同样存在存在于循环外部的执行环境中。</p>
+ <script type="text/javascript">
+    function noBlockScope(){
+      if(true){
+        var color = "red";
+      }
+      
+      for(var i = 1;i < 5;){
+        i++;
+      }
+
+      alert(color + i);
+    }
+ </script>
+ <br />
+ <h3>变量的声明</h3>
+ <button onclick="variableStatement()">变量的声明</button>
+ <pre>
+    例1：函数内部声明的变量不能再函数外部进行访问
+      function addSum1(num1,num2){
+        var count = num1 + num2;
+        return count;
+      }
+      var result = addSum(50,30);
+      alert(result);
+      alert(count);   //Uncaught ReferenceError: count is not defined
+
+    例2：没有用var声明的变量自动添加到全局变量中  (严格模式下会报错误)
+      function addSum2(num1,num2){
+        count2 = num1 * num2;
+        return count2;
+      }
+      var result2 = addSum2(500,2);
+      alert(count2);
+ </pre>
+ <p>使用var声明的变量自动添加到最近的环境中，在函数中，最近的执行环境就是函数的局部环境，with语句最近的环境是所在的函数环境，如果变量没有var声明，该变量会自动添加到全局环境中</p>
+ <script type="text/javascript">
+    function variableStatement(){
+      //例1：函数内部声明的变量不能再函数外部进行访问
+        function addSum1(num1,num2){
+          var count = num1 + num2;
+          return count;
+        }
+        var result = addSum1(50,30);
+        alert(result);
+        alert(count);
+      //例2：没有用var声明的变量自动添加到全局变量中
+        function addSum2(num1,num2){
+          count2 = num1 * num2;
+          return count2;
+        }
+        var result2 = addSum2(500,2);
+        alert(count2);
+      }
+ </script>
+ <br />
+ <h3>查询标识符</h3>
+ <button onclick="searchVariable()">查询标识符</button>
+ <pre>
+ 例1：
+    var color = "blue";
+    function getColor(){
+      return color;
+    }
+    alert(getColor());
+ </pre>
+ <p>调用getColor()函数，函数返回color的值，在getColor()函数中没有color,然后逐级向上查找，在全局环境中有一个color = “blue”,则返回blue</p>
+ <pre>
+ 例2：
+    var color = "blue";
+    function getColor2(){
+      var color = "red";
+      return color;
+    }
+    alert(getColor2());
+ </pre>
+ <p>调用getColor2()函数，在getColor()函数中声明了局部变量color 值为 red,则返回red</p>
+ <p>查询标识符:给定名称向上逐级查询，如果在局部环境中找到该标识符，搜索停止，变量就绪.如果局部环境中没有，则继续沿作用域链向上级搜索。</p>
+ <script type="text/javascript">
+    function searchVariable(){
+      var color = "blue";
+      function getColor(){
+        return color;
+      }
+      alert(getColor());
+
+      function getColor2(){
+        var color = "red";
+        return color;
+      }
+      alert(getColor2());
+    }
+ </script>
+</body>
+</html>

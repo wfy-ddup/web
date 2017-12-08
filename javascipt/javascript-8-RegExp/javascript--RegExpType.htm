@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>正则(RegExp)类型</title>
+</head>
+<body>
+<h2>正则(RegExp)类型</h2>
+<p>var expression = /pattern/flags</p>
+<p>pattern:是任何简单或复杂的正则表达式，可以包含字符类，限定类，分组，向前查找，以及反向引用。</p>
+<p>flags:（匹配模式）可以是一个或者是多个，用以表明正则表达式的行为。</p>
+<pre>
+    匹配模式：
+      g：表示全局（global）模式，即模式将被应用于所有字符串，而非在发现第一个匹配项时立即停止；
+      i：表示不区分大小写（case-insensitive）模式，即在确定匹配项时忽略模式与字符串的大小写；
+      m：表示多行（multiline）模式，即在达到一行文本末端是会继续查找下一行中是否存在于模式匹配的项；
+</pre>
+<br />
+<pre style="font-size:18px;">
+    var pattern1 = /at/g;        //匹配字符串中所有“at”的实例，不去份大小写
+    var pattern2 = /[bc]at/i;    //匹配第一个“bat”或“cat”,不区分大小写--只匹配第一个不是全局
+    var pattern3 = /.at/gi;      //匹配所有以“at”结尾的3个字符的组合，不区分大小写
+</pre>
+<p>元字符：{ [ ( \ ^ $ | ? + . ) ] },如果要匹配这些元字符，需要堵他们进行转义</p> 
+<pre style="font-size:18px;">
+    匹配"bat"或"cat"   与    匹配"[bc]at"的区别
+    batOrcat = /[bc]at/ig;
+    [bc]at = /\[bc\]at/ig;
+
+    匹配所有已at结尾的3个字符的组合  与   匹配".at"  ,不区分大小写。
+    only_at = /.at/ig;
+    pointer_at = /\.at/ig;
+</pre>
+<p>正则中  点  表示任意一个可以构成匹配项的字符。</p>
+<hr />
+<h3>正则表达式的创建</h3>
+<p class="ti2em">1.以字面量的形式来创建</p>
+<p class="ti2em">2.使用正则表达式的构造函数</p>
+<pre>
+    1.  字面量形式
+        var reg1 = /[bc]at/ig;
+        var reg2 = /\[bc\]at/ig;
+
+    2.   构造函数形式
+        var reg1 = new RegExp("[bc]at","ig");
+        var reg2 = new RegExp("\\[bc\\]at","ig")
+</pre>
+<p>由于构造函数的模式参数是字符串，所以在某些情况向要对字符进行双重转义。所有元字符都必须进行双重转义，例如\n(字符 \ 在字符串中通产被转义为 \\ ,而在正则表达式字符串中就会变成 \\\\)</p>
+<pre>
+    字面量模式                           等价字符串 用于RegExp构造函数
+    /\[bc\]at/                           "\\[bc\\]at"
+    /\.at/                               "\\.at"
+    /name\/age/   匹配name/age           "name\\/age"
+    /\d.\d{1,2}/                         "\\d.\\d{1,2}"
+    /\w\\hello\\123/ 匹配 \w\hello\123   "\\w\\\\hello\\\\123"
+</pre>
+<br />
+<p class="ti2em">使用正则表达式字面量和使用 RegExp构造函数 创建的正则表达式不一样。</p>
+<p class="ti2em">正则表达式字面量始终会共享同一个 RegExp 实例。</p>
+<p class="ti2em">正则表达式构造函数创建的每一个新RegExp实例都是一个新实例。</p>
+<pre>
+    var reg = null , i;
+    for(i = 0;i < 10;i++){
+      reg = /cat/g;                 //每一次运行for循环，reg都是同一个RegExp实例
+      reg.test("catastrophe");
+    }
+    for(i = 0;i < 10;i++){
+      reg = new RegExp("cat","g");  //每次运行for循环，都创建一个新的RegExp实例
+      reg.test("catastrophe");
+    }
+</pre>
+<button onclick="regDirect()">正则表达式字面量</button>
+<button onclick="regCustructor()">正则表达式RegExp构造函数创建</button>
+<script type="text/javascript">
+  function regDirect(){
+    var reg = null , i;
+    for(i = 0;i < 10;i++){
+      alert( i );
+      reg = /cat/g;
+      var isReg = reg.test("catastrophe");
+      alert( isReg );
+    }
+  }
+  function regCustructor(){
+    var reg = null , i ;
+    for(i = 0;i < 10;i++){
+      alert(i);
+      reg = new RegExp("cat","g");
+      var isReg = reg.test("catastrophe");
+      alert( isReg );
+    }
+  }
+</script>
+<p>第一个循环中，即使是循环体中指定的，但实际上只为/cat/创建一个RegExp实例。鱼鱼实力属性不会重叠，所以在循环中再次调用test()方法失败。以为第一次调用test()找到“cat”，第二次调用是从索引为3的字符开始。当测试到字符串结尾，下次调用test()就会从头开始</p>
+<p>第二个循环使用RegExp构造函数在每次循环中创建一个新的RegExp实例，所以每次都返回true。</p>
+<p class="fz18">一次调用test()会匹配“catastrophe”整个字符串</p>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dom2_Dom5</title>
+  <link rel="stylesheet" href="../css/simple.css" />
+</head>
+<body>
+  <div class="box">
+    <div class="independent_block">
+      <p class="fz20">
+        DOM2级遍历和范围<br>
+        定义了两个辅助顺序遍历DOM结构的类型：NodeIterator 和 TreeWalker.
+      </p>
+      <p class="fz16">
+        这两个类型能够基于给定的起点对DOM结构执行深度优先的遍历操作。<br>
+        FireFox safari opera chrome都支持<br>
+        ie不支持DOM遍历<br>
+      </p>
+      <pre>
+        检测代码1
+        document.implementation.hasFeature("Traversal","2.0")
+        检测浏览器是否支持某项功能，不能彻底的判断，浏览器可以更改其值，Safari中存在问题
+
+        检测代码2
+        var supportsNodeIterator = (typeof createNodeIterator == "function")
+
+        检测代码3
+        var supportsTreeWalker = (typeof createTreeWalker == "function")
+      </pre>
+
+      <p class="fz12 cor_error">
+        深度优先遍历：同级节点，现将第一个节点子元素遍历完成，在遍历第二个节点，如果子节点中还有子节点，以此类推
+      </p>
+      <pre>
+        &lt;!DOCTYPE html>
+        &lt;html>
+          &lt;head>
+            &lt;title>example&lt;/title>
+          &lt;/head>
+          &lt;body>
+            &lt;p>Lorem ipsum dolor sit amet, consectetur
+             adipisicing elit. Perferendis, distinctio, cum 
+             iusto esse pariatur consectetur eligendi itaque 
+             quos totam voluptas rem mollitia voluptatem 
+             veniam reiciendis omnis, saepe eaque animi qui.
+             &lt;/p>
+          &lt;/body>
+        &lt;/html>
+      </pre>
+      <p class="fz18">
+        如上边的节点的遍历的顺序
+        <img class="vm" src="NodeIterator.png" alt="">
+      </p>
+    </div>
+
+    <div class="independent_block">
+      <div class="test_div"><ul class="list_style_ul_02"><li class="item1"><p class="text">item01</p><p class="text">item11</p></li><li class="item2"><p class="text">item02</p><p class="text">item12</p></li><li class="item3"><p class="text">item03</p><p class="text">item13</p></li></ul>
+      </div>
+      <p class="fz16">
+        NodeIterator ,可以使用document.createNodeIterator()方法创建它的新实例。接受四个参数<br>
+        root ： 开始遍历的节点<br>
+        whatToShow : 表示要访问那些节点的数字代码<br>
+        filter : NodeFilter对象，或者表示应该接受还是拒绝某种特定节点的函数<br>
+        entityReferenceExpansion: 布尔值，表示是否要扩展实体引用
+      </p>
+      <p></p>
+      <p class="">
+        whatToShow  位掩码  <br>
+        通过应用一个或多个过滤器（filter）来确定要访问哪些节点<br>
+        NodeFilter.SHOW_ALL  显示所有类型节点<br>
+        NodeFilter.SHOW_ELEMENT  显示元素节点<br>
+        NOdeFilter.SHOW_ATTRIBUTE 显示特性节点（这个值不能使用）<br>
+        NodeFilter.SHOW_TEXT 显示文本节点<br>
+        NodeFilter.SHOW_COMMENT 显示注释节点<br>
+        NodeFilter.SHOW_DOCUMENT 显示文档节点<br>
+      </p>
+      <script>
+        var elem = document.querySelector(".test_div");
+        function useNodeIterator_01(){
+          var whatToShow = NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT;
+          var filter = {
+            acceptNode : function(node){
+              return node.tagName.toLowerCase() == 'p'?NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+            }
+          }
+
+          var iterator = document.createNodeIterator(elem,NodeFilter.SHOW_ELEMENT,filter,false);
+
+          console.log(iterator);
+        }        
+      </script>
+      <p class="fz14">
+        可以通过createNodeIterator()方法的filter参数来指定自定义NodeFilter对象，或者指定一个类似节点过滤的函数，没有NodeFilter对象只有一个方法，即acceptNode(),如果应该访问给定的节点，该方法返回NodeFileter.FILTER_ACCEPT,否则返回NodeFilter.FILTER_SKIP。必要时创建创建一个包含acceptNode()方法的对象。
+      </p>
+      <pre>
+        var filter = {
+          acceptNode : function(node){
+            return node.tagName.toLowerCase() = 'p'?NodeFilter.FILTER_ACCPET:NodeFilter.FILTER_SKIP;
+          }
+        }
+
+        var elem = document.querySelector(".test_div");
+        function useNodeIterator(){
+          var filter = {
+            acceptNode : function(node){
+              node.tagName.toLowerCase() == 'p' ? NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP;
+            }
+          }
+
+          var iterator = document.createNodeIterator(elem,NodeFilter.SHOW_ELEMENT,filter,false);
+        }
+      </pre>
+      <button onclick="useNodeIterator_01()">尝试上方的代码</button>
+      <pre>
+        filter可以是个函数
+        var filter = function(node){
+          node.tagName.toLowerCase()=='p'?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP;
+        }
+
+        function useNodeIterator_02(){
+          var filter = function(){
+            node.tagName.toLowerCase()=='p'?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP;
+          }
+
+          var iterator = document.createNodeIterator(elem,NodeFilter.SHOW_ELEMENT,null,false);
+        }
+      </pre>
+
+      <script>
+        function useNodeIterator_02(){
+          var filter = function(node){
+            node.tagName.toLowerCase()=='p'?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP;
+          }
+          var iterator = document.createNodeIterator(elem,NodeFilter.SHOW_ALL,null,false);
+          console.log(iterator);
+        }
+      </script>
+      <button onclick="useNodeIterator_02()">第二种filter方法</button>
+
+      <div class="small_block">
+        <p class="fz16">
+          NodeIterator类型的两个主要方法<br>
+          nextNode()方法用于向前前进一步<br>
+          previousNode()方法用于向后后退一步<br>
+          在刚刚创建的NodeIterator对象中，有一个内部指针指向跟节点，因此第一次调用nextNode()会返回到根节点<br>
+          当遍历到DOM子树的最后一个节点时，nextNode()返回null <br>
+          previousNode()方法，当遍历到DOM子树最后一个节点时，previousNode()会返回到根节点，二再次调用它就会返回null
+        </p>
+      </div>
+      
+      <div id="div1">
+        <p class="">wrold<b>hello</b></p>
+        <ul class="list_style_ul_02">
+          <li class="item1">
+            <p>item Lorem1</p>
+            <p>lorem3</p>
+          </li>
+          <li class="item2">
+            <p>item Lorem2</p>
+            <p>lorem4</p>
+          </li>
+          <li class="item3">
+            <p>item Lorem3</p>
+            <p>lorem5</p>
+          </li>
+        </ul>
+      </div>
+      <pre>
+        遍历上方的列表
+
+        忘了这几个属性
+          previousElementSibling
+          nextElementSibling 等。。。
+
+        function iteratorAllElement(){
+          var elem = document.getElementById("div1");
+          var iterator = document.createNodeIterator(
+                          elem, //其实遍历元素
+                          NodeFilter.SHOW_ALL, // 显示所有元素
+                          null,    // 是否按要求过滤
+                          false
+                         );
+          var nodeNext = iterator.nextNode();
+          while(nodeNext != null){
+            console.log(nodeNext.tagName);
+            nodeNext = iterator.nextNode();
+          }
+        }
+      </pre>
+      <script>
+        function iteratorAllElement(){
+          debugger;
+          var elem = document.getElementById("div1");
+
+          var iterator = document.createNodeIterator(
+                          elem,
+                          NodeFilter.SHOW_ELEMENT,
+                          null,
+                          false
+                        );
+          var nextNode = iterator.nextNode();
+          while(nextNode != null){
+            console.log(nextNode.tagName);
+            nextNode = iterator.nextNode();
+          }
+
+        }
+      </script>
+
+      <button onclick="iteratorAllElement()">console.log()观察执行过程</button>
+
+      <pre>
+        添加过滤要求,按要求访问节点:过滤出li元素
+
+
+        //此处有问题 看看正版书本
+        var filter = function(node){
+          return node.tagName.toUpperCase()=='li'?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP;
+        }
+        var iterator = document.createNodeIterator(
+                          elem, //起始遍历的元素
+                          NodeFilter.SHOW_ALL, //访问的类型 位掩码
+                          filter, //符合条件的返回
+                          false
+                        );
+        while(nextNode != null){
+          console.log(nextNode.tagName);
+          nextNode = iterator.nextNode();
+        }
+      </pre>
+
+      <script>
+        function asRequiredIterator(){
+          //debugger;
+          var elem = document.getElementById("div1");
+          //此处有问题
+
+          // var filter = function(node){
+          //     return node.tagName.toLowerCase()=="li"?NodeIterator.FILTER_ACCEPT:NodeIterator.FILTER_SKIP;
+          // }
+          var iterator = document.createNodeIterator(
+                          elem,
+                          NodeFilter.SHOW_ELEMENT,
+                          null,
+                          false
+                          );
+          var nextNode = iterator.nextNode();
+
+          while(nextNode !== null){
+            nextNode.tagName.toUpperCase()=='LI'&&console.log(nextNode.tagName);
+            nextNode = iterator.nextNode();
+          }
+        }
+      </script>
+      <button onclick="asRequiredIterator()">按要求迭代，遍历出li</button>
+    </div>
+
+    <div class="independent_block">
+      <p class="fz20">
+        
+      </p>
+    </div>
+
+
+
+  </div>
+</body>
+</html>

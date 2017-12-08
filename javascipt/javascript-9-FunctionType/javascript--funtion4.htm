@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>函数的内部属性</title>
+</head>
+<body>
+<h2>函数的内部属性</h2> 
+<p>函数有两个特殊属性：arguments,this。</p>
+<h3>函数的arguments属性</h3>
+<p class="ti2em">arguments是一个类数组对象，保存着所有传入函数的参数。可以通过index按照传入的顺序进行读取</p>
+<p class="ti4em">arguments对象有个属性callee的属性。该属性是一个指针，指向拥有这个arguments对象的函数。</p>
+<hr />
+<h3>函数arguments对象的callee属性</h3>
+<button onclick="calleeProperty()">函数arguments对象的callee属性，计算3的阶乘</button>
+<pre>
+  例：
+    原函数：
+      function factorial(num){
+        if(num <= 1){
+          return 1;
+        }else{
+          return num * factorial(num-1);   //递归算法，factorial(num-1)可以理解成factorial()返回的一个数，直到最后返回1，在算出结果
+        }
+      }
+使用函数的 arguments对象的callee属性 进行改写
+      function factorial(num){
+        alert("函数arguments对象callee属性是一个指针，指向拥有这个arguments对象的函数factorial() \n"+arguments.callee);
+        if(num <= 1){
+          return 1;
+        }else{
+          return num * arguments.callee(num-1);
+        }
+      }
+</pre>
+<script type="text/javascript">
+  function calleeProperty(){
+    function factorial(num){
+      alert("函数arguments对象callee属性是一个指针，指向拥有这个arguments对象的函数factorial() \n"+arguments.callee);
+      if(num <= 1){
+        return 1;
+      }else{
+        return num * arguments.callee( num-1 );
+      }
+    }
+    alert("阶乘结果："+factorial(3));
+  }
+</script>
+<p>这样改写可以避免函数名改变而带来的影响</p>
+<button onclick="affecting()">有影响</button>
+<button onclick="noAffecting()">没有影响</button>
+<pre>
+  有影响
+    如：
+      function factorial(num){
+        if(num <= 1){
+          return 1;
+        }else{
+          return num * factorial( num-1 );
+        }
+      }
+      var anotherFactorial = factorail;
+      anotherFactorial(5);    //报错  factorial is not defined
+
+  没有影响
+    如：
+      function factorial(num){
+        if(num <= 1){
+          return 1;
+        }else{
+          return num * arguments.callee(num-1);
+        }
+      }
+      var anotherFactorial = factorial;
+      factorail = null;
+      anotherFactorial(5);
+</pre>
+<script type="text/javascript">
+  function affecting(){
+    try{
+      function factorial(num){
+        if(num <= 1){
+          return 1;
+        }else{
+          return num * factorial(num-1);
+        }
+      }
+      var anotherFactorial = factorial;
+      factorial = null;
+      alert( anotherFactorial(5) );
+    }catch(e){
+      alert(e.message);
+    }
+  }
+  function noAffecting(){
+    function factorial(num){
+      if(num <= 1){
+        return 1;
+      }else{
+        return num * arguments.callee( num-1 );
+      }
+    }
+    var anotherFactorial = factorial;
+    factorial = null;
+    alert( anotherFactorial(5) );
+  }
+</script>
+<br />
+<h4>函数的this属性</h4>
+<p class="ti2em">this应用的是函数据以执行的环境对象--可以说是this值。</p>
+<button onclick="diffThis()">不同的this</button>
+<pre>
+  思考题：
+    var add = function(x){
+    var sum = 1;
+    var tmp = function(x){
+      sum = sum +x;
+      return tmp;
+    }
+    tmp.toString = function(){
+      return sum;
+    }
+    debugger;
+    return tmp;
+  }
+  add(1)(2)(3);
+</pre>
+<pre>
+  不同的this
+    window.color = "red";
+    var o = {color:"blue"};
+    function sayColor(){
+      alert(this.color);    this 指向的是 window
+    }
+    o.sayColor = sayColor;
+    sayColor();             // this --> window    red
+    o.sayColor();           // this --> o        blue
+</pre>
+<script type="text/javascript">
+  function diffThis(){
+    window.color = "red";
+    var o = {color:"blue"};
+    function sayColor(){
+      alert(this.color);
+    }
+    sayColor();
+    o.sayColor = sayColor;
+    o.sayColor();
+  }
+</script>
+<p>sayColor()函数中的this引用的是全局对象window，当把sayColor()函数赋值给对象o时，并调用o.sayColor()时，this引用的是对象o，所以this.color成o.color，结果就是blue</p>
+<p>函数的名字仅仅是一个包含指针的变量，sayColor()函数 与 o.sayColor()指向的是同一个函数</p>
+<br />
+<h3>函数的caller属性</h3>
+<p class="ti2em">caller属性：表示调用当前函数 的函数 的引用</p>
+<p class="ti2em">caller属性保存的是某一个函数的指针，而那个函数调用着当前函数。（当前函数可以用函数名表示，也可以用augrments.callee来指定）</p>
+<button onclick="FunCite()">函数caller方法：保存着调用当前函数的 函数的引用</button>
+<pre>
+    caller 属性 保存着调用当前函数 的函数的 引用
+      如：
+        function outer(){
+          inner();
+        }
+        function inner(){
+          alert(inner.caller);
+          //alert(agruments.callee.caller);   //可以将 函数本身 换成 arguments.callee
+        }
+</pre> 
+<script type="text/javascript">
+  function FunCite(){
+    function outer(){
+      inner();
+    }
+    function inner(){
+      alert("inner函数被 :\n"+arguments.callee.caller+"\n所引用");
+    }
+    outer();
+  }
+</script> 
+<p>ie、Firefox、Chrome、Safari 和 Opera 9.6+ 都支持</p>
+</body>
+</html>

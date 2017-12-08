@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>时间（Date）对象的方法</title>
+</head>
+<body>
+<h2>实践对象Date的继承方法</h2>
+<p>Date类型也重新写toLocaleString(),toString(),valueOf()的方法，但是这些方法返回值与其他类型中的方法不同.</p> 
+<p class="ti2em">toLocaleString()返回浏览器设置地区的时间</p>
+<p class="ti2em">toString()时间是24小时制</p>
+<pre>
+    var toLocaleStringTime = new Date().toLocaleString();
+    var toStringTime = new Date().toString();
+    var valueOfTime = new Date().valueOf();
+
+    toLocaleStringTime // "2015/3/16 上午 12:00:00";
+    toStringTime   //"Mon Mar 16 2015 00:00:00 GMT+0800 (中国标准时间)"
+    valueOfTime    //1488422846694
+
+    算之前的时间
+    var beforeTime = new Date(Date.parse("3/25/2015")).toLocaleString(); "2015/3/16 上午 12:00:00";
+</pre>
+<p class="ti2em">valueOf()方法：返回的是时间的毫秒数,因此可以用于比较符</p>
+<pre>
+  var valueOfTime = new Date().valueOf();
+  valueOfTime   //1426435200000
+
+  时间对象比较时：
+    var date1 = new Date("3/16/2015");
+    var date2 = new Date("4/16/2015");
+    alert(date1 > date2);  //false
+    alert(date1 < date2);   //true
+</pre>
+<br />
+<h3>日期格式化方法</h3>
+<p class="ti2em">toDateString()方法：以特定于实现的格式显示星期几，月，日，年</p>
+<p class="ti2em">toTimeString()方法：以特定于实现的格式显示时，份，秒和时区</p>
+<p class="ti2em">toLocaleDateString()方法：以特定于地区的格式显示星期几，月，日，年</p>
+<p class="ti2em">toLocaleTimeString()方法：以特定于实现的格式显示时 份 秒</p>
+<p class="ti2em">toUTCString()</p>
+<pre class="pre18">
+    3/2/2017 11:10:00
+    new Date().toDateString();          //"Thu Mar 02 2017"
+    new Date().toTimeString();         //"10:56:56 GMT+0800 (中国标准时间)"
+    new Date().toLocaleDateString();   //"2017/3/2"
+    new Date().toLocaleTimeString();  //"上午10:57:30"
+    new Date().toUTCString();    //"Thu, 02 Mar 2017 03:10:05 GMT"
+</pre> 
+<p class="ti2em">推荐在编写时一律使用toUTCString()</p>
+<br />
+<h3>日期/时间组件的方法</h3>
+<p class="ti2em">getTime()方法：返回表示日期的毫秒数；与valueOf()方法返回值相同</p>
+<p class="ti2em">getFellYear()方法：获取四位数的年份（如：2007而非07）</p>
+<p class="ti2em">getMonth()方法：返回日期中的月份，其中0表示一月，11表示十二月</p>
+<p class="ti2em">getDate()方法：返回日期中的天数（1-31）</p>
+<p class="ti2em">getDay()方法：返回日期中的星期几，其中0表示星期日，6表示星期六</p>
+<p class="ti2em">getHours()方法：返回日期中的小时数（0-23）</p>
+<p class="ti2em">getMinutes()方法：返回日期中的分钟数（0-59）</p>
+<p class="ti2em">getSeconds()方法：返回日期中的秒数 （0-59）</p>
+<p class="ti2em">getMilliseconds()方法：返回毫秒数</p>
+<br />
+<pre style="font-size:18px;">
+  得到一个月的天数：
+  var date = new Date();                //首页获取当前的时间的毫秒数
+      year = date.getFullYear();        //获取当前时间的年份
+      month = date.getMonth();          //获取当前的月份
+  var days = new Date(year,month+1,0);  //获取下个月的第0天，下个月没有第0天，返回上个月（本月）的最后一天
+</pre>
+<br />
+<button onclick="calendarTable()">点击加载日历</button>
+<br />
+<p></p>
+<style type="text/css">
+  .wp100 { width:100%; }
+  .ov { overflow:hidden;zoom:1 }
+  .wp14 { width:14.28%; }
+  .lh50 { line-height:50px; }
+  .fl { float:left; }
+  .tac { text-align:center }
+  .cor { color:#e02d2d; }
+  .bgf5 { background:#f5f5f5 }
+  ul,li { 
+    list-style:none;
+    padding:0;
+    margin:0;
+  }
+  .todayDate {
+    height:50px;
+    line-height:50px;
+    text-align:center;
+    font-size:18px;
+    color:#666;
+    display:none;
+  }
+  .timeTable { border-collapse:collapse; }
+  .timeTable td{
+    height:69px; 
+    text-align:center;
+    border-top:1px solid #f5f5f5;
+  }
+  .topMouth ,.nextMonth { color:#BFBFBF; }
+  .holiday { color:#E02D2D; }
+  .today { background:pink; }
+</style>
+<!--
+输入年：<input type="text" id="year"/>
+输入月：<input type="text" id="month"/>
+输入日：<input type="text" id="day"/>
+
+<button onclick="changeTime()">查询</button>
+-->
+<div class="timeBox">
+  <div class="todayDate">2017年5月25日--( 周三 )</div>
+  <div class="bgf5">
+    <ul class="wp100 ov">
+      <li class="wp14 fl lh50 tac">一</li>
+      <li class="wp14 fl lh50 tac">二</li>
+      <li class="wp14 fl lh50 tac">三</li>
+      <li class="wp14 fl lh50 tac">四</li>
+      <li class="wp14 fl lh50 tac">五</li>
+      <li class="wp14 fl lh50 tac"><em class="cor">六</em></li>
+      <li class="wp14 fl lh50 tac"><em class="cor">日</em></li>
+    </ul>
+  </div> 
+  <div class="tableBox">
+    <table style="width:100%" class="timeTable">
+      <colgroup>
+        <col class="wp14" />
+        <col class="wp14" />
+        <col class="wp14" />
+        <col class="wp14" />
+        <col class="wp14" />
+        <col class="wp14" />
+        <col class="wp14" />
+      </colgroup> 
+    </table>
+  </div>
+</div>
+<script type="text/javascript">
+var isGetTime = true;
+function calendarTable(){
+    if(!isGetTime){ return false }
+    var 
+        date = new Date(),
+        curYear = date.getFullYear(),
+        curMonth = date.getMonth(), 
+        todayIsWeek = date.getDay(),
+        curWeek = new Date(curYear,curMonth,1).getDay() || 7,
+        curFirstDayTime = new Date(curYear,curMonth,1).getTime(),
+        weekArr = ["日","一","二","三","四","五","六"],
+        curMonthDays = new Date(curYear,curMonth+1,0).getDate();
+    var 
+        discrepancyDays = (curWeek-1)*24*60*60*1000,
+        tableFirst = curFirstDayTime - discrepancyDays,
+        fillLastMonth = 36 - curMonthDays + curWeek,
+        tbodyElem = document.createElement("tbody");
+        tbodyElem.className = "tbody";
+
+    var 
+        tablePar = document.querySelector(".timeTable"),
+        todayTxt = document.querySelector(".todayDate"),
+        txt = curYear + " 年 " + (curMonth+1) + " 月 " + date.getDate() + " 日 - ( " + weekArr[todayIsWeek] + " )";
+    for(var i = 1,userFirstDay = tableFirst,time = 1;i < 43;){
+        var trElem = document.createElement("tr");
+        for(var n = i;n <= time * 7;n++){
+           var tdElem = document.createElement("td");
+           n <= (curWeek-1) ?  tdElem.className = "topMouth" : 0;
+           n > (curMonthDays + curWeek-1) ? tdElem.className = "nextMonth" : 0;
+           date.toLocaleDateString() === new Date( userFirstDay ).toLocaleDateString() ? tdElem.className = "today" : 0;
+           //debugger;
+           tdElem.innerHTML = new Date( userFirstDay ).getDate();
+           trElem.appendChild( tdElem );
+           userFirstDay += 24*60*60*1000;
+           i++;
+       }
+       time ++ ;
+       tbodyElem.appendChild( trElem );
+    }
+    todayTxt.innerHTML = txt;
+    todayTxt.style.display= "block";
+    tablePar.appendChild(tbodyElem);
+    console.log(txt);
+    isGetTime = false;
+}
+</script>
+<p>简单生成日历的思想</p>
+<pre style="font-size:18px;">
+   1.获取当前的时间毫秒数          
+      date = new Date();
+   2.获取当前时间的年份，月份
+      year = date.getFullYear();
+      month = date.getMonth();          //获取的月份是从 0 - 11 的类型
+   3.获取当月一号是星期几               //这样可以计算出当月一号在页面中日历表格第一行的位子，同时可以得出在本月一号之前要填充的上个月的天数
+      week = new Date(year,month,1).getDay() || 7;   //星期是 0（星期天） - 6 表示
+   4.获取当月的有多少天
+      days = new Date(year,month+1,0);
+   5.计算出本月一号之前要填的上个月的天数,可以计算出日历表格第一个填充的日期数
+      fullPrevMonthDays = week - 1;
+   6.日期表格第一个填充的日期数
+      firstGridDate = date - (fullPrevMonthDays*24*60*60*1000);
+   7.计算出当月的天数 与 本月一号之前填充的上个月天数的 和
+      FPMD_Days_counts = days + fullPrevMonthDays;
+   8.自定义日期表格中的日期数    如  日期表格中的日期数是 35 天
+
+   9.利用for循环，得出日历表格中的每一格的日期 , 保存在声明的数组中
+      for(var i = 0,baseDate = firstGridDate,datesArr = [];i < 35;i++){
+           ......
+          datesArr.push();
+          baseDate += 24*60*60*1000;
+      }
+获取了日历表格中每一格的日期
+</pre>
+<br />
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>Dom_02</title>
+</head>
+<body>
+<div id="box" class='box'>
+  <div id='useNodes' class="independent_block">
+      <h2>元素节点关系</h2>
+      <p class="fz16">1.每个节点都有一个childNodes属性，其中保存着一个NodeList对象，NodeList是一个类数组对象，用于保存一组有序的节点，可以通过位置来访问这些节点。</p>
+      <p class="ti2em fz14">虽然NodeList是类数组，可以通过方括号访问，并且有length属性，但是不是一个数组的实例化。NodeList对象独特之处在于，他是基于DOM结构动态执行查询结果，因此DOM的结构变化能自动反应在NodeList对象中。</p>
+      <pre>
+        function test1(){ 
+          var box = document.getElementById('box');
+          var firstChild = box.childNodes[0];
+          // var firstChild = box.childNodes.item(2)   item(n)  == [n]  childNodes类数组的访问方式
+          var count = box.childNodes.length;
+          console.log(firstChild)
+        } 
+      </pre>
+    <script type="text/javascript">
+      var useNodesCountChild = document.getElementById('useNodes').childNodes;
+      console.log(useNodesCountChild[2].ownerDocument);
+      function test1(){ 
+        var box = document.getElementById('box');
+        var firstChild = box.childNodes[1];
+        var count = box.childNodes.length;
+        console.log(firstChild+' 与 '+count)
+      }    
+    </script>
+    <button onclick='test1()'>test NodeList</button>
+    <br /><br />
+    <pre>
+      function transformType(){
+        var box = docuemnt.getElementById('box');
+        
+        console.log(Array.prototype.slice.call(box.childNodes));
+      }
+
+      Array.prototype.slice.call();  类似于 Object.prototype.toString.call(); 方法
+
+      Array.prototype.slice.call(); 方法原型
+
+
+
+      //Array.prototype.slice.call( ) 原理  ； ie8- 不支持此方法时可以使用
+      Array.prototype.slice = function ( start , end ){    
+        var array = new Array();
+        start = start || 0;
+        end = end || this.length;   // this指向的是调用此函数的对象，当时用call()绑定时，this的指向会被改变
+        for(var i = start ; i < end ; i++ ){ 
+          array[i] = this[i];
+        }
+
+        return array;
+      }
+
+
+    </pre>
+    <script type="text/javascript">
+      function transformType(){
+        var box = document.getElementById('box');
+        var nodes = box.childNodes;
+        var count = nodes.length;
+        var result = null;
+        var MSIE = window.navigator.appVersion.indexOf('MSIE') > -1 ? true : false;
+        switch (true){
+
+          case !MSIE:
+            result = Array.prototype.slice.call( nodes );
+          case MSIE:
+            result = new Array();
+            for(var i = 0; i < count; i++ ){ 
+              result[i] = nodes[i];
+            }
+        }
+        return result;
+      }
+    </script>
+    <button onclick="var result = transformType();console.log(result)">将childNodes类数组对象转换成数组对象</button>
+  </div>
+  <div class="independent_block">
+    <p class="fz14 ti2em">childNodes 包含元素节点与文本节点 文本节点包含 空格 换行 文本</p>
+    <br />
+    <br />
+    <br />
+    <pre>
+      前面所说的判断数据类型的方法 与 arguments类数组对象转化成数组对象的方法  没有影响 当时没有注意
+
+      // ie低版本不支持
+
+      function argus(){
+        var argusType = Object.prototype.toString.call(arguments[0]) == '[object Array]' ? 
+        arguments[0] : Array.prototype.slice.call(arguments);
+        console.log(argusType);
+      }
+      
+      Array.prototype.slice = function(){
+        var count = this.length;
+        var transformArr = new Array();
+        for(var i = 0; i < count; i++){
+          transformArr[i] = this[i];  
+        }
+        return transformArr;
+      }
+
+    </pre>
+    <script type="text/javascript">
+      function argus(){
+        var argusType = Object.prototype.toString.call(arguments[0]) == '[object Array]' ? arguments[0] : Array.prototype.slice.call(arguments);
+        console.log(argusType);
+      }
+    </script>
+    <button onclick='argus("1","2","3")'>get Arguments Type</button><br />
+    <br />
+    <br />
+    <p>使用检测，同时顾忌所有浏览器</p>
+    <script type="text/javascript">
+      function convertToArray(nodes){
+        var array = null;
+        try{
+          array = Array.prototype.slice.call(nodes);
+        }catch( ie ){
+          array =[];
+          for(var i = 0,count = nodes.length; i < count; i++){
+            array.push( nodes[i] );
+          }
+        }
+
+        console.log( array );    
+      }
+    
+    </script>
+    <pre>
+      function convertToArray(nodes){
+        var array = null;
+        try{
+          array = Array.prototype.slice.call(nodes);
+        }catch( ie ){
+
+  // ie 必须检测到 array是数组 才能是用  
+      进出栈方法 ： push pop shift unshift  
+      截取方法 ：concat splice slice  
+      检索方法：indexOf lastIndexOf   (ie9+) 
+      操作方法：filter every some foreach map (ie9+)
+      排序方法：reduce sort reverse   (ie9+)
+
+          array =[];   
+
+          for(var i = 0,count = nodes.length; i < count; i++){
+            array.push( nodes[i] );
+          }
+        }
+
+        console.log( array );    
+      }
+    </pre>
+    <button onclick='convertToArray(useNodesCountChild)'>让所有浏览器都支持 Object.prototype.slice.call()方法，ie并不支持只是模拟此方法</button>
+  </div>
+
+  <div id='block_01' class="independent_block">
+    <p class="fz20">parentNode  previousSibling nextSibling属性</p>
+    <p class="ti2em fz16">parentNode属性 指向文档的父节点，childNodes列表中的所有节点都有一个共同的父节点</p><br />
+    <p class="fz20">previousSibling 此节点的上一个兄弟节点，如果此节点是第一个节点这previousSibling为空</p>
+    <p class="ti2em">nextSibling 此节点的下一个兄弟节点，同理如果此节点是最后一个节点这nextSibling为空</p>
+    <pre>
+      function preNextSibling(){
+        var len = useNodesCountChild.length;
+        for(var i = 0; i < len; i++){ 
+          console.log(useNodesCountChild[i].previousSibling);
+          console.log(useNodesCountChild[i].nextSibling);
+        }
+      }
+    </pre>
+    <script type="text/javascript">
+      function prevNextSibling(){
+        var len = useNodesCountChild.length;
+        for(var i = 0; i < len; i++){
+          useNodesCountChild[i].previousSibling == null ? console.log('此节点为第一个子节点，previousSibling为空') : console.log( useNodesCountChild[i].previousSibling );
+          useNodesCountChild[i].nextSibling == null ? console.log('此节点为最后一个子节点，nextSibling为空') : console.log( useNodesCountChild[i].nextpreviousSibling );
+        }
+      }
+    </script>
+    <button onclick='prevNextSibling()'>输出useNodes所有子节点的左右兄弟节点</button>
+    <br /><br />
+    <p class="fz16">
+      当childNodes列表中只有一个节点时，那么该节点的nextSibling 与 previousSibling都为空，二此节点也是父元素的lastChild 与 firstChild
+    </p>
+    <p class="fz18">lastChild 与 firstChild</p>
+  </div>
+
+  <div class="independent_block">
+    <p class="fz20">操作节点</p>
+    <p class="fz20">appendChild()</p>
+    <p class="fz16">appendChild() 向childNodes列表末尾添加一个节点, <span class='cor_1'>该节点位置从原来的的位置转移到新的位置</span></p>
+    <p class="ti2em">dom节点不能同时出现在现在文档中的额多个位置，因此appendChild()传入第一个节点时，那么该节点成为父节点的最后一个子节点</p>
+    <pre>
+      function append(){
+        var newNode = useNodesCountChild[2];
+        var elem = document.getElementById('block_01');
+        elem.appendChild(newNode);
+      }
+    </pre>
+    <script type="text/javascript">
+      function append(){
+        var newNode = useNodesCountChild[1];
+        var elem = document.getElementById('block_01');
+        elem.appendChild(newNode);
+      }
+    </script>
+    <button onclick='append()'>向上面区域添加一个子节点</button>
+    <br />
+    <br />
+    <br />
+    <p class="fz20">insertBefore()</p>
+    <p class="ti2em fz16">把节点放在childNodes列表中某个位置，而不是放在末尾，insertBefore()接受两个参数：要插入的节点和作为参考的节点，要插入的节点在参考节点之前，如果参考节点为null，则与appendChild()执行结果相同,insertChild()返回所插入的对象</p>
+    <pre>
+      function insert(){
+        var newNode = useNodesCountChild[1];
+        var elem = document.getElementById('block_01');
+        elem.insertBefore(newNode,elem.childNodes[3]);
+        var returnNode = elem.insertBefore(newNode,Dom);
+        console.log(returnNode);
+      }
+    </pre>
+    <script type="text/javascript">
+      function insert(){
+        var newNode = useNodesCountChild[3];
+        newNode.style.color = 'red';
+        var elem = document.getElementById('block_01');
+        var Dom = Math.random() > 0.5 ? null : elem.childNodes[parseInt(Math.random()*10)];
+        var returnNode = elem.insertBefore(newNode,Dom);
+        console.log(returnNode);
+      }
+    </script>
+    <button onclick='insert()'>上方自定随机位置插入元素</button>
+    <br />
+    <br />
+    <br />
+    <p class="fz20">replaceChild()方法</p>
+    <div id="testReplace">
+      <p class="ti2em">replaceChild()方法接受两个参数：要插入的节点和要替换的节点，要替换的节点将由这个方法返回并从文档树中删除，同时由插入的节点占据其位置。</p>
+    </div>
+    <pre>
+      function replaceNode(){
+        var newNode = useNodesCountChild[5];
+        newNode.style.color = 'red';
+        var elem = document.getElementById('testReplace');
+        elem.replaceChild( newNode,elem.childNodes[2] );
+      }
+    </pre>
+    <script type="text/javascript">
+      function replacenode(){
+        var newNode = useNodesCountChild.item(5);
+        newNode.style.color = 'red';
+        var elem = document.getElementById('testReplace');
+        elem.replaceChild(newNode,elem.childNodes[1]);
+      }
+    </script>
+    <button onclick='replacenode()'>替换文字</button>
+    <br />
+    <br />
+    <br />
+    <p class="fz20">removeChild() 删除文档中某个节点</p>
+    <pre>
+      function removeNode(){
+        var elem = document.getElementById('testReplace');
+        elem.removeChild(elem.childNodes[1]);
+      }
+    </pre>
+    <script type="text/javascript">
+      function removeNode(){
+        var elem = document.getElementById('testReplace');
+        elem.removeChild(elem.childNodes.item(1));
+      }
+    </script>
+    <button onclick='removeNode()'>删除文档中的某个节点</button> 
+
+    <br />
+    <br />
+    <br />
+    <p class="fz16">
+      这里的appendChild(),insertChild(),replaceChild(),removeChild()四个方法,分别要获取被操作元素的父节点或者使用parentNode属性。
+    </p>
+  </div>
+
+  <div class="independent_block">
+    <p class="fz14">其他操作方法</p>
+    <p class="fz18">cloneNode() 用于创建调用这个方法的节点的一个完全相同的副本。</p>
+    <p class="ti2em fz16">cloneNode()方法接受一个布尔值参数（true false），表示是否执行深复制，复制后返回节点的副本属于文档所有，并没有为它指定父节点</p>
+    <p class="fz16 ti2em">可以使用appendChild(),insertChild(),replaceChild()方法将其添加到文档中</p>
+    <p class="fz16">normalize() 用于处理文档数中的文本节点</p>
+    <p class="fz14 ti2em">文本节点不包含文本，或者链接两个文本节点的情况，如果找到空文本节点，则删除，两个相邻的文本这合并这两个文本（<span class='cor_1'>之后继续讨论</span>）</p>
+  </div>
+</div>  
+</body>
+</html>

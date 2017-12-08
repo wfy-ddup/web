@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>Dom_extend_02</title>
+</head>
+<body>
+  <div class="box">
+    <div id="test_01" class="test_01">
+      <p>node1</p>
+      <p>node2</p>
+      <p>node3</p>
+      <p>node4</p>
+      <p>node5</p>
+    </div>
+    <div class="independent_block">
+      <p class="fz20">专有扩展</p>
+      <div class="small_block fz18">
+        <p class="">文档模式</p>
+        <p class="ti2em">理解ie8及高版本的工作原理，必须理解文档模式</p>
+        <p class="ti2em">要强制浏览器以魔种模式渲染页面可以使用HTTP头部信息X-UA-Compatible,或者通过&ltmeta>标签来设置</p>
+        <pre>
+          &lt;meta http-equiv="X-UA-Compatible" content="IE=IEVersion"/>
+
+          IEVersion 有一下不同的值，
+
+          Edge  始终以最新的文档模式来渲染页面。ie8 始终保持以ie8标准模式渲染 ，ie9 也是
+
+          EmulateIE9 如果有文档类型声明，则以IE9标准模式渲染页面，否则文档模式为IE5
+          EmulateIE8                         IE8                                IE5
+          EmulateIE7                         IE7                                IE5
+
+          9           强制以IE9标准模式渲染页面 忽略文档类型声明
+          8                 IE8
+          7                 IE7
+          5                 IE5
+
+          如果想让文档模式想在IE7中一样，可以使用
+
+          &lt;meta http-equiv="X-UA-Compatible" content="IE=IEmulateIE7">
+
+          如果不打算考虑文档类型声明，而直接使用IE7标准模式
+
+          &lt;meta http-equiv="X-UA-Compatible" content="IE=7"/>
+
+          在没有设置X-UA-Compatible 浏览器会通过文档声明来确定使用最佳的可用文档模式，使用混杂模式
+        </pre>
+      </div>
+
+      
+      <div class="small_block">
+        <p class="fz16">children属性</p>
+        <p class="ti2em">只包含元素中同样还是元素的子节点。除此之外没有别的区别。</p>
+        <pre>
+          var childCount = element.children.length;
+          var firstChild = element.children[0];
+
+          ie5+,单ie8级更早的版本children属性中也会有注释节点
+        </pre>
+        <script type="text/javascript">
+          function test1(){
+           console.log( document.getElementById("test_01").children );
+          }
+        </script>
+        <button onclick="test1()">test_01的所有元素子节点</button>
+      </div>
+
+      <div class="small_block">
+        <p class="fz16">contains()方法</p>
+        <p class="ti2em">判断某个节点是否为另一个节点的后代</p>
+        <pre>
+          alert(document.documentElement.contains(document.body))
+        </pre>
+        <script type="text/javascript">
+          function judge(){
+            alert(document.documentElement.contains(document.body));
+          }
+        </script>
+        <button onclick="judge()">document.documentElement.contains(document.body)</button>
+        <pre>
+          //判断body是不是html的后代
+          alert(document.documentElement.contains(document.body))
+
+          //确定节点之间的关系，返回一个表示该关系的位掩码。
+
+
+          掩码                                  节点关系
+            
+            1                                      无关系 
+            2                                      给定节点在DOM树中位于参考节点之前
+            4                                      局后
+            8                                      包含
+            16                                     被包含
+
+          compareDocumentPosition() 
+
+          var result= document.documentElement.compareDocumentPosition(document.body);  // 20
+          20 ==> 4+16
+        </pre>
+        <script type="text/javascript">
+          function judge2(){
+            console.log(document.documentElement.compareDocumentPosition(document.body));
+          }
+        </script>
+        <button onclick="judge2()">document.documentElement.compareDocumentPosition(document.body)</button>
+
+        <p class="cor_error">p320没有看完</p>
+      </div>
+
+      <div class="independent_block">
+        <p class="fz20">innerText 插入文本</p>
+        <p class="ti2em">操作元素中包含的所有文本内容，包含字文档树中的文本</p>
+        <p class="ti2em">读取时：按照由浅到深的将自文档树中的所有文本拼接起来</p>
+        <p class="ti2em">写入时：会删除元素的所有子节点，插入包含相对性的文本节点</p>
+        <div id="test_02" class="test_01">
+          <p>this is a <strong>paragraph</strong> with a</p>
+          <ul class="list_style_ul_01">
+            <li class="">Ttiem 1</li>
+            <li class="">Ttiem 2</li>
+            <li class="">Ttiem 3</li>
+          </ul>
+        </div>
+        <script type="text/javascript">
+          function testText(){
+            alert(document.querySelector("#test_02").innerText);
+            return document.querySelector("#test_02");
+          }
+          function testInnerText(){
+            var elem = testText();
+            var txt = "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^";
+            elem.innerText = txt;
+          }
+        </script>
+        <button onclick="testInnerText()">innerText</button>
+        <p class="ti2em">innerText在给元素节点赋值时，字符串中的标签进行编码。</p>
+        <pre>
+          var innerTxt = document.querySelector("#test_02").innerHTML;
+          document.querySelector("#test_02").innerText = innerTxt;
+        </pre>
+        <script type="text/javascript">
+          function test3(){
+            var elem = document.querySelector("#test_02");
+            var innerTxt = elem.innerHTML;
+            elem.innerText = innerTxt;
+          }
+        </script>
+        <button onclick="test3()">innerText对元素进行赋值问本是，会给文本中的标签进行转码</button>
+
+        <p class="fz12">firefox不支持innerText,但firefox支持textContent属性</p>
+
+        <pre>
+          function getInnerText(){
+            var elem = document.querySelector("#test_02");
+            var refunc = function(obj){
+             typeof obj.textContent == "string" ? console.log(obj.textContent) : console.log(obj.innerText);
+            }(elem);
+          }
+        </pre>
+      </div>
+
+
+    </div>
+  </div>
+</body>
+</html>

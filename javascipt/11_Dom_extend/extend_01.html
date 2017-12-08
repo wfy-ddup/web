@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>Dom_extend_01</title>
+</head>
+<body>
+  <div class="box">
+    <div class="independent_block">
+      <p class="fz18">
+        理解SelectorsAPI <br />
+        使用HTNL5 DOM 扩展 <br />
+        了解专有DOM 扩展
+      </p>
+    </div>
+
+    <div class="independent_block">
+      <p class="fz20">选择符API</p>
+      <p class="fz14">致力于让浏览器原生支持css查询。所有实现这一功能的Javascript库都会写一个css解析器</p>
+
+      <div class="small_block">
+        <p class="fz20 fwb">querySelector()方法</p>
+        <p class="ti2em">此方法接受一个css选择符，返回与该方法匹配的第一个元素，如果没有找到则返回null</p>
+        <pre>
+          var body  = document.querySelector("body");
+
+          var myDiv = document.querySelector("#myDiv");
+
+          var selected = document.querySelector(".selected");
+
+          //取得第一个类为btn的img元素
+          var img = document.body.querySelector("img.btn")
+        </pre>
+        <div class="fz14">
+          通过Document调用querySelector()时，会在文档中查找匹配的元素。<br />通过Element调用querySelector()时，在此元素的后代中查找。
+        </div>
+      </div>
+
+      <div class="small_block">
+        <p class="fz20">querySelectorAll()方法</p>
+        <p class="ti2em">querySelecorAll()方法与querySelector()方法接受的参数一样，querySelectorAll()返回的是所有匹配的元素。</p>
+        <p class="ti2em">与querySelector()方法类似，querySelectorAll()可被调用的有Document,DocumentFragment,Element</p>
+        <pre>
+          var ems = document.getElementBy("myDiv").querySelectorAll("em");
+          var ems = document.querySelectorAll("#myDiv em");
+
+
+          var selectors = document.querySelectorAll(".selector");
+
+          var strongs = document.querySelectorAll("p strong");
+        </pre>
+        <script type="text/javascript">
+          function getSecondDiv(){
+            var indepenDiv = document.querySelectorAll(".independent_block");
+            var txtArr = [];
+            for(var i = 0; i < indepenDiv.length; i++){
+
+              var indexTxt = function(index){  // 自调函数，形成闭包，保护变量
+
+                txtArr[i] = function(){
+                  console.log(index);
+                };
+
+              }(i)
+            }
+
+            return txtArr;
+          }
+          var func =  getSecondDiv();
+          func[1]();
+        </script>
+        <button onclick="getSecondDiv()">实验上边方法</button>
+      </div>
+
+      <div class="small_block">
+        <p class="fz20">matchsSelector()方法</p>
+        <p class="ti2em">matchsSelector()方法接受一个参宿，及css选择符，如果调用元素与该选择符匹配，返回true，否则返回false</p>
+        <p class="ti2em">w3c没有规定浏览器要支持此方法，ie9+,firefox3.6,safari5+和webkitMatchsSelector()支持该方法，在使用此方法时，要用函数包装</p>
+        <pre>
+          function matchsSelector(elem,selector){
+            switch(true){
+              case elem.matchsSelector:
+                return elem.matchsSeletor(selector);
+              case elem.msMatchsSelector:
+                return elem.msMatchsSeletor(selector);
+              case elem.mozMatchsSelector:
+                return elem.mozMatchsSeletor(selector);
+              case elem.webkitMatchsSelector:
+                return elem.webkitMatchsSeletor(selector);
+              defalut:
+                alert("no supported");
+            }
+          }
+
+        没有实现效果，但是chrome 控制台 提示 有 webkitMatchsSelector()方法
+        </pre>
+      </div>
+
+
+    </div>
+
+    <div class="independent_block">
+      <p class="fz20">元素的遍历</p>
+      <p class="ti2em">元素之间的空格，ie9之前的版本不会返回文本节点，但其他浏览器会返回文本节点，致使childNodes和firstChild等属性的行为不一致。</p>
+      <p class="fz18">Element Traversal API 为 DOM 元素添加了5个属性</p>
+      <pre>
+        childElementCount: 返回子元素（不包含文本节点和注释）的个数
+        firstElementChild: 指向第一个子元素  firstChild的元素版
+        lastElementChild：指向最后一个子元素 lastChild的元素版
+        previousElementSibling：指向上一个兄弟元素 previousSibling的元素版
+        nextElementSibling：指向下一个兄弟元素 nextSibling的元素版
+
+        利用这些属性可以避免空白文本节点的干扰
+      </pre>
+      <pre>
+        var i,
+            len,
+            child = elem.firstChild;
+        while(child != elem.lastChild){
+          child.nodeType == 1 ? console.log(child) : 0 ;
+          child = child.nextSibling;
+        }
+
+
+        使用元素的遍历
+
+        var i,
+            len,
+            child = elem.firstElementChild;
+        while(child != elem.lastElementChild){
+          console.log(child);
+          child = child.nextElementSibling;
+        }
+      </pre>
+      <script type="text/javascript">
+        function getNoTxtElem(){
+          var elem = document.querySelectorAll(".independent_block"),
+              child = elem[1].firstChild;
+              
+          while(child != elem.lastChild){
+            child.nodeType == 1 ? console.log(child) : 0;
+            child = child.nextSibling;
+          }
+        }
+      </script>
+      <button onclick="getNoTxtElem()">检测非文本节点</button>
+    </div>
+
+    <div class="independent_block">
+      <p class="fz20">HTML5</p>
+      <p class="ti2em">HTML5 规范围绕如何使用新增标记定义了大量javascript API。其中一些API与DOM重叠，浏览器应该支持DOM扩展。</p>
+      <div class="small_block">
+        <p class="fz16">getElementsByClassName()方法</p>
+        <p class="ti2em">getElementByClassName()接受一个参数，类名</p>
+        <pre>
+          // 取得所有类名中含有 current 和 username 的元素，类名的先后顺序无所谓
+          var allCurrentUsernames = document.getElementsByClassName("current username");
+
+          // 取得id为myDIv的指定元素下的类名为selected的所有元素
+          var selected =  document.getElementById("myDiv").getElementsByClassName("selected");
+
+          getElementsByClassName() 返回的是NodeList,ie9+
+        </pre>
+      </div>
+
+      <div class="small_block">
+        <p class="fz20">classList属性</p>
+        <p class="ti2em">在操作类名时，需要通clasName属性添加，删除和提花类型</p>
+        <style type="text/css">.user{color:red}</style>
+        <div id="test_div_01" class="bd user disabled">这是一个测试div</div>
+        <pre>
+          &lt;div id="test_div_01" class="bd user disabled">这是一个测试div&lt;/div>
+          
+
+          // 不是classList方法
+
+          // removeClass 函数
+          function amendClass(){    
+            var elem = document.getElementById("test_div_01"),
+                classList = elem.className.split(/\s+/),
+                deleteClass = arguments[0].split(/\s+/);
+
+            for(var n = 0; n < deleteClass.length; n++){
+              for(var i = 0; i < classList.length; i++){
+                classList[i] == deleteClass[n] ? classList.splice(i,1) : 0 ;
+              }
+            }
+            
+            elem.className = classList.join();  //
+            console.log(deleteClass);
+          }
+        </pre>
+        <script type="text/javascript">
+          function amendClass(){
+            var elem = document.getElementById("test_div_01"),
+                classList = elem.className.split(/\s+/),
+                deleteClass = arguments[0].split(/\s+/);
+
+            for(var n = 0; n < deleteClass.length; n++){
+              for(var i = 0; i < classList.length; i++){
+                classList[i] == deleteClass[n] ? classList.splice(i,1) : 0 ;
+              }
+            }
+            
+            elem.className = classList.join();
+            console.log(deleteClass);
+          }
+        </script>
+        <button onclick="amendClass('user disabled')">不使用classList修改class</button><br /><br />
+        <p class="fz18">使用classList属性</p>
+        <p class="ti2em">classList属性是新集合类型DOMTokenList的实例，与集合类似，有length属性，每个元素可以使用item()方法或[]表示</p>
+        <pre>
+          add(value)  将给定的className字符串添加到列表中，如果存在就不添加
+          contains(value) 表示列表中是否有给定的className,有返回true，没有则返回false
+          remove(value)
+          toggle(value) classList中没有就添加，有这就删除
+
+          类似于 jquery 中的 addClass(),removeClass(),hasClass(),
+        </pre>
+      </div>
+
+
+      <div class="small_block">
+        <p class="fz20">焦点管理</p>
+        <p class="fz16">元素获取焦点的方式：页面加载，用户输入，调用focus()方法</p>
+        <div class="test_01">
+          姓名：<input type="text" id="ipt_01" name="userName" /><br />
+          电话：<input type="text" id="ipt_02" name="userPhone" />
+        </div>
+        <pre>
+          document.activeElement 属性，始终会引用DOM中当前获得了焦点的元素。
+
+          文档刚刚加载完成时，document.activeElement 中保存着 document.body 元素的引用。
+          加载期间值为null
+
+          var btn1 = document.getElementById("ipt_01");
+          btn1.focus();
+          console.log(document.activeElement == btn1);
+
+
+          document.hasFocus();确定文档是否获得焦点    true/false
+
+          var btn2 = document.getElementById("ipt_02");
+          btn2.focus();
+          alert(document.hasFocus);
+        </pre>
+        <script type="text/javascript">
+          function activeElem(){
+            var btn1 = document.getElementById("ipt_01");
+            btn1.focus();
+            console.log(document.activeElement);
+          }
+          function hasF(){
+            var btn2 = document.getElementById("ipt_02");
+            btn2.focus();
+            console.log(document.hasFocus());
+          }
+        </script>
+        <button onclick="activeElem()">document.activeElement</button><br />
+        <button onclick="hasF()">document.hasFocus()</button>
+        <br />
+        <p class="fz14">ie4+,firefox,safari,chrome,opera8+ 支持</p>
+      </div>
+    </div>
+
+    <div class="independent_block">
+      <div class="small_block">
+        <p class="fz20">HTMLDocument的变化</p>
+        <p class="fz18">readyState属性</p>
+        <p class="fz18 pl2em">Document的readyState属性</p>
+        <p class="fz18 pl2em">
+          loading 正在加载文档；<br />
+          complete 已经加载完文档<br />
+          通过它来实现一个指示文档已经加载完成
+        </p>
+        <pre>
+          if(document.readyState === 'complete'){  //判断文档加载完
+            //
+          }
+
+          支持 ie4+,opera9+
+        </pre>
+        <script type="text/javascript">
+          function judge(){ if(document.readyState == "complete"){alert("i am ready")} }
+        </script>
+        <button onclick="judge()">文档是否加载完</button>
+      </div>
+
+      <div class="small_block">
+        <pre>
+          document中的compatMode的属性；<br />
+          两个值 CSS1compat BackCompat
+        </pre>
+        <script type="text/javascript">
+          function compat(){
+            if(document.compatMode == "CSS1compat"){alert("standards mode")}else{alert("Quirks mode")}
+          }
+        </script>
+        <button onclick='compat()'>document.compat属性</button>
+      </div>
+
+      <div class="small_block">
+        <p class="fz18">head属性</p>
+        <p class="fz14">var head = document.head || document.getElementsByTagName("head")[0]</p>
+      </div>
+
+      <div class="small_block">
+        <p class="fz18">自定义数据属性</p>
+        <div id="myTestDiv" data-app="12345" data-myname="nichlos">这是一个测试div</div>
+        <pre>
+          可以通过dataeset属性来访问自定义属性的值。
+          &lt;div id="myTestDiv" data-appid="12345" data-myName="nichlos">这是一个测试div&lt;/div>
+          var div = document.getElementById("myTestDiv");
+
+          var appId = div.dataset.appid;
+          var myName = div.dataset.myname;
+
+          前后不能重名  如 appId 后边不能是 div.dataset.appId
+        </pre>
+
+        <script type="text/javascript">
+          function datasetFunc(){var div=document.getElementById("myTestDiv");var appId=div.dataset.app;var myName=div.dataset.myname;console.log(appId+"^^^^我^^^^^^"+myName)}
+
+        </script>
+        <button onclick="datasetFunc()">上边的dataset属性</button>
+      </div>
+    </div>
+
+    <div class="independent_block">
+      <p class="fz20">innerHTML属性</p>
+      <p class="pl2em">
+        在读的模式下，innerHTML属性返回与调用元素的所有子节点（包含元素，注释和文本节点）对应的HTML标记<br />
+        在写的模式下，innerHTML会根据指定的值创建新的DOM数，然后DOM树完全替换调用元素原先的所有子节点
+      </p>
+      <div class="content">
+        <ul class="list_style_ul_01">
+          <li>Ttem 1</li>
+          <li>Ttem 2</li>
+          <li>Ttem 3</li>
+        </ul>
+      </div>
+      <pre>
+        var content = dcument.getElementsByClassName("content")[0].innerHTML;
+        content = "&lt;ul class="list_style_ul_01">
+                    &lt;li>Ttem 1&lt;/li>
+                    &lt;li>Ttem 2&lt;/li>
+                    &lt;li>Ttem 3&lt;/li>
+                  &lt;/ul>"
+      </pre>
+      <script type="text/javascript">
+        function getInnerHTML(){
+          alert(document.querySelector(".content").innerHTML);
+        }
+        function setInnerHTML(){
+          document.querySelector(".content").innerHTML="<p class=\"fz18\"><strong>变了</strong></p>"
+        }
+      </script>
+      <button onclick="getInnerHTML()">得到内容</button>
+      <button onclick="setInnerHTML()">重设内容</button>
+
+      <div class="small_block">
+        <p class="fz14">通过innerHTML向页面插入script</p>
+        <pre>
+          //无效的方法
+          div.innerHTML = "&lt;script type="text/javascript" defer>alert("hi");&lt;/script>"
+
+          //有效的方法
+          div.innerHTML = " _&lt;script type="text/javascript" defer>alert("hi");&lt;/script> "
+          div.innerHTML = "&lt;div>&nbsp;&lt;/div> &lt;script type="text/javascript" defer>alert("hi");&lt;/script> "
+          div.innerHTML = "&lt;input type="" hidden />&lt;script type="text/javascript" defer>alert("hi");&lt;/script> "
+
+
+          // 最为有效并且不影响页面的布局
+          "&lt;input type="" hidden />&lt;script type="text/javascript" defer>alert("hi");&lt;/script> "
+        </pre>
+        <div class="content_01">
+          
+        </div>
+
+        <script type="text/javascript">
+          document.querySelector(".content_01").innerHTML = "<input type=\"hidden\"><script defer>console.log('hi');<\/script>"
+        </script>
+      </div>
+
+      <div class="small_block">
+        <p class="fz20">outerHTML</p>
+        <div class="content_02">
+          <p class="fz20">this is a <strong>paragraph</strong> with a list following it.</p>
+          <ul class="list_style_ul_01">
+            <li>Ttem 1</li>
+            <li>Ttem 2</li>
+            <li>Ttem 3</li>
+          </ul>
+        </div>
+
+        <p class="fz16">outerHTML包含调动的元素在一起，可以使用replaceChild</p>
+
+        <script type="text/javascript">
+          function getHTML2(){alert(document.querySelector(".content_02").outerHTML)}
+        </script>
+
+        <script type="text/javascript">
+          function setHTML2(){
+            var txt = "<pre>"
+                     +"&lt;p class=\"fz20\">this is a &lt;strong>paragraph&lt;/strong> with a list following it.&lt;/p>\n"
+                     +"&lt;ul class=\"list_style_ul_01\">\n"
+                     +"&lt;li>Ttem 1&lt;/li>\n&lt;li>Ttem 2&lt;/li>\n&lt;li>Ttem 3&lt;/li>\n&lt;/ul>"
+                     +"</pre>";
+            document.querySelector(".content_02").outerHTML = txt;
+          }
+        </script>
+
+        <button onclick="getHTML2()">outerHTML在读模式下</button>
+        <button onclick="setHTML2()">outerHTML在写模式下</button>
+
+        <div class="cor_error">使用replaceChild();</div>
+        <script type="text/javascript">
+          function useReplaceChild(){
+            var div = document.querySelector(".cor_error");
+            div.parentNode.replaceChild(document.createElement("p").appendChild(document.createTextNode("这是p")),div);
+          }
+        </script>
+        <button onclick="useReplaceChild()">使用replaceChild()</button>
+      </div>
+
+      <div class="small_block">
+        <p class="fz20">scrollIntoView()方法，所有浏览器支持，让元素滚动到浏览器可见区域</p>
+
+        <pre class="">
+          document.querySelector(".independent_block").scrollIntoView();
+          很像锚点的跳转
+        </pre>
+        <button onclick="document.querySelector('.independent_block').scrollIntoView()">document.querySelector(".independent_block").scrollIntoView()</button>
+      </div>
+
+
+    </div>
+
+  </div>  
+</body>
+</html>

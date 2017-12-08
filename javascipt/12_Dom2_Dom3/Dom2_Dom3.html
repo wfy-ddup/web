@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>Dom2_Dom3</title>
+</head>
+<body>
+  <div class="box">
+
+
+    <div class="independent_block">
+      <p class="fz18">
+        Dom2和Dom3的变化<br />
+        操作样式与Dom API <br />
+        Dom遍历范围
+      </p>
+    </div>
+    
+    <div class="independent_block">
+      <div class="small_block">
+        <p class="fz16">DOM变化</p>
+        <p class="">Dom2 和 Dom3的目的在于扩展DOM API，以满足操作XML的所有需求，同事提供更好的错误处理及特性检测能力</p>
+        <p class="">document.implementation.hasFeature("Core","2.0")，检测是否支持DOM2，返回true</p>
+      </div>
+
+      <div class="small_block">
+        <p class="fz18">针对XML命名空间的变化</p>
+        <p class="">XML命名空间，不同XML文档的元素就可以混合在一起，共同构成格式良好的文档，而不必但系发生命名冲突，HTML不支持XML命名空间，但XHTML支持XML命名空间</p>
+        <pre>
+          命名空间要是用xmln特性来制定。
+          XHTML的命名空间是http://www.w3.org/199/xhtml
+
+          &lt;html xmlns="http://www.w3.org/1999/xhtml">
+            &lt;head>
+              &lt;title>example XHTML page&lt;/title>
+            &lt;/head>
+            &lt;body>
+              hello world;
+            &lt;/body>
+          &lt;/html>
+
+          对于这个例子来书其中所有的元素都默认视为XHTML命名空间中的元素
+        </pre>  
+        <br />
+        
+        <br />
+        <pre>
+          明确的为XML命名空间创建前缀，可以使用xmlns后跟冒号。xml
+
+          &lt;xmlns:html xmlns:xhtml="http://www.w3.org/1999/xhtml">
+            &lt;xmlns:head>
+              &lt;xmlns:title>example XHTML page&lt;/xmlns:title>
+            &lt;/xmlns:head>
+            &lt;xmlns:body>
+              hello world;
+            &lt;/xmlns:body>
+          &lt;/xmlns:html>
+
+          这里为XHTML的命名空间定义了一个名为xhtml的前缀，并要求所有的XHTML元素都已该前缀开头。
+        </pre>
+        <br /><a href="xml-test.html">xml-test-01</a><br />
+        <pre>
+          避免不同语言间的冲突，也需要使用命名空间来限定特性
+
+          &lt;xmlns:html xmlns:xhtml="http://www.w3.org/1999/xhtml">
+            &lt;xmlns:head>
+              &lt;xmlns:title>example XHTML page&lt;/xmlns:title>
+            &lt;/xmlns:head>
+            &lt;xmlns:body>
+              hello world;
+            &lt;/xmlns:body>
+          &lt;/xmlns:html>
+
+        
+        </pre>
+        <br /><a href="xml-test_02.html">xml-test-02</a><br />
+
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1"  style="width:100px;height:100px;border:1px solid #fff;">
+          <rect x="0" y="0" width="50" height="50" style="fill:red">
+        </svg>
+        <pre>
+          node 类型
+          localName 不带命名空间前缀的节点名称
+          namespaceURI 命名空间URI 没有则返回null
+          prefix 命名空间前缀 没有则返回null
+
+          html localName html 
+               namespaceURI www.w3.org/1999/xhtml
+               prefix null
+
+        p.326
+        </pre>
+        <pre>
+          //创建一个名为tagName给定命名空间为namesspaceURI的新xml元素
+          document.createElementNs(namespaceURI,tagName); 
+          //使用给定的attributeName创建一个属于命名空间namespaceURI的新特性
+          document.createAttributeNS(namespaceURI,attributeName)
+          //返回命名空间namespaceURI的tagName元素的NodeList
+          document.getElementsByTagNameNS(namespaceURI,tagName)
+        </pre>
+        <script type="text/javascript">
+          function NSfun(){
+            var svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+            var att = document.createAttributeNS("http://www.w3.org/2000/svg","random");
+            var elems = document.getElementsByTagNameNS("http://www.w3.org/2000/svg","*");
+            console.log(svg);
+            console.log(att);
+            console.log(elems);
+          }
+        </script>
+        <button onclick="NSfun()">测试xml Document类型的变化</button>
+      </div>
+    </div>
+
+
+
+
+
+
+
+  </div>
+</body>
+</html>

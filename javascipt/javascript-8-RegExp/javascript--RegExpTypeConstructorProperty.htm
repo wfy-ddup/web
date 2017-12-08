@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>RegExp构造函数属性</title>
+</head>
+<body>
+  <h2>RegExp 构造函数属性</h2>
+  <p>这些属性使用与作用域中所有的正则表达式，并且基于所执行的最近一次正则表达式操作二变化。</p>
+  <p>属性名有长属性名与短属性名（opera不支持短属性名）</p>
+  <button onclick="RegExpProperty()">构造函数的属性</button>
+  <pre style="font-size:18px">
+      长属性名        短属性名          说明
+      input             $_              最近一次要匹配的字符串。Opera  no
+      lastMatch         $&              最近一次的匹配项        Opera  no
+      lastParen         $+              最近一次匹配的捕获组    Opera  no
+      leftContext       $`              input字符串中lastMatch之前的文本
+      multiline         $*              布尔值
+      rightContext      $               lastMatch之后的文本
+  </pre>
+  <br />
+  <pre style="font-size:18px">
+    var text = "this has been a short summer";
+    var pattern = /(.)hort/g;
+    if(pattern.test(text)){
+      alert(RegExp.input);      //最近一次匹配的字符串  目标字符串
+      alert(RegExp.leftContext);  //最近一次匹配项的左边的字符串
+      alert(RegExp.rightContext);  //最近一次匹配项的右边的字符串
+      alert(RegExp.lastMatch);    //z最近一次匹配的项
+    }
+  </pre>
+  <p class="ti2em">input 属性 返回了原始字符串</p>
+  <p class="ti2em">leftContext属性 所匹配项的左边的内容 rightContext属性 所匹配的右边的字符串</p>
+  <p class="ti2em">lastMatch 所匹配的项</p>
+  <p class="ti2em">lastParen 最近一次匹配的捕获组</p>
+  <script type="text/javascript">
+    function RegExpProperty(){
+      var text = "this has been a short summer";
+      var pattern = /(.)hort/g;
+      if(pattern.test( text )){
+        alert("RegExp属性 input 原始字符串：" +RegExp.input );
+        alert("RegExp属性 lastMatch 所匹配的字符串：" + RegExp.lastMatch);
+        alert("RegExp属性 leftContext 所匹配字符串左边的内容" + RegExp.leftContext);
+        alert("RegExp属性 rightContext 所匹配字符串右边的内容" + RegExp.rightContext);
+      }
+    }
+  </script>
+  <p class="ti2em">$1,$2,$3,$4,$5,$6,$7,$8,$9分别用于存储第一 到 第九个匹配的捕获组</p>
+  <button onclick="use_$n()">$n的使用</button>
+  <pre>
+    var text = "this has been a short summer";
+    var pattern = /(..)or(.)/g;
+    if(pattern.test(text)){
+      alert(RegExp.$1);          //sh
+      alert(RegExp.$2);          //t 
+    }
+  </pre>
+  <script type="text/javascript">
+    function use_$n(){
+      var text = "this has been a short summer";
+      var pattern = /(..)or(.)/g;
+      if(pattern.test(text)){
+        alert(RegExp.$1);          //sh
+        alert(RegExp.$2);          //t 
+      }
+    }
+  </script>
+  <br />
+  <h3>模式的局限性</h3>
+  <p class="ti2em">匹配字符串开始和结尾的\A和\Z锚</p>
+  <p class="ti2em">向后查找(lookbehind)</p>
+  <p class="ti2em">并集和交集</p>
+  <p class="ti2em">原子组</p>
+  <p class="ti2em">Unicode支持</p>
+  <p class="ti2em">命名的捕获组</p>
+  <p class="ti2em">条件匹配</p>
+  <p class="ti2em">正则表达式的注释</p>
+  <p>以上并不是都不支持，支持一下几个</p>
+  <p class="ti2em">开始（^）和结尾（$）</p>
+  <p class="ti2em">向前查找（lookahead）</p>
+  <p class="ti2em">支持编号的捕获组</p>
+</body>
+</html>

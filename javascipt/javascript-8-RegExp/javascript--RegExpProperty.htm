@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>RegExp实例属性</title>
+</head>
+<body>
+<h2>RegExp实例属性</h2>
+<p>RegExp的每个实例都与有下列属性，通过这些属性可以取得有关模式的各种信息。了解</p>
+<p class="ti2em">global:布尔值，表示是否设置了g标志</p>
+<p class="ti2em">ignoreCase:布尔值，表示是否设置了i标志</p>
+<p class="ti2em">lastIndex:整数，表示开始搜索下一个匹配项的字符位置，从0开始</p>
+<p class="ti2em">multiline：布尔值，表示是否设置了m标志</p>
+<p class="ti2em">source：正则表达式的字符串表示</p>
+<pre>
+  var pattern = /\[bc\]at/g;
+  pattern.global;  是否有标记 g    //true
+  pattern.ignoreCase;  是否有标记 i  //false
+  pattern.muliline;    是否有标记 m  //false
+  pattern.lastIndex;   表示开始匹配下一个字符位置，从0开始  // 0
+  pattern.source       返回正则表达式的字符串形式       //  "\[bc\]at"
+</pre>
+<p>正则表达式字面量，正则表达式RegExp构造函数的source属性是相同的，都返回正则表达式的字符串形式</p>
+<br /><br />
+<h3>RegExp 实例方法</h3>
+<button onclick="RegExpFun1()">RegExp实例方法1</button>
+<p class="ti2em">RegExp 对象的主要方法是 <span class="fz24">exec()</span>，exec()接受一个参数(需要匹配的字符串)，返回包含第一个匹配项信息的数组；如果没有则返回null。</p>
+<p class="ti2em">exec()方法返回的数组Array，但包含两个属性：index 和 input</p>
+<p class="ti2em">index:表示匹配项在字符串中的位置；input：表示应用正则表达式的字符串</p>
+<p>数组中：第一项是与整个模式匹配的字符串，其他项是与模式中的捕获组匹配的字符串</p>
+<pre>
+  var text = "mom and dad and bady";
+  var pattern = /mom (and dad (and bady)?)?/ig;
+    正则表达式匹配三项，第一项匹配的是mom and dad and bady,第二项匹配的是 包含于第一项捕获匹配的内容："and dad and bady" ,第三项匹配的是 包含于第一项补货匹配的内容 : "and bady"
+  var matches = pattern.exec(text);
+  matches = ["mom and dad and bady","and dad and bady","and bady"];
+  matches.index = 0;                      //匹配项在字符串中的位置
+  matches.input = "mom and dad and bady";  //应用正则表达式的字符串
+</pre>
+<script type="text/javascript">
+  function RegExpFun1(){
+    var text = "mom and dad and bady";
+    var pattern = /mom (and dad (and bady)?)?/ig;
+    var matches = pattern.exec( text );
+    alert( matches );
+    alert( matches.index );
+    alert( matches.input );
+  }
+</script>
+<p class="ti2em">对于exec()方法而言，即使在模式中设置了全局标志（g）,它每次返回一个匹配项，如果不设置全局标志（g），exec()在同一个字符串上多次调用，返回第一个匹配项的信息</p>
+<button onclick="noGlobalPattern()">不带全局标志g的模式匹配</button>
+<button onclick="globalPattern()">带有全局标志g的模式匹配</button>
+<pre>
+  var text = "ad-ad--ad---ad----ad-----ad";
+  var noGlobalPattern  = /cd/;    //不带有全局标志（g）
+  var matches = null;
+  var arr = null;
+  for(var i = 0;i < 5;i++){
+    matches = noGloblePattern.exec( text );
+    arr.push( matches );
+  }
+  alert(noGlobalPattern.lastIndex);
+
+  var text = "ad-ad--ad---ad----ad-----ad";
+  var globalPattern = /cd/g;      //带有全局标志（g）
+  var matches = null;
+  var arr = null;
+  for(var i = 0;i < 5;i++){
+    matches = noGloblePattern.exec( text );
+    arr.push( matches );
+  }
+  alert(noGlobalPattern.lastIndex);
+</pre>
+<script type="text/javascript">
+  function noGlobalPattern(){
+    var text = "a1d-aad--abd---add----add-----aed";
+    var noGPattern = /a.d/;
+    var matches = [] , arr = [];
+    for(var i = 0;i < 6;i++){
+      matches = noGPattern.exec( text );
+      arr.push( matches );
+      alert("index :"+matches.index);
+      alert("lastIndex :"+noGPattern.lastIndex)
+    }
+    alert(arr);
+  }
+  function globalPattern(){
+    var text = "a1d-aad--abd---acd----add-----aed";
+    var gPattern = /a.d/g;
+    var matches = [] , arr = [];
+    for(var i = 0;i < 6;i++){
+      matches = gPattern.exec( text );
+      arr.push( matches );
+      alert("index :" + matches.index);
+      alert("lastIndex :" + gPattern.lastIndex);
+    }
+    alert(arr);
+  }
+</script>
+<p>模式中设置了全局标志g，每一次都返回一个匹配项，且下一次匹配在上一次匹配结束之后的位置开始，matches + 2，即pattern.lastIndex处,pattern.lastIndex每次都是增加的,匹配的到的是["a1d","aad","abd","acd","add","aed"]</p>
+<p>模式中不设置全局标志g，每一次匹配都是从开始处进行，pattern.lastIndex始终等于0，metches.index始终等于pattern.lastIndex，匹配的到的是["a1d","a1d","a1d","a1d","a1d","a1d"]</p>
+<p>但在ie的javascript实现在lastIndex属性上存在差异，即使在非全局模式下，lastIndex属性每次也会变化</p>
+<br />
+<h3>test()方法：</h3>
+请输入你的电话号码：<input type="text" id="num"/><button onclick="regTestFun()">正则表达式的test()方法</button>
+<p class="ti2em">test()接受一个字符串，在模式与参数匹配的情况下返回true，否则返回false</p>
+<pre>
+    匹配目标字符串是否含有符合某个模式的项
+    var text = "000-0000-00000"
+    var pattern =/\d{3}-\d{4}-\d{5}/;
+    if(pattern.test(text)){
+      alert("目标字符串中含有匹配项");
+    }else{
+      alert("目标字符串中有匹配项");
+    }
+</pre>
+<script type="text/javascript">
+  function regTestFun(){
+    var num = document.querySelector("#num").value;
+    var reg = /^1{1}[34578]\d{9}$/g;
+    if(reg.test(num)){
+      alert("电话号码格式正确");
+    }else{
+      alert("电话号码格式错误")
+    }
+  }
+</script>
+<br />
+<h3>对象的toLocaleString(),toString(),valueOf()方法</h3>
+<button onclick="regStringOrValue()">console.log(),比较RegExp对象的三大方法</button>
+<pre>
+  var reg1 = /a.d/gi;
+  var reg2 = new RegExp("a.d","gi");
+  console.log("reg1的toLocaleString :"+ reg1.toLocaleString() + " toString()方法：" + reg1.toString() +" valueOf()方法：" + reg.valueOf());
+  console.log("reg2的toLocaleString :"+ reg2.toLocaleString() + " toString()方法：" + reg2.toString() +" valueOf()方法：" + reg2.valueOf());
+  console.log(typeof reg1.valueOf());
+</pre>
+<script type="text/javascript">
+  function regStringOrValue(){
+    var reg1 = /a.d/gi;
+    var reg2 = new RegExp("a.d","gi");
+    console.log("reg1的toLocaleString :"+ reg1.toLocaleString() + " toString()方法：" + reg1.toString() +" valueOf()方法：" + reg1.valueOf());
+    console.log("reg2的toLocaleString :"+ reg2.toLocaleString() + " toString()方法：" + reg2.toString() +" valueOf()方法：" + reg2.valueOf());
+    console.log(typeof reg1.valueOf());
+  }
+</script>
+<p>正则表达式的toLocaleString()方法，toString()方法，都返回正则表达式的字符串格式</p>
+<p>正则表达式的valueOf()方法，返回正则表达式的本身（引用类型的值 Object）</p>
+</body>
+</html>

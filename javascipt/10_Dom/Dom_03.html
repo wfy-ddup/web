@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>Dom_03</title>
+</head>
+<body>
+<div class="box">
+  <div class="independent_block">
+    <h3>Document类型</h3>
+    <p class="fz18">浏览器中 document对象是 HTMLDocument的一个实例，表示整个HTML网页，document对象是window对象的一个属性。</p>
+    <ul class="list_style_ul_01">
+      <li>nodeType的值为9</li>
+      <li>nodeValue的值为 null</li>
+      <li>nodeName的值为 "#document"</li>
+      <li>parentNode的值为 null</li>
+      <li>ownerDocument的值为 null</li>
+    </ul>
+    <p class="fz16">Document 类型可以表示HTML页面或者基于XML的文档。通常作为HTMLDocument实例的document对象</p>
+    <p class="fz20">documentElement属性，该属性始终指向HTML页面中的&lt;html&gt;元素。</p>
+    <pre>
+      documentElement属性
+
+      var html = document.documentElement; // &lt;!doctype html>...&lt;/html>
+      var html = document.childNodes[0]    // &lt;!doctype html>...&lt;/html>
+
+      documentElement 其他属性
+
+        1.可得到浏览器的可视窗口，支持所有浏览器，但不支持 ie的兼容模式
+          document.documentElement.clientWidth = window.innerWidth;
+          document.documentElement.clientHeight = window.innerHeight;
+          ie 兼容模式下  document.body.clientWidth   document.body.clientHeight
+
+        var visibleW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    </pre>
+    <script type="text/javascript">
+      console.log(document.documentElement);
+      function printVisibleWidth(){ 
+        var visibleW = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        console.log(visibleW);
+      }
+      window.onresize = function(){ printVisibleWidth() }
+    </script>
+  </div>
+  <div class="independent_block">
+    <h3>文档子节点</h3>
+    <pre>
+      document.documnetElement   文档子节点  指向&lt;html>
+      document.childNodes[0] {item(0)}  文档子节点  指向&lt;html>
+      document.firstChild;
+    </pre>
+    <button onclick='getHtml()'>documentElement</button>
+    <script type="text/javascript">
+      function getHtml(){
+        var html = document.documentElement,
+            html1 = document.childNodes,
+            html2 = document.firstChild;
+       console.log(html);
+       console.log(html1);
+       console.log(html2);
+      }
+    </script>
+    <br />
+    <h3>文档信息</h3>
+    <p class="ti2em">document对象还有一些标准的document对象没有的属性</p>
+    <pre>
+      document对象
+        1.document.title //取得文档标题
+        2.documnet.URL   //取得完整的文档地址
+        3.document.domain //取得域名
+        4.document.referrer  //取得来源页面的URL
+
+      在 window.location 对象中
+        1.window.loacation.hash    //取得地址中的 #
+        2.window.location.host     //取得服务器地址 和 端口号
+        3.window.location.hostname //取得不含端口号的服务器地址
+        4.window.location.href     //取得地址栏中的地址
+        5.window.location.search   //
+    </pre>
+    <button onclick='diff()'>试试documnent.URL,document.domain与window.location.href,window.location.hostname的区别</button>
+    <script type="text/javascript">
+      function diff(){
+        var dURL = document.URL,
+            dHost = document.domain;
+        var lHref = window.location.href,
+            lHost = window.location.hostname;
+        console.log('document-url: '+ dURL +' -domain: ' + dHost);
+        console.log('window.location-url: '+ lHref +' -hostname: ' + lHost);
+      }
+    </script>
+    <br />
+    <h3>window.location.search</h3>
+    <p class="ti2em">得到请求的内容</p>
+    <pre>
+      function getRequestContent(){
+        //得到请求的内容  window.location.search => ?q=javascript&name=wfy
+        var qs = window.location.search.length > 0 ? window.location.search.substring(1) : '';   //qs => q=javascript&name=wfy 或 ''
+        var items = qs.length ? qs.split('&') : [];
+        var args = {};
+        
+        for(var i = 0; i < items.length;i++){
+          var env = null;  //每一个键值对
+          env = items[i].split('=');  // 以等号截取每一个键值对
+          args[ decodeURIComponent( env[0] ) ] = decodeURIComponent( env[1] );
+        }
+      }
+    </pre>
+    <script type="text/javascript">
+      function getRequestContent(){
+        //得到请求的内容  window.location.search => ?q=javascript&name=wfy
+        var qs = window.location.search.length > 0 ? window.location.search.substring(1) : '';   //qs => q=javascript&name=wfy 或 ''
+        var items = qs.length ? qs.split('&') : [];
+        var args = {};
+        
+        for(var i = 0; i < items.length;i++){
+          var env = null;  //每一个键值对
+          env = items[i].split('=');  // 以等号截取每一个键值对
+          args[ decodeURIComponent( env[0] ) ] = decodeURIComponent( env[1] );
+        }
+        console.log(args);
+      }
+    </script>
+    <button onclick='getRequestContent()'>获取url中的键值对</button>
+  </div>
+  <div class="independent_block">
+    <h3>元素的查找</h3>
+    <p class="fz18">ie低版本中只支持document.getElementById(),ie8版本不区分id的大小写</p>
+    <p class="fz16">document.getElementById('id-value')</p>
+    <p class="fz16">document.getElementsByClassName('class-value') 得到是一个数组</p>
+    <p class="fz16">document.getElementsByTagName('tag-name') 返回的也是一个数组</p>
+    <br />
+    <p class="fz16 ti2em">ie7下的bugger</p>
+    <div class="content">
+      <input type="text" name='myIpt' value='myIpt' />
+      <div id="myIpt">这个是id为myIpt的div</div> 
+    </div>
+    <button onclick='ie7Bugger()'>在ie7下测试id='myIpt'与name='myIpt'</button>
+    <script type="text/javascript">
+      function ie7Bugger(){
+        var myIpt = document.getElementById('myIpt');
+        console.log(myIpt);
+      }
+    </script>
+    <p class="fz24">namedItem()方法</p>
+    <p class="ti2em">与getElementsbyClassName或getElementsbyTagName()一起用</p>
+    <pre>
+      &lt;img src="1.png" alt="" />
+      &lt;img src="2.png" alt="" />
+      &lt;img src="3.png" name='myImage' alt="" />
+
+      function (){
+        var images = document.getElementsByTagName('img');
+        var myImage = images.namedItem('myImage');
+      }
+    </pre>
+    <div class="">
+      <img src="../images/cursor.png" alt="" />
+      <img src="../images/cursor2.png" name='myImage' alt="" />
+      <img src="../images/cursor3.png" alt="" />
+    </div>
+    <script type="text/javascript">
+      function getMyImg(){
+        var imgs = document.getElementsByTagName('img');
+        var myImage = imgs.namedItem('myImage');
+        console.log(myImage);
+        console.log(myImage.src);
+      }
+    </script>
+    <button onclick='getMyImg()'>namedItem('name-value')的使用</button>
+    <p class="fz24">document.getElementsByName()</p>
+    <p class="fz16 ti2em">通过name属性获取元素，通常用于表单元素</p>
+    <pre>
+      fieldset 标签
+      legend   标签
+    </pre>
+    <fieldset>
+      <legend align='left'>试试这个标签</legend>
+      <p>非h5 input类型</p>
+      <ul>
+        <li>文本：<input type="text" name='iptType'/></li>
+        <li>单选<input type="radio" name='iptType'/></li>
+        <li>复选：<input type="checkbox" name='iptType'/></li>
+        <li>密码：<input type="password" name='iptType'/></li>
+        <li>图像：<input type="image" name='imagesubmit' src='../images/cursor3.png' width="50" height='50'/></li>
+        <li>file:<input type="file" /></li>
+        <li>提交按钮：<input type="submit" name='iptType' value='tijiao'/></li>
+      </ul>
+      <p>h5 input类型</p>
+      <ul>
+        <li>color:<input type="color" name='iptType' /></li>
+        <li>number:<input type="number" name='iptType' max='50' min='1' step='1' value='10'/></li>
+        <li>tel:<input type="tel" name='iptType'/></li>
+        <li>email:<input type="email" name='iptType'/></li>
+        <li>url:<input type="url" name='iptType'/></li>
+        <li>search:<input type="search" name='iptType'/></li>
+        <li>range:<input type="range" name='iptType' max='10' min='1' step='0.2' value='2'/></li>
+        <li>date:<input type="date" name='iptType'/></li>
+        <li>month:<input type="month" name='iptType'/></li>
+        <li>week:<input type="week" name='iptType'/></li>
+        <li>time:<input type="time" name='iptType'/></li>
+        <li>datetime-local:<input type="datetime-local" name='iptType'/></li>
+        <li>datetime:<input type="datatime" name='iptType'/></li>
+      </ul>
+    </fieldset>
+    <script type="text/javascript">
+      function testName(){
+        var hasNameElems = document.getElementsByName('iptType');
+        console.log(hasNameElems);
+      }
+    </script>
+    <br />
+    <button onclick='testName()'>通过document.getElementsByName()获取元素</button>
+  </div>
+  <div class="independent_block">
+    <h3>DOM一致性检测</h3>
+    <p class="fz18 ti2em">document.implementation属性提供相应信息和功能对象</p>
+    <p class="ti2em fz18">document.implementation属性有hasFeature()方法，该方法接受两个参数,要检测的dom功能及名称,支持该功能则返回true</p>
+    <p class="fz20">document.implementation.hasFeature('XML','1.0') //检测浏览器是否支持xml 1.0 版本</p>
+    <table width='100%' class='table'>
+      <colgroup>
+        <col width='20%'/>
+        <col width='20%'/>
+        <col width='60%'/>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>功能</th>
+          <th>版本号</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Core</td>
+          <td>1.0、2.0、3.0</td>
+          <td>基本的DOM，用于描述表现文档的节点树</td>
+        </tr>
+        <tr>
+          <td>XML</td>
+          <td>1.0、2.0、3.0</td>
+          <td>Core的XML扩展，添加对CDATA、处理指令及实体的支持</td>
+        </tr>
+        <tr>
+          <td>HTML</td>
+          <td>1.0、2.0</td>
+          <td>XML的HTML扩展，添加了对HTML特有元素及实体的支持</td>
+        </tr>
+        <tr>
+          <td>Views</td>
+          <td>2.0</td>
+          <td>基于某些样式完成文档的格式化</td>
+        </tr>
+        <tr>
+          <td>StyleSheets</td>
+          <td>2.0</td>
+          <td>将样式表关联到文档</td>
+        </tr>
+        <tr>
+          <td>CSS</td>
+          <td>2.0</td>
+          <td>对层叠样式表1级的支持</td>
+        </tr>
+        <tr>
+          <td>CSS2</td>
+          <td>2.0</td>
+          <td>对层叠样式表2级的支持</td>
+        </tr>
+        <tr>
+          <td>Events</td>
+          <td>2.0、3.0</td>
+          <td>常规的DOM事件</td>
+        </tr>
+        <tr>
+          <td>UIEvents</td>
+          <td>2.0、3.0</td>
+          <td>用户界面事件</td>
+        </tr>
+        <tr>
+          <td>MouseEvents</td>
+          <td>2.0、3.0</td>
+          <td>用户鼠标事件 click mouseover mouseout </td>
+        </tr>
+        <tr>
+          <td>MutationEvents</td>
+          <td>2.0、3.0</td>
+          <td>DOM树变化引发的事件</td>
+        </tr>
+        <tr>
+          <td>HTMLEvents</td>
+          <td>2.0、3.0</td>
+          <td>HTML4.01事件</td>
+        </tr>
+        <tr>
+          <td>Range</td>
+          <td>2.0</td>
+          <td>用于操作DOM树中某个范围的对象和方法</td>
+        </tr>
+        <tr>
+          <td>Traversal</td>
+          <td>2.0</td>
+          <td>遍历DOM树的方法</td>
+        </tr>
+        <tr>
+          <td>LS</td>
+          <td>3.0</td>
+          <td>文件与DOM树之间的同步加载和保存</td>
+        </tr>
+        <tr>
+          <td>LS-Async</td>
+          <td>3.0</td>
+          <td>文件与DOM树之间的异步加载和保存</td>
+        </tr>
+        <tr>
+          <td>Validation</td>
+          <td>3.0</td>
+          <td>在确保有效的前提下修改DOM树的方法</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>Dom_01</title>
+</head>
+<body>
+<div class='box'>
+  <h2>Dom(文档对象模型)市针对HTML与XML文档的一个API（应用程序接口）</h2>
+  <p class="ti2em fz16">描绘了一个层次化的树节点，允许开发人员添加，移除和修改页面的某个部分</p>
+  <br />
+  <p>ie中的DOM对象都是以COM对象的形式实现的</p>
+  <h3>节点层次</h3>
+  <p class="ti2em fz16">DOM可以将HTML与XML文档描绘成一个多层次节点构成的网络。</p>
+  <pre>
+    &lt;html>
+      &lt;head>
+        &lt;title>Sample Page&lt;/title>
+      &lt;/head>
+      &lt;body>
+        &lt;p>Hello World&lt;/p>
+      &lt;/body>
+    &lt;/html>
+  </pre><br />
+  <img src="Dom_01.png" alt="" /> 
+  <p id="p1">节点的关系如上图所示</p>
+  <button onclick='setAttr()'>添加属性</button><br /><br />
+  <button onclick='isElement()'>PNODE 是元素吗</button>
+  <script type="text/javascript">
+    window.PNODE = document.getElementById('p1');
+  </script>
+  <br />
+  <br />
+  <br />
+  <h4>Node类型</h4>
+  <p class="ti2em">每一个节点都有一个nodeType属性，用于表明节点的类型，有下列十二个常量</p>
+  <pre>
+    Node.ELEMENT_NODE(1)  元素节点
+
+    Node.ATTRIBUTE_NODE(2)  属性节点
+
+    Node.TEXT_NODE(3)     文本节点
+
+    Node.CDATA_SECTION_NODE(4)
+
+    Node.ENTITY_REFERENCE_NODE(5)
+
+    Node.ENTITY_NODE(6)
+
+    Node.PROCESSING_INSTRUCTION_NODE(7)
+
+    Node.COMMENT_NODE(8) 注释节点
+
+    Node.DOCUMENT_NODE(9) 文档节点
+    
+    Node.DOCUMENT_TYPE_NODE(10)
+
+    Node.DOCUMENT_FPAGMENT_NODE(11)
+
+    Node.NOTATION_NODE(12)
+  </pre>
+  <br /><br /><br />
+  <pre>
+    给 p 元素添加 自定义属性
+
+    function setAttr(){ 
+      var p_node = document.getElementById('p1');   // 获取要添加自定义属性的元素
+
+      var attr = document.createAttribute('myAttr');  // 创造一个自定义属性 document.createAttribute('myAttr');  与创建新元素一样
+      
+      attr.nodeValue = 'first';    // nodeValue 节点的值
+
+      p_node.setAttributeNode( attr );  // setAttributeNode();
+    }
+  
+  </pre><br />
+  <br />
+  <br />
+
+  <pre>
+    function setAttr(){ 
+      var node = window.PNODE;
+      var attr = document.createAttribute('myAttr');
+      attr.nodeValue = 'p_one';
+      node.setAttributeNode(attr);
+    }
+
+    function isElement(){   // ie中不支持Node.ELEMENT_NODE
+      window.PNODE.nodeType == Node.ELEMENT_NODE ? alert(window.PNODE + 'is a element') :alert(window.PNODE + 'is not a element');
+    }
+    /*  所有浏览器都支持
+
+    function isELement(){ 
+      window.PNODE.nodeType == 1 ? alert('is a element') : alert('not a element');
+    }
+
+    */
+  </pre>
+  <br />
+  <br />
+  <br />
+  <p class="fz18">nodeName  和 nodeValue 属性 </p>
+  <p class="ti2em fz18">对于元素节点，nodeName中保存的是元素的标签名，nodeValue始终保存的是null</p>
+  <script type="text/javascript">
+    function getNodeName(){
+      alert(window.PNODE.nodeName);
+      confirm(window.PNODE.nodeValue);
+    }
+  </script>
+  <button onclick='getNodeName()'>js获取标签名</button>
+</div>
+  <script type="text/javascript">
+    function setAttr(){ 
+      var node = window.PNODE;
+      var attr = document.createAttribute('myAttr');
+      attr.nodeValue = 'p_one';
+      node.setAttributeNode(attr);
+    }
+
+    function isElement(){   // ie中不支持Node.ELEMENT_NODE
+      window.PNODE.nodeType == Node.ELEMENT_NODE ? alert(window.PNODE + 'is a element') :alert(window.PNODE + 'is not a element');
+    }
+    /*  所有浏览器都支持
+
+    function isELement(){ 
+      window.PNODE.nodeType == 1 ? alert('is a element') : alert('not a element');
+    }
+
+    */
+  </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>function 类型</title>
+</head>
+<body>
+<h2>function 类型 （函数类型）</h2>
+<p>每个函数都是Function类型的实例，而且都与其他引用类型一样具有属性和方法</p>
+<p>由于函数是对象，因此函数名是一个指向函数对象的指针</p>
+<h3>函数的语法声明</h3>
+<pre style="font-size:18px;">
+  1.
+    function sum(num1,num2){
+      return num1 + num2;
+    }
+  2.
+    var sum = function(num1,num2){    //function关键字后面没有函数名 初始化
+      return num1 + num2;
+    };      // 此类型声明函数时，在函数结尾处要有分号
+
+  3. 不推荐的声明  使用函数对象
+    var sum = new Function("num1","num2","return num1 + num2");   //不推荐
+    此种声明函数要解析两次
+      1.ECMAScript常规解析
+      2.解析传入的字符串
+
+    影响性能，但可以看出 函数是对象，函数名是指针
+</pre> 
+<h4>函数是对象，函数名是指针</h4>
+<button onclick="funNameIsPointer()">函数名是指针</button>
+<pre style="font-size:18px;">
+    如：
+      function sum(num1,num2){
+        return num1 + num2;
+      }
+      alert(sum(10,10));
+
+      var anotherSum = sum;
+      alert(anotherSum(10,20));
+
+      sum = null;
+      alert(sum(10,40));   //报错 sum is not defined
+      alert(anotherSum(10,30));
+
+</pre>
+<script type="text/javascript">
+  function funNameIsPointer(){
+    function sum(num1,num2){
+      return num1 + num2;
+    }
+    alert(sum(10,10));
+
+    var anotherSum = sum;
+    alert(anotherSum(10,20));
+
+    sum = null;
+    try{
+      sum(10,10);
+    }catch(e){
+      alert(e.message);   
+    }
+    alert(anotherSum(10,30));
+  }
+</script>
+<hr />  
+</body>
+</html>

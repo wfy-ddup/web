@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>Date类型--时间类型</title>
+
+</head>
+<body>
+  <h3>Date类型</h3>
+  <p>创建一个日期对象，使用new操作符和Date构造函数</p>
+  <button onclick="nowTime()">创建时间对象，获取时间，new Date()</button>
+  <p id="nowTime"></p>
+  <pre>
+      如：
+         var now = new Date();
+  </pre>
+  <script type="text/javascript">
+    function nowTime(){
+      var now = new Date();
+      var elem = document.getElementById("nowTime");
+      elem.innerHTML ="现在时间： " + now;
+    }
+  </script>
+  <hr />
+  <p>如果要在new Date() 对象中传入参数，获取时间对象，必须传入时间的毫秒数</p>
+  <p>输入任意一天得到下一天：<input id="iptDay" type="text" value="格式 如：3/16/2007"/><button onclick="getNextDay()">通过Date.parse()获取时间，nextDay</button></p>
+  <p id="nextDateTime"></p>
+  <p class="ti2em">ECMAScript提供两个方法：Date.parse()和Date.UTC()</p>
+  <p class="ti2em">Date.parse()方法：接受一个日期字符串，格式必须是：月/日/年；返回一毫秒为单位的日期数</p>
+  <p class="ti2em">一天的毫秒数：oneDay_MS = 24*60*60*1000</p>
+  <pre>
+      如：
+        var dataStr = "6/13/2004"
+        Date.parse(dataStr);    //
+  </pre>
+  <script type="text/javascript">
+    var ipt = document.getElementById("iptDay");
+    var timeBox = document.getElementById("nextDateTime");
+    ipt.onclick = function(){
+      this.value === "格式 如：3/16/2007" ? this.value = "" : 0 ;
+    }
+    ipt.onblur = function(){
+      this.value === "" ? this.value = "格式 如：3/16/2007" : 0 ;
+    }
+
+    function getNextDay(){
+      var curDate = ipt.value;
+      if(curDate === "格式 如：3/16/2007"){return false}
+      var curDateTime = Date.parse(curDate);
+      if(isNaN( curDateTime )){ 
+        return false 
+      }else{
+        curDateTime += 24*60*60*1000 ;
+        nextDateTime = new Date( curDateTime );
+        timeBox.innerHTML = "下一天为：" + nextDateTime;
+      }
+
+    }
+  </script>
+  <p class="ti2em">Date.UTC()方法:同样是返回时间的毫秒数。但参数分别是年份，基于0的月份（一月是0，二月是1，...），月中的那一天（1-31），小时数（0-23），分钟，秒以及毫秒，如果没有提供月中的天数，则设为第一天，如果其他没有则统统设为0</p>
+  <p class="ti2em">Date.UTC()方法其实返回的也是一个日期的字符串，但传入Date.UTC()方法的参数中，月数是从0开始的，及0代表一月</p>
+  <p>输入任意一天得到下一天：<input id="iptDay_UTC" type="text" value="格式 如：2007/5/25"/><button onclick="time()">通过Date.UTC(),获取下一天的时间</button></p>
+  <div id="Date_UTC_getNextDay"></div>
+  <pre>
+      如：GMT时间2000年1月1日
+        var y2k = new Date(Date.UTC(2000,0));
+          2005年5月5日下午5:55:55:800
+        var allFives = new Date(Date.UTC(2005,4,5,17,55,800));
+  </pre>
+  <script type="text/javascript">
+    var ipt2 = document.getElementById("iptDay_UTC");
+    var getTomo = document.getElementById("Date_UTC_getNextDay");
+
+    ipt2.onclick = function(){
+      this.value === "格式 如：2007/5/25" ? this.value = "" : 0 ;
+    }
+    ipt2.onblur = function(){
+      this.value === "" ? this.value = "格式 如：2007/5/25" : 0 ;
+    }
+    function time(){
+      var curDate = ipt2.value , timeArr = [] ,curDateTime = null;
+      if(curDate === "格式 如：2007/5/25"){return false}
+      timeArr = curDate.split("/");
+      for(var i = 0;i < timeArr.length;i++){
+        timeArr[i] =Number(timeArr[i]); 
+        if(i === 1){ timeArr[i]--; }
+      }
+      function today(){
+        return Date.UTC(timeArr[0],timeArr[1],timeArr[2]);
+      }
+     curDateTime = today();
+     console.log(curDateTime);
+      if(isNaN( curDateTime )){ 
+        return false 
+      }else{
+        curDateTime += 24*60*60*1000 ;
+        getTomo.innerHTML = "下一天为：" + (new Date( curDateTime ));
+      }
+    }
+  </script>
+  <br />
+  <p class="ti2em">Date.now()方法：获取挡墙时间的毫秒数，可用于计算程序执行多久</p> 
+  <pre>
+      function countTime(){
+        var start = Date.now(), stop = 0;
+        outSide:
+        for(var i = 0;i < 10000;i++){
+          if(i % 5 === 1){
+            console.log(i);
+            continue outSide;
+          }
+        }
+        stop = Date.now();
+        alert( stop - start )
+      }
+  </pre>
+</body>
+</html>

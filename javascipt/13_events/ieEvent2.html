@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<script type="text/javascript" src="../publicJs/public.js"></script>
+<title>events</title>
+<style rel="styleSheet" type="text/css">
+  .test01 {
+    width: 400px;
+    height: 200px;
+    line-height: 200px;
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    background: #e4393c;
+    margin: 10px auto;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  <div class="box">
+    <div class="independent_block">
+      <p class="fz24">焦点事件</p>
+      <p class="fz18">
+        焦点事件会在页面获得或失去焦点时触发<br>
+        利用这些事件并与document.hasFocus()方法与document.activeElement属性可知晓页面的行踪<br>
+        blur  失去焦点 这个事件不会冒泡 所有浏览器都支持<br>
+        focus 获得焦点 这个事件不会冒泡 所有浏览器都支持<br>
+        要确定浏览器是否支持，可以使用如下代码<br>
+        var isSupportd = document.implemention.hasFeature("FocusEvent","3.0")
+      </p>
+      <br><br>
+      <p class="fz24">鼠标与滚轮事件</p>
+      <pre>
+        click 点击事件
+        dblclick 双击鼠标按钮
+        mousedown 按下鼠标任意键
+        mouseenter 鼠标首次移入指定元素的时触发<
+        mouseleave 在鼠标离开目标元素时触发
+        mousemove  当鼠标在指定元素内部移动时，反复的触发
+        mouseout  在鼠标指针位于一个元素上方，然后用户将其移入另一个元素时触发
+        mouseover  当鼠标移入到另一个元素时触发
+        mouseup  用户在释放鼠标是触发
+
+        同一个元素 mousedown  mouseup 相续触发，才会触发click事件
+        dblclick 只有触发两次click事件，才会触发一次dblclick
+        如果代码阻止了连续两次click事件，也可能通过mousedown与mouseup间接实现click事件
+        mousedown mouseup 不受其他事件的影响
+
+        这四个事件触发顺序如下
+        mousedown
+        mouseup
+        click
+        mousedown
+        mouseup
+        click
+        dblclick
+      </pre>
+      <p class="fz24">客户区坐标位置</p>
+      <div id="test01" class="test01">获取鼠标点击时,鼠标在可视窗口的位置位置</div>
+      <p class="fz16">鼠标事件都是浏览器视口中的特定位置上发生的，这个位置信息保存事件对象的clientX和ClientY属性中。他们的值表示事件发生时鼠标指针在视口的水平和垂直坐标。</p>
+      <p class="fz16">多次点击发现，clientX与clientY不包含页面滚动的距离，因此这个位置并不能表示鼠标在页面上的位置</p>
+      <pre>
+        (function(){
+          var div = document.getElementById("test01");
+          EventUtil.addHandler(div,"click",function(event){
+            var e = EventUtil.getEvent(event);
+            var msg = "水平坐标clientX:"+e.clientX+"px--垂直坐标clicentY:"+e.clientY+"px";
+            if(confirm(msg) == true){
+              prompt(msg)
+            }else{
+              alert(msg)
+            }
+          });
+        })();
+      </pre>
+      <script type="text/javascript">
+        (function(){
+          var div = document.getElementById("test01");
+          EventUtil.addHandler(div,"click",function(event){
+            var e = EventUtil.getEvent(event);
+            var msg = "水平坐标clientX:"+e.clientX+"px--垂直坐标clicentY:"+e.clientY+"px";
+            if(confirm(msg) == true){
+              prompt(msg)
+            }else{
+              alert(msg)
+            }
+          });
+        })();
+      </script>
+      <div id="test02" class="test01">获取鼠标点击时，鼠标在页面的位置</div>
+      <p class="fz24">页面坐标位子</p>
+      <p class="fz16">页面坐标通过事件对象的pageX和pageY属性，能告诉你事件在页面中的什么位置</p>
+      <pre>
+        (function(){
+          var div = document.getElementById("test02");
+          EventUtil.addHandler(div,"click",function(event){
+            var e = EventUtil.getEvent(event);
+            var msg = "水平坐标clientX:"+e.pageX+"px--垂直坐标clicentY:"+e.pageY+"px";
+            console.log(msg);
+          });
+        })();
+      </pre>
+      <script type="text/javascript">
+        (function(){
+          var div = document.getElementById("test02");
+          EventUtil.addHandler(div,"click",function(event){
+            var e = EventUtil.getEvent(event);
+            var msg = "水平坐标clientX:"+e.pageX+"px--垂直坐标clicentY:"+e.pageY+"px";
+            console.log(msg);
+          });
+        })();
+      </script>
+      <p class="fz16">在页面没有滚动的情况下，pageX 和 pageY的值与clientX 和 clientY的值相等。</p>
+      <div class="test01" id="test03"></div>
+      <pre>
+        ie8及更早的版本不支持事件对象上的页面坐标，不过使用客户区坐标和滚动信息可以计算出来。这是后需要用到document.body(混杂模式)或document.documentElement(标准模式)中的scrollleft和scrollTop属性
+      
+        (function(){
+          var div = document.getElementById("test03");
+          EventUtil.addHandler(div,"click",function(event){
+            var event = EventUtil.getEvent(event);
+            var pageX = event.pageX,
+                pageY = event.pageY;
+            if(pageX ===  undefined){
+              pageX = event.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft);
+            }
+            if(pageY === undefined){
+              pageY = event.clientY + (document.body.scrollTop || document.documentElement.scrollTop);
+            }
+            var msg = "相对于页面水平位置:"+pageX+"px--相对于页面垂直位置:"+pageY+"px";
+            console.log(msg)
+          });
+        })();
+      </pre>
+      <script>
+        (function(){
+          var div = document.getElementById("test03");
+          EventUtil.addHandler(div,"click",function(event){
+            var event = EventUtil.getEvent(event);
+            var pageX = event.pageX,
+                pageY = event.pageY;
+            if(pageX ===  undefined){
+              pageX = event.clientX + (document.body.scrollLeft || document.documentElement.scrollLeft);
+            }
+            if(pageY === undefined){
+              pageY = event.clientY + (document.body.scrollTop || document.documentElement.scrollTop);
+            }
+            var msg = "相对于页面水平位置:"+pageX+"px--相对于页面垂直位置:"+pageY+"px";
+            console.log(msg)
+          });
+        })();
+      </script>
+    </div>
+    <div class="independent_block">
+      <p class="fz24">屏幕坐标位置</p>
+      <p class="fz16">
+        鼠标事件，不仅会有相对于浏览器窗口的位置<br>还有相对于整个电脑屏幕的位置<br>
+        而screenX 和 screenY属性可以通过鼠标事件发生时鼠标指针相对于整个屏幕的坐标信息
+      </p>
+      <div class="test01" id="test04"></div>
+      <script>
+        (function(){
+          var div = document.getElementById("test04");
+          EventUtil.addHandler(div,"click",function(event){
+            var event = EventUtil.getEvent(event);
+            console.log("Screen coordinates:"+event.screenX+","+event.screenY);
+          });
+        })();
+      </script>
+      <p class="fz24">修改键</p>
+      <p class="fz16">
+        虽然鼠标事件主要是使用鼠标来触发，但是在按下鼠标时，键盘上某些键的状态也可以影响到所要采取的操作。这些修改键就是 Shift Ctrl Alt win <br>
+        DOM规定了4个属性，shiftKey ctrlKey altKey metakey，这些属性中包含的都是boolean，如果相应的键被按下，则值为true 否则 为false
+      </p>
+      <pre>
+        var div = document.getElementById("test05");
+        EventUtil.addHandler(div,"click",function(event){
+          var event = EventUtil.getEvent(event);
+          var keys = new Array();
+          console.log(event);
+          if(event.shiftKey){ keys.push("shift");alert(555); }
+          if(event.ctrlKey){ keys.push("ctrl") }
+          if(event.altKey){ keys.push("alt") }
+          if(event.metaKey){ keys.push("meta") }
+          console.log( event.shiftKey );
+        });
+
+        无效 event对象中有 altKey shiftKey ctrlKey 属性 值为false
+      </pre>
+      <div class="test01" id="test05"></div>
+      <script>
+        (function(){
+          var div = document.getElementById("test05");
+          EventUtil.addHandler(div,"click",function(event){
+            var event = EventUtil.getEvent(event);
+            var keys = new Array();
+            console.log(event);
+            if(event.shiftKey){ keys.push("shift");alert(555); }
+            if(event.ctrlKey){ keys.push("ctrl") }
+            if(event.altKey){ keys.push("alt") }
+            if(event.metaKey){ keys.push("meta") }
+
+            console.log( event.shiftKey );
+          });
+        })();
+      </script>
+      <div class="test0" id="test05">
+        
+      </div>
+      <pre>
+        var div = document.getElementById("test05");
+        EventUtil.addHandler(div,"mouseout",function(event){
+          event = EventUtil.getEvent(event);
+          var target = EventUtil.getTarget(event);
+          var relatedTarget = EventUtil.getRelatedTarget(event);
+          console.log("Moused of:div."+target.className+"--to--div."+relatedTarget.className);
+        });
+      </pre>
+      <script>
+        (function(){
+          var div = document.getElementById("test05");
+          EventUtil.addHandler(div,"mouseout",function(event){
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+            var relatedTarget = EventUtil.getRelatedTarget(event);
+            console.log("Moused of:div."+target.className+"--to--div."+relatedTarget.className);
+          });
+        })();
+      </script>
+      <p class="fz24">鼠标按钮</p>
+      <p class="fz16">
+        
+      </p>
+    </div>
+
+    
+  </div>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>基本包装类型1</title>
+</head>
+<body>
+<h2>基本包装类型</h2>
+<p class="ti2em">基本类型值中Boolean，number，string的是特殊的引用类型，与其他的引用类型相似。</p>
+<p class="ti4em">每当读取这些基本类型的值的时候，后台会创建一个对应的基本包装类型的对象</p>
+<pre>
+    如：
+      var s1 = "some text";
+      var s2 = s1.substring(2);
+
+      当第二行代码访问s1时，会对s1做一下的处理
+        
+        1. 创建String类型的一个实例    var s1 = new String("some text") ;
+        2. 在实例上调用指定的方法      var s2 = s1.substring(2);
+        3. 摧毁这个实例                s1 = null;   //这个s1是指后台自动创建的基本包装类型
+</pre>
+<p>引用类型 与 基本包装类型区别在于 对象的存在时间</p>
+<p class="ti2em">使用new操作符创建的引用类型的实例，在执行流离开当前作用域之前都一直存在内存中。</p>
+<p class="ti2em">只存在于代码执行的一瞬间，然后立即被销毁，如下例</p>
+<pre>
+  var s1 = "some text";
+  s1.color = "red";  //
+  alert(s1.color);   // undefined
+
+  在执行第二行的时候 创建了 String 对象，但是在执行第三行的时候就被销毁了
+</pre>
+<p>不建议显示的创建基本包装类型的对象，但每个基本包装类型都提供了相应的快捷方法</p>
+<hr />
+<h3>boolean类型</h3>
+<p>使用boolean对象，调用boolean构造函数，传入true或false</p>
+<pre>
+    var booleanObject = new Boolean(true);
+</pre>
+<p class="ti2em">Boolean类型实例重写了valueOf()，返回基本类型值true或false</p>
+<p class="ti2em">Boolean类型实例重写了toString(),返回 “true” 或者 “false”</p>
+<button onclick="booleanObj()">利用new Boolean()导致的误区</button>
+<pre>
+  利用new Boolean(),导致的误区
+
+  var falseObject = new Boolean(false);
+  var result = falseObject && true; //这行代码是对falseObject对象而不是对它的值（false）进行求值。
+  alert(reslut);  // true
+
+  var falseValue = false;
+  result = falseValue && true ;
+  alert(result);
+</pre>
+<p class="ti2em">boolean类型中的所有对象都转化成true，所以falseObjec被转化成true</p>
+<script type="text/javascript">
+  function booleanObj(){
+    var falseObject = new Boolean(false);
+    var result = falseObject && true;
+    alert(result);
+
+    var falseValue = false;
+    var result = falseValue && true;
+    alert(result);
+  }
+</script>
+<p>使用Boolean的基本类型与引用类型还有两个区别：typeof instanceof</p>
+<pre>
+  var one = new Boolean(false);
+  var two = false;
+  typeof one ;   // object
+  typeop two ;   // boolean
+
+  one instanceof Object;  true 
+  one instanceof Boolean; true
+
+  two instanceof Boolean; false
+  two instanceof Object; false
+</pre>
+<p>永远不要使用Boolean对象</p>
+<br />
+<h3>Number类型</h3>
+<pre>
+  var numberObject = new Number(10);
+</pre>
+<p>Number类型重写了 valueOf(),toLocaleString(),toString();valueOf()返回基本类型的值，toLocaleString(),toString()返回字符窜的形式</p>
+<p class="ti2em">toString()方法传递一个表示基数的参数，返回几进制的数值的字符串,如果不传入则返回数字的字符串形式</p>
+<button onclick="toStringFun()">Number类型，利用toString()方法转化成不同的进制</button>
+<pre>
+  var num = 10;
+  alert(num.toString());
+  alert(num.toString(2));
+  alert(num.toString(8));
+  alert(num.toString(10));
+  alert(num.toString(16));
+</pre>
+<script type="text/javascript">
+  function toStringFun(){
+    var num = 10;
+    alert("没有转化成进制数为：" + num.toString());
+    alert("转化成2进制数为：" + num.toString(2));
+    alert("转化成8进制数为：" + num.toString(8));
+    alert("转化成10进制数为：" + num.toString(10));
+    alert("转化成16进制数为：" + num.toString(16));
+  }
+</script>
+<br />
+<p>toFixed()方法：显示指定的几位小数，如果小数为不足，以0填补，如果小数位多余指定的小数位，则舍入</p>
+<pre>
+  var num1 = 10 ; 
+  alert(num1.toFixed(2)); //10.00
+  var num2 = 5.1121212;
+  alert(num2.toFixed(4)); //5.1121
+</pre>
+<p>toExponential()方法：使用 e 进行表示</p>
+<pre>
+  var num = 50000;
+  num.toExponentrial(2); //5.00e+4;   2 表示保留的有效小数
+  var num = 0.0005;
+  num.toExponentrial(2); //5.00e-4    2 表示保留的有效小数
+</pre>
+<p>toPrecision()方法：</p>
+<br />
+<p>不要直接实例化 Number 类型，因为typeof和instanceof操作符测试基本类型数值与引用类型数值时，得到的结果完全不同</p>
+<pre>
+    如：
+      var numberObject = new Number(10);
+      var numberValue = 10;
+      typeof numberObject;    // object
+      typeof numberValue;     // number
+      numberObject instanceof Number   // true
+      numberValue instanceof Number    // false
+</pre>
+<p>typeof 操作符测试基本类型数值时 返回Number；测试Number对象时，返回Object</p>
+<br />
+<h3>String 类型</h3>
+<p>String类型是字符串的对象包装类型，可以使用String()构造函数来创建</p>
+<pre>
+  var stringObject = new String("hello world");
+</pre>
+<p>String对象的方法可以所有基本的字符串值中访问，valueOf(),toString(),toLocaleString(),都返回的是基本字符串的值</p>
+<p>length属性：表示字符串中包含多少个字符</p>
+输入字符串：<input type="text" id="getStr"/><button onclick="getStrLength()">得到字符串有多少个字符</button>
+<pre>
+  var stringValue = "hello world";
+  stringValue.length;
+</pre>
+<script type="text/javascript">
+  function getStrLength(){
+    var txt = document.querySelector("#getStr").value;
+    if( !txt ){return false}else{ alert(txt +" 有："+txt.length+"位字符。") }
+  }
+</script>
+<p>字符方法</p>
+<p class="ti2em">charAt() 与 charCodeAt() 两个方法</p>
+<p class="ti4em">这两个方法都接受一个参数，即基于0的字符位置，charAt()方法返回的是给定位置上的字符</p>
+输入字符<input type="text" id="iptStr" />输出第几个位置的字符<input value="0" type="text" id="location" onfocus="this.value = ''" onblur="if(!/\d+/g.test( this.value )){this.value = 0}"/><button onclick="getIndexVal()">查找</button>
+<pre>
+    如：
+      var str = "我叫王方圆，今年二十有六";
+      alert(str.charAt(5));//  返回 ， 从 0 开始 第5个是 ，（逗号）
+</pre>
+<script type="text/javascript">
+  function getIndexVal(){
+    var txt = document.getElementById("iptStr").value;
+    var num = Number( document.getElementById("location").value );
+    if(!txt || (txt.length-1 < num)){return false}
+    var result = txt.charAt( Number(num) ) === " " ? "空格" : txt.charAt( Number(num) );
+    alert( result );
+  }
+</script>
+<p class="ti4em">charCodeAt()方法：表示得到字符的编码，如果传入参数，表示得到字符串中第几个字符的编码，如果不传入则得到的是第0个字符的编码</p>
+输入字符串<input type="text" id="iptStr1" />输出第几个位置的字符的编码<input value="0" type="text" id="location1" onfocus="this.value = ''" onblur="if(!/\d+/g.test( this.value )){this.value = 0}"/><button onclick="getIndexCode()">查找编码</button>
+
+<pre>
+    如：
+      var str = "我叫王方圆，今年二十有六";
+      alert(str.charCodeAt(5)); // 得到的是65292(中文逗号的编码）
+</pre>
+<script type="text/javascript">
+  function getIndexCode(){
+    var txt = document.getElementById("iptStr1").value;
+    var num = Number( document.getElementById("location1").value );
+    if(!txt || (txt.length-1 < num)){return false}
+    var result = txt.charCodeAt( Number(num) );
+    alert( result );
+  }
+</script>
+<h4>字符串操作方法</h4>
+<p class="ti2em">concat():字符串的拼接,但更多的使用的是 + （concat()方法，在数组中也有同样的方法，数组的拼接）</p>
+<p class="ti2em">slice(),substr(),substring()三种方法：返回的是截取的新字符串，对元字符串没有影响，</p>
+<p class="ti2em">这三种方法都能接受两个参数：slice(),substring()方法接受的参数，第一个表示截取字符串开始的位置，第二个表示结束的位置。（含头不含尾）；<br />substr()方法：第一个参数表示截取字符串开始的位置，第二个参数截取的字符串的长度所以substr()方法第二个参数不能负数。<br />而substring()传入的两个参数都不能为负数，会将传入的负数转化成0</p>
+<pre>
+    例：concat()方法
+      拼接 concat()  等同于   + （在字符串中）
+      var  str1 = "我家在东北";
+      var  str2 = " 松花江上";
+      
+      var  str = str1.concat(str2,"!"); //返回"我家在东北 松花江上!" //  concat()方法可传入多个参数，且执行结果不影响原来的字符串。
+
+    例：slice(),substring(),substr()方法  //都不影响原字符窜
+
+      var str = "大王叫我来巡山";
+      
+      var sliceStr = str.slice(2,6);   // "叫我来巡"  含头不含尾
+      var sliceStr = str.slice(2,-1);
+      var substringStr= str.substring(2,6); // "叫我来巡"  含头不含尾
+
+      var substrStr = str.substr(2,4)   // "叫我来巡"   4 表示截取字符串的长度
+      var substrStr = str.substr(2,-1); //""(空字符串)  -1表示不了长度
+</pre>
+<p>在数组中有 concat(),slice()(不影响数组),splice()操作方法</p>
+<p class="ti2em">every(),fiter(),forEach(),map(),some()</p>
+<br />
+<h4>字符串位置方法</h4> 
+<p class="ti2em">indexOf(),lastIndexOf()方法</p>
+<p class="ti2em">indexOf()是重头开始查找，lastIndexOf()重结尾开始查找，找到相应的子字符串，则返回其位置，没有找到则返回-1</p>
+<button onclick="getStrInd()">字符串的indexOf(),lastIndexOf()与数组的功能差不多，但在数组中不能接受两个参数</button>
+<pre>
+    var str = "helle wolrd";
+    alert(str.indexOf("o"));
+    alert(str.lastIndexOf("r"));
+</pre>
+<script type="text/javascript">
+  function getStrInd(){
+    var str = "hello world";
+    alert(str.indexOf("o"));
+    alert(str.lastIndexOf("r"));
+  }
+</script>
+<p class="ti2em">indexOf(),lastIndexOf()在作用与字符串时可接受两个参数，第一个参数为要找的值，第二个则是开始查找的位置</p>
+<button onclick="getAllE()">找到例句中的所有的e</button>
+<pre>
+  var str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+  var positions = new Array();
+  var pos = str.indexOf("e");
+  while( pos != -1 ){
+    positions.push(pos);
+    pos = str.indexOf("e",pos + 1);
+  }
+  alert(position);
+</pre>
+<script type="text/javascript">
+  function getAllE(){
+    var str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+    var positions = new Array();
+    var pos = str.indexOf("e");
+    while(pos != -1){
+      positions.push(pos);
+      pos = str.indexOf("e",pos + 1);
+    }
+    alert(positions);
+  }
+</script>
+<br />
+<p>trim()方法:返回一个删除前置及后缀的所有空格的字符串副本</p>
+<pre>
+  var str = "  我家在东北  ";
+  var trimStr = str.tirm();  // "我家在东北" ，相比之上前后的空格被去掉了
+</pre>
+<p>支持ie9+</p>
+<p>四种大小写转换的方法</p>
+<p class="ti2em">toLowerCase(),toUpperCase(),toLocaleLowerCase(),toLocaleUpperCase(),方法</p>
+<p class="ti4em">toLowerCase()与toUpperCase()是经典的大小写方法</p>
+<button onclick="upper_lower()">toLowerCase(),toUpperCase()</button>
+<pre>
+  var letter1 = "abc";
+  var letter2 = "EFG";
+  letter1.toUpperCase(); // "ABC"
+  letter2.toLowerCase(); // "efg"
+</pre>
+<script type="text/javascript">
+  function upper_lower(){
+    var upper = "ABC" , lower = "efg";
+    alert(upper+"转换成小写"+upper.toLowerCase());
+    alert(lower+"转换成大写"+lower.toUpperCase());
+  }
+</script>
+<br />
+<h4>字符串的匹配方法</h4>
+<p class="ti2em">match()方法：与调用RegExp的exec()方法相同。但match()方法接受的参数与RegExp的exec()方法不同.</p>
+<p class="ti2em">match(),接收到额是一个正则表达式，如  str.match(reg)</p>
+<p class="ti2em">RegExp的exec()方法：接受的是一个字符串，如reg.exec(str)</p>
+<pre>
+  var str = "aad-abd--acd---add----aed";
+  var pattern = /a.d/g;
+  var matches = str.match( pattern );
+  alert(matches.index);
+  alert(pattern.lastIndex);
+</pre>
+<p>使用全局匹配的时候：match()方法返回的数组 与 RegExp的exec()返回的数组的index属性不同</p>
+<br />
+<p class="ti2em">search()方法：索引字符串中的匹配项，如果找到返回第一个匹配项的下标，如果没有找到返回-1</p>
+<button onclick="stringSearch()">字符串的search()</button>
+<pre>
+  var str = "aad-abd--acd---add----aed";
+  var no = str.search(/aid/);
+  var has = str.search(/ad/);
+  alert("没有匹配项，返回："+no+" ,有匹配项，返回第一个匹配项的下标："+has)
+</pre>
+<script type="text/javascript">
+  function stringSearch(){
+    var str = "aad-abd--acd---add----aed";
+    var no = str.search(/aid/);
+    var has = str.search(/ad/);
+    alert("没有匹配项，返回："+no+" ,有匹配项，返回第一个匹配项的下标："+has)
+  }
+</script>
+</body>
+</html>

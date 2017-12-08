@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<title>引用类型</title>
+<style type="text/css">
+  pre { font-size:14px; }
+  .ti2em { text-indent:2em }
+</style>
+</head>
+<body>
+  <h2>引用类型</h2>
+  <p class="ti2em">引用类型是一种数据结构，用于将数据和功能组织在一起。有时候被称为対象定义，因为他们描述的是一类对象所具有的属性和方法；</p>
+  <p class="ti2em">新对象是使用new操作附后跟一个构造函数来创建的：</p>
+  <pre>
+  一：
+    var person = new Object();
+
+  二：
+    var obj = function(name,age){
+      this.name = name;
+      this.age = age;
+      this.instr = function(){
+        statement;
+      }
+    }
+    var person = new obj("xxx",20);
+
+  三：
+    var person = {
+          name : "xxxx",
+          age :20,
+          instr : function(name,age){
+            this.name = name;
+            this.age = age;
+          }
+    }
+  </pre>
+  <p class="ti2em">创建新的对象,一，二是同一种创建的方法</p>
+  <hr />
+  <h3>Object对象</h3>
+  <pre>
+    var person = {          //( { ) 花括号表示对象字面量的开始
+      name : "nicholas",
+      fun : function(){},   //属性和方法后面用冒号 再在后面是属性的值和方法
+      age : 20              //最后一个属性和方法之后不用加逗号 
+    }
+ 
+
+
+    if(expression){         //此处的( { ) 花括号 表示语句块的开始
+      statements;
+    }
+  </pre><br />
+ <p>使用对象字面量向函数传递大量可选参数</p>
+ <button onclick="info()">使用对象向函数传递参数</button>
+ <pre>
+    function displayInfo(args){
+      var output = "";
+      if(typeof args.age === "sting"){
+        output += "Name: "+ args.name + " \n";
+      }
+      if(typeof args.age === "number"){
+        output += "Age: "+ args.age + "\n";
+      }
+      alert(output)
+    }
+
+    var 
+        Nicholas = {
+          name : "Nicholas",
+          age : 27
+        },
+        Greg = {
+          name : "Greg"
+        }
+    ;
+    displayInfo(Nicholas);
+    displayInfo(Greg);
+ </pre>
+ <script type="text/javascript">
+    function info(){
+      function displayInfo(args){
+        var output = "";
+        if(typeof args.name === "string"){
+          output += "Name: " + args.name + "\n";
+        }
+        if(typeof args.age === "number"){
+          output += "Age: " + args.age + "\n";
+        }
+        alert(output);
+      }
+      var 
+          Nicholas = {
+            name : "Nicholas",
+            age : 27
+          },
+          Greg = {
+            name : "Greg"
+          }
+
+      displayInfo(Nicholas);displayInfo(Greg);
+    }
+ </script>
+ <p>多个可选参数的情况下就会显得不灵活，最好对那些必须值使用命名参数</p>
+ <br />
+ <p>对象的访问</p>
+ <button onclick="objVisit()">对象访问方法</button>
+ <pre>
+    var person = {
+      name : "nicholas",
+      age : 27
+    }
+    对象的访问方法：
+
+        1.使用对象的 点表示法
+        alert(person.name);
+
+        2.使用方括号表示法
+        alert(person["name"])
+
+        3.可使用变量与方括号表示
+        var propertyName = "name";
+        alert(person[propertyName])
+ </pre>   
+ <script type="text/javascript">
+ function objVisit(){
+    var person = {
+      name : "nicholas",
+      age : 27
+    }
+    var propertyName = "name";
+    alert("方法一： " + person.name);
+    alert("方法二： " + person["age"]);
+    alert("方法三:  " + person[propertyName]);
+ }
+ </script>
+</body>
+</html>

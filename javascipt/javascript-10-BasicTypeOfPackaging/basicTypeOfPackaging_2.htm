@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>基本包装类型2</title>
+</head>
+<body>
+<h2>基本包装类型</h2>  
+<h4>字符串的模式匹配方法</h4>
+<p class="ti2em">replace()方法，简化替换子字符串的操作</p>
+<p class="ti4em">replace()方法接受两个参数：第一个参数可以是 字符串 或 正则表达式，第二个可以是字符串 或者 一个函数.</p>
+<button onclick="replaceFun()">replace方法,第一个参数可以是 字符串</button>
+<pre>
+  如：第一个参数是 字符串
+  var text = "cat,bat,sat,fat";
+  var result = text.replace("at","on")
+</pre>
+<script type="text/javascript">
+  function replaceFun(){
+    var text = "cat,fat,sat,bat";
+    var result = text.replace("at","on")
+    alert(result);
+  }
+</script>
+<p>以上代码仅仅替换的是字符串中的所匹配的第一个匹配项</p>
+<br />
+<button onclick="replaceFun2()">replace方法,第一个参数可以是 正则表达式</button>
+<pre>
+  如：使用正则表达式
+  var text = "cat,fat,bat,sat";
+  var result = text.replace(/at/g,"ond")
+</pre>
+<script type="text/javascript">
+  function replaceFun2(){
+    var text = "cat,sat,fat,bat";
+    var result = text.replace(/at/g,"ond");
+    alert(result);
+  }
+</script>
+<p>以上代码通过正则表达式全局匹配，替换了字符串中所有的相关匹配项</p>
+<br />
+<p>replace()方法第二个参数，可以使用正则中的（$1-$9）</p>
+<button onclick="replaceFun3()">replace()方法中第二个参数，使用正则中的（$1-$9）</button>
+<pre>
+  var text = "cat,sat.fat.bat";
+  var result = text.replace(/(.at)/g,"world ($1)");
+</pre>
+<script type="text/javascript">
+  function replaceFun3(){
+    var text = "cat,sat.fat.bat";
+    var result = text.replace(/(.at)/g,"world ($1)");
+    alert(result);
+  }
+</script>
+<br />
+<p>replace()方法第二个参数是 函数   (不太清楚)</p>
+<button onclick="replaceFun4()">replace()方法第二个参数是 函数   (不太清楚)</button>
+<div id="replace4"></div>
+<pre>
+ text.replace(/[<>'&]/g,function(match,pos,originalText){
+      switch(match){
+        case "<":
+          return "&lt;";
+        case ">":
+          return "&gt;";
+        case "\"":
+          return "&amp;";
+        case "&":
+          return "&quot;";
+      }
+  });
+  match  :  当前当前匹配项所用到的模式
+  pos  :    匹配项在字符串中的位置
+  origianlText  :  原始字符串 text
+</pre>
+<script type="text/javascript">
+  function replaceFun4(){
+    var text = '<div data-for="result" id="swfEveryCookieWrap" style="width: 0px; height: 0px; overflow: hidden;">';
+    var result = text.replace(/[<>"&]/g,function(match,pos,originalText){
+      console.log(match);console.log(pos);console.log(originalText);
+      switch(match){
+        case "<":
+          return " &lt; ";
+        case ">":
+          return " &gt; ";
+        case '"':
+          return " &amp; ";
+        case "&":
+          return " &quot; ";
+      }
+    });
+    alert(result);
+    //document.querySelector("#replace4").innerHTML = result ;
+  }
+</script>
+<br />
+<p>字符串的split()方法：将一个字符串分隔成多个子字符串，将结果保存在数组中。split()方法可以接受两个参数</p>
+<p class="ti2em">第一个参数：字符串以什么分隔（可以是正则表达式），第二个参数可以理解为截取到第几个</p>
+<pre>
+  如：
+    var txt= "yellow,red,blue,green,grey";
+    var result = txt.split(",");  //["yellow","red","blue","green","grey"]
+    var result = txt.split(",",3); //["yellow","red","blue"]
+    var result = txt.split(/,/); //["yellow","red","blue","green","grey"]
+</pre>
+<br />
+<p>String对象还有个属性是 fromCharCode()方法：解码</p>
+请输入字符串<input type="text" id="iptBox" value="请输入任意字符" onfocus="if(this.value === '请输入任意字符'){this.value = ''}" onblur="if(this.value === ''){this.value = '请输入任意字符'}"/><button onclick="charCodeAt_fromCharCode()">字符的编码与解码</button>
+<pre>
+  String.fromCharCode(97)    // a
+</pre>
+<script type="text/javascript">
+  function charCodeAt_fromCharCode(){
+    var val = document.querySelector("#iptBox").value;
+    if(val === ""){return false}
+    for(var i = 0 , codeStr="" ; i < val.length ; i++){
+      var getStr = ( "00000" + val.charCodeAt( i ) ).slice(-5);
+      codeStr += getStr;
+    }
+    for(var n = 0 , recodeStr="" ; n < codeStr.length ;){
+      var numAs = Number( codeStr.substr(n,5) );
+      n += 5;
+      recodeStr += String.fromCharCode( numAs );
+    }
+    alert(" " + val + " 的 字符编码 为： " + codeStr);
+    alert( " " + codeStr + " 的 字符解码 为： " + recodeStr);
+  }
+</script>
+</body>
+  
+</html>

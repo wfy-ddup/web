@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>Document</title>
+</head>
+<body>
+<div class="box">
+  <h2>BOM:浏览器对象模型</h2>
+  <p>所用全局作用域中声明的变量，函数都会变成window对象的属性和方法</p>
+  <button onclick="alert(window.age)">window.age</button>
+  <script type="text/javascript"> var age = 29; </script>
+
+  <h4>窗口关系及框架</h4>
+  <p style="cursor:pointer;" onclick="window.open('frameset.html','_blank','height=400,width=400')">如果页面中包含框架，则每个框架都拥有自己的window对象，并保存在frames集合中。</p>
+
+  <p class="fz24">窗口的位置</p>
+  <pre>
+    var leftPos = (typeof window.screenLeft == 'number' ) ? window.screenLeft : window.screenX;
+    var topPos = ( typeof window.screenTop == 'number' ) ? window.screenTop :window.screenY;
+
+    在ie,opera,chrome,safafi中：
+      screenLeft 表示浏览器可是浏览器到屏幕左侧的距离
+      screenTop  表示浏览器可是浏览器到屏幕上方的距离
+    在Firefox中：
+      screenX  表示浏览器可是浏览器到屏幕左侧的距离
+      screenY  表示浏览器可是浏览器到屏幕上方的距离
+  </pre>
+  <button onclick="outputWindowPos()">输出窗口的位置</button>
+  <script type="text/javascript">
+
+    function outputWindowPos(){
+      var leftPos = (typeof window.screenLeft == 'number' ) ? window.screenLeft : window.screenX;
+      var topPos = ( typeof window.screenTop == 'number' ) ? window.screenTop :window.screenY;
+      alert("窗口左侧距离："+leftPos+"---窗口上方距离："+topPos)
+    }
+
+
+  </script>
+
+  <br />
+  <p class="fz18">移动窗口，两种方法</p>
+  <button onclick="windowMoveTo()">moveTo</button><br /><br />
+  <button onclick="windowMoveBy()">moveBy</button>
+  <p class="fz14">无效被浏览器禁用</p>
+  <pre>
+    moveTo(x,y)   将窗口移动到某个位置
+    moveBy(x,y)   将窗口移动多少距离
+
+    浏览器禁用
+  </pre>
+  <script type="text/javascript">
+    function windowMoveTo(){ 
+      window.moveTo(0,0);
+    }
+    function windowMoveBy(){ 
+      window.moveBy(0,100);
+    }
+  </script>
+  <br />
+  <br />
+  <br />
+  <p class="fz24">窗口的大小</p>
+  <p class="lh36">
+    ie9+,firefox,safari,opera,chrome: <br />
+
+    &emsp;&emsp;均提供了innerWidth,innerHeight,outerWidth,outerHeight方法<br />
+
+    &emsp;&emsp;innerWidth,innerHeight均返回的是浏览器可是窗口的宽高<br />
+
+    &emsp;&emsp;ie9+,safari中outerWidth，outerHeight返回的是浏览器的宽高<br />
+
+    &emsp;&emsp;chrome中outerWidth，outHeight返回值与innerWidth,innerHeight相同<br />
+
+    &emsp;&emsp;ie8以下不支持innerWidth,innerHeight,outerWidth,outerHeight<br />
+
+    &emsp;&emsp;&emsp;&emsp;但在ie,firefox,safari,opera,chrome中提供了document.documentElement.clientWidth 与document.documentElement.clientHeight得到页面可视的信息<br />
+    document.body.clientWidth    document.body.clientHeight
+
+    document.body.clientWidth兼容ie的非兼容模式
+  </p>
+  <button onclick="testIe()">试试document.documentElement.client</button>
+  <p class="fz16">document.documentElement.clientWidth兼容个大浏览器，ie7+</p>
+  <script type="text/javascript">
+    function testIe(){
+      var winW = window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;
+      alert( winW );
+    }
+  </script>
+  <br /><br />
+  <p class="fz20">浏览器打开新的窗口</p>
+  <p class="ti2em fz16">使用window.open(),可以导航到一个特定的url，也可以打开一个新的浏览器</p>
+  <p class="ti4em fz16">接受四个参数：url,窗口目标(是否为本窗口),..</p>
+  <button onclick="window.open('http://www.baidu.com','topFrame','height=800,width=1000,top=100,left=100,resizeable=yes')">新窗口访问百度</button>
+  <pre>
+    window.open('http://www.baidu.com','topFrame','height=800,width=1000,top=100,left=100,resizeable=yes');
+    新建一个宽高分别为1000和800，距离屏幕上方与左方都为100的百度窗口，
+  </pre><br /><br />
+  <p class="fz16">window.open()方法返回一个指向新窗口的引用，通过这个引用可能能够操作新的窗口</p>
+  <pre>
+    var wrowWin = window.open('http://www.baidu.com','openWin','height=800,width=1000,top=10,left=10,resizeable=yes');
+
+    wrowWin.moveTo(50,50);
+  </pre><br /><br />
+  <button onclick="operateNewWin()">试试window.open()方法返回的引用能不能操作新的窗口,与下边的窗口相同</button><br /><br />
+  <button onclick='moveBdWin()'>获得bdWin,同一个窗口被移动</button>
+  <pre>
+    function operateNewWin(){ 
+      var bdWin = window.open('http://www.baidu.com','bdWin','width=1000,height=800,left=10,top=10');
+      return function (){ 
+        return function(){bdWin.moveTo(100,100)}
+      }
+    }
+
+    function moveBdWin(){ 
+      var moveBD = operateNewWin()();
+      moveBD();
+    }
+
+    此处的两个函数用到了闭包
+  </pre>
+  <script type="text/javascript">
+    function operateNewWin(){ 
+      var bdWin = window.open('http://www.baidu.com','bdWin','width=1000,height=800,left=10,top=10');
+      return function (){ 
+        return function(){bdWin.moveTo(100,100)}
+      }
+    }
+
+    function moveBdWin(){ 
+      var moveBD = operateNewWin()();
+      moveBD();
+    }
+  </script>
+  <br /><br />
+  <p class="fz20">闭包回想,第七章内容</p>
+  <button onclick='operateArrayFunc()'>第七章的利用闭包让数组中的每一个函数都返回其下标</button>
+  <pre>
+    function createClosureArray(){
+      var functionArray = new Array();
+      for(var i = 0; i < 10;i++){
+        functionArray[i] = function(num){ //此函数会立即调用 给functionArray[i]中返回一个function
+          return function(){
+            alert(num);
+          }
+        }(i);
+      }
+      return functionArray;
+    }  
+    function operateArrayFunc(){ 
+      var funcArray = createClosureArray();
+      for(var n = 0; n < funcArray.length; n++){ 
+        funcArray[n]();
+      }
+    }
+  </pre>
+  <script type="text/javascript">
+    function createClosureArray(){ 
+      var functionArray = new Array();
+      for(var i = 0; i < 10; i++){ 
+        functionArray[i] = function(index){
+          return function(){console.log(index)};
+        }(i);
+      }
+      return functionArray;
+    }
+    function operateArrayFunc(){ 
+      var funcArray = createClosureArray();
+      for(var n = 0; n < funcArray.length; n++){ 
+        funcArray[n]();
+      }
+    }
+  </script>
+  <br /><br />
+  <p class="fz16">检测窗口是否被屏蔽</p>
+  <pre>
+    function winIsBlocked(){ 
+      var isBlocked = false;
+
+      try{ 
+        var bdWin = window.open('http://www.baidu.com','bdwin','width=1000,height=800,left=100,top=100');
+        bdwin == null&&isBlocked = true;
+      }catch(e){ 
+        isBlocked = true;
+      }
+
+      if( isBlocked ){ 'the popup is blocked' };
+    }
+  
+  </pre>
+  <button onclick='winIsBlocked()'>检测窗口是否被屏蔽</button>
+  <script type="text/javascript">
+    function winIsBlocked(){ 
+      isBlocked = false;
+      try{ 
+        var bdWin = window.open('http://www.baidu.com','bdwin','width=1000,height=800,left=100,top=100');
+        //isBlocked = bdwin == null&&true;
+        bdWin == null ? isBlocked = true : 0;
+      }catch(e){
+        isBlocked = true;
+      }
+      if(isBlocked)alert('the popup is blocked');
+    }
+  </script>
+  <br /><br />
+  <p class="fz18">延时调用和间歇调用</p>
+  <p class="ti2em">setTimeout();此函数返回一个id,此id可以用于清除clearTimeout(id)超时调用</p>
+  <button onclick='evalFunc()'>试试eval</button><br /><br />
+  <pre>
+      function timeoutFunc(name){ 
+        function popupName(){ 
+          alert(name);
+          clearTimeout( timeoutId );
+        }
+        var timeoutId = setTimeout('popupName',3500)
+      }
+  </pre>
+  <button onclick='timeoutFunc("wfy")'>setTimeout()与clearTimeout()</button>
+
+  <script type="text/javascript">
+    function evalFunc(){ 
+      eval('console.log("555")');
+    }
+
+    function timeoutFunc(name){ 
+      function popupName(){ 
+        console.log(timeoutId);
+        alert(name);
+        clearTimeout( timeoutId );
+      }
+      var timeoutId = setTimeout(popupName,3500)
+    }
+  </script>
+  <pre>
+    注意：
+        setTimeout()调用的函数和字符串实在全局中调用，在非严格模式下this指向的是window，严格模式下指向的是undefined
+  </pre>
+  <br /><br />
+  <p class="fz16">setInterval();此函数返回一个id,此id可以用于清除clearTimeout(id)超时调用</p>
+  <button onclick="intervalFunc()">间歇调用</button>
+  <pre>
+    function intervalFunc(){ 
+      var i = 0;
+      function intervalHalfSecond(){ 
+        i++;
+        alert(i);
+        i == 4 && clearInterval( intervalId );
+      }
+
+      var intervalId = setInterval(intervalHalfSecond,500)
+    }
+  </pre>
+  <script type="text/javascript">
+    function intervalFunc(){ 
+      var i = 0;
+      function intervalHalfSecond(){ 
+        i++;
+        alert(i);
+        i == 4 && clearInterval( intervalId );
+      }
+
+      var intervalId = setInterval(intervalHalfSecond,500)
+    }
+  </script>
+  <br /><br />
+  <p class="fz20">系统对话框</p><br />
+  <p class="fz24 fwb">有三种:看控制台</p>
+  <pre>
+    function popupAlert(){ 
+      alert('555');
+    }
+  </pre>
+  <script type="text/javascript">
+    function popupAlert(){ 
+      alert('are you sure');
+    }
+  </script>
+  <p class="fz16 ti2em lh36">1.alert() 浏览器弹出窗</p>
+  <button onclick='popupAlert()'>alert()弹出框</button>
+  <pre>
+    function popupConfirm(){ 
+      if(confirm('are you sure')){ 
+        alert('I am glad you are sure');
+      }else{ 
+        alert('I am sorry');
+      }
+    }
+  </pre>
+  <script type="text/javascript">
+    function popupConfirm(){ 
+      if(confirm('are you sure')){ 
+        alert('I am glad you are sure')
+      }else{
+        alert('I am sorry')
+      }
+    }
+  </script>  
+  <p class="fz16 ti2em lh36">2.confirm('are you sure') 浏览器弹出窗等待用户确认</p>
+  <button onclick='popupConfirm()'>confirm()弹出框</button>
+  <pre>
+    function popupPrompt(){ 
+      if( Number(prompt('0 or 1'))){ 
+        confirm('you are sure') ? alert('I am glad you are sure') : alert('are you sad');
+      }else{ 
+        confirm('you are sad') ? alert('I am sorry') : alert('are you sure ?')
+      }
+    }
+  </pre>
+  <script type="text/javascript">
+    function popupPrompt(){ 
+      var result = prompt(' are you sure \n true or false','true') ;
+      debugger;
+      if( result != 'false' || result != 'true' ){ /*arguments.callee();*/ }else{ result == 'true' ? result = 1 : result = 0 ; }
+      if( result ){ 
+        confirm('you are sure') ? alert('I am glad you are sure') : arguments.callee();
+      }else{ 
+        confirm('you are sad') ? alert('I am sorry') : arguments.callee();
+      }
+    }
+  </script>
+  <p class="fz16 ti2em lh36">3.prompt() 浏览器弹出窗等待用户输入</p>
+  <button onclick='popupPrompt()'>prompt()弹出框</button>
+
+</div>
+</body>
+</html>

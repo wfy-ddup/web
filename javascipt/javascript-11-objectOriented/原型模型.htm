@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>面向对象的程序设计</title>
+<script type="text/javascript">
+  function Person(name,age,job){
+    this.name = name;
+    this.age = age;
+    this.job = job;
+  }
+</script>
+</head>
+<body>
+<h2>原型模式</h2>
+<p class="ti2em">每个函数都有一个prototype属性，这个属性是一个指针，指向一个对象；这个对象的作用是可以包含由这个特定类型所创建的所有实例都能共享的属性和方法。这个对象是构造函数的原型对象</p>
+<p class="ti2em">prototype就是通过调用构造函数而创建的那个对象的原型</p>
+<button onclick="understandPrototypeObj()">原型对象（构造函数的原型对象）</button>
+<pre>
+  如：
+    function Person(name,age,job){    //  Person()是一个构造函数
+      this.name = name;
+      this.age = age;
+      this.job = job;
+    }
+    Person.prototype.sayName = function(){  // 给构造函数Person添加一个  通过调用构造函数Person()所创建的所有对象都能访问的    方法sayName()
+      alert(this.name);
+      alert("i am yong");
+    }
+
+    Person.prototype中的方法和属性  是所有通过调用构造函数Person()所创建的所有对象  都能调用的方法和属性
+    这个
+    var wfy = new Person("wfy",28,"enginner");
+    var lyy = new Person("lyy",28,"nurse");
+    wfy.sayName();  // wfy
+    lyy.sayName();  // lyy
+</pre>
+<script type="text/javascript">
+  function understandPrototypeObj(){
+    Person.prototype.sayName = function(){
+      alert(this.name);
+      alert("i am yang");
+    }
+    var wfy = new Person("wfy",28,"enginner");
+    var lyy = new Person("lyy",26,"nurse");
+    wfy.sayName();
+    lyy.sayName();
+    console.log(wfy._proto_);
+  }
+</script>
+<br />
+<h4>理解原型对象</h4>
+<p class="ti2em">每个函数都有一个prototype属性，该属性指向函数的原型对象。默认情况下原型对象有个constructor属性，该属性又指向原函数</p>
+<p class="ti2em">通过构造函数创建的实例对象与构造函数之间没有直接的联系</p>
+<br />
+<p>构造函数在创建一个实例后，实例中都有一个指针（[[prototype]] EMCA-262中）(_proto_ Firefox,Safari,Chrome中)指向构造函数的原型对象。但这个属性是完全不可见的。</p>
+<p>s实例对象无法通过[[prototype]]或_proto_访问到到原型对象。</p>
+<p class="ti2em">isPrototypeOf()来确定对象之间的关系</p>
+<button onclick="ConstruAndObjRelation()">isPrototypeOf();某个构造函数的原型对象与某个实例对象之间是否有关系</button>
+<pre>
+    var wfy = new Person("wfy",28,"enginner");
+    var lyy = new Object();
+    Person.prototype.isPrototypeOf(wfy);  // true;
+    Person.Prototype.isPrototypeOf(lyy);  // false;
+</pre>
+<script type="text/javascript">
+  function ConstruAndObjRelation(){
+    var wfy = new Person("wfy",28,"enginner");
+    var lyy = new Object();
+    alert(Person.prototype.isPrototypeOf(wfy));
+    alert(Person.prototype.isPrototypeOf(lyy));
+  }
+</script>
+
+<p>getPrototypeOf():返回的是某个对象的原型（构造函数的原型对象），console中</p>
+<button onclick="getPrototype()">getPrototypeOf()方法</button>
+<pre>
+    var wfy = new Person("wfy",28,"enginner");
+    Object.getPrototypeOf(wfy);    // 得到该对象的原型 （也就是之前调用的构造函数的原型对象）
+</pre>
+<script type="text/javascript">
+  function getPrototype(){
+    Person.prototype.sex = "man";
+    var wfy = new Person("wfy",28,"enginner");
+    var proto = Object.getPrototypeOf(wfy);
+    alert(proto.sex);
+    console.log(proto);
+  }
+</script>
+<p>当代码执行读取某个对象的某个属性时，都会进行搜索，首先搜索对象的本身，如果本身没有，再在该对象的原型（构造函数的原型对象）中进行搜索。</p>
+<br />
+<p>对象能够得到该对象的原型中值，但是不能改变着该对象的原型中的值。但是可以在该对象添加一个同名属性（如上所说：读取对象的某个属性时先从对象本身进行搜索。阻止了访问原型中的属性）</p>
+<button onclick="noChangeObjPrototypeValue()">对象不能改变该对象原型中的值，但可以在自身设置同名属性</button>
+<pre>
+  Person.prototype.sex = "man";
+  var wfy = new Person("wfy",28,"enginner");
+  var lyy = new Person("lyy",26,"nurse");
+  wfy.sex;    // "man"
+  lyy.sex;    // "man"
+  lyy.sex = "woman";
+  lyy.sex;    // "woman"
+</pre>
+<script type="text/javascript">
+  function noChangeObjPrototypeValue(){
+    Person.prototype.sex = "man";
+    var wfy = new Person("wfy",28,"enginner");
+    var lyy = new Person("lyy",26,"nurse");
+    alert(wfy.sex);  //  man
+    alert(lyy.sex);  //  man
+    lyy.sex = "woman";
+    alert(lyy.sex);   // woman
+  }
+</script> 
+<p>在对象 lyy 中从新设置了 sex 属性 ，覆盖了原型中的 sex : man;属性；但构造函数的原型对象中的属性没有随 lyy对象的改变而改变</p>
+<p class="fz20">如图：构造函数原型对象的关系</p>
+<img src="构造函数原型对象的关系.jpg" alt="" />
+<br />
+<p>删除实例中的属性 delete </p>
+<button onclick="objDeleteFun()">delete方法彻底删除属性</button>
+<pre>
+  Person.prototype.sex = "man";
+  var wfy = new Person("wfy",28,"enginner");
+  wfy.sex = "woman";   //从新设置了wfy自身属性sex 
+  alert(wfy.sex);  // woman   来自wfy本身 阻止了向该对象原型中 查找
+  wfy.sex = null;    
+  alert(wfy.sex);   // null 始终存在 wfy对象本身
+  delete wfy.sex;   //   删除了wfy本身的sex属性，不会影响原型
+  alert(wfy.sex);  // "man"  来自于该对象的原型中
+
+
+  Object.getPrototypeOf(wfy)
+
+  也可删除原型对象中的属性和方法  delete Person.prototype.sex
+</pre>
+<script type="text/javascript">
+  function objDeleteFun(){
+    Person.prototype.sex = "man";
+    var wfy = new Person("wfy",28,"enginner");
+    console.log( Object.getPrototypeOf(wfy) );
+    alert(wfy.sex);
+    wfy.sex = "woman";
+    alert(wfy.sex);
+    wfy.sex = null;
+    alert(wfy.sex);
+    delete wfy.sex;
+    alert(wfy.sex);
+    Object.getPrototypeOf(wfy)
+    alert(wfy.sex);
+    var proto = Object.getPrototypeOf(wfy);
+    console.log(proto);
+  }
+</script>
+<br />
+<p>hasOwnProperty()方法：检查一个属性或方法是存在与实例中（对象自身中）还是原型中（构造函数的原型对象中），只有在实例中时才返回true</p>
+<button onclick="hasOwnPropertyFun()">检测某个属性存在于实例中还是对象的原型中</button>
+<pre>
+  Person.prototype.sex = "man";
+  var  lyy = new Person("lyy",26,"nurse");
+  var isOwn = lyy.hasOwnProperty("sex");   // false   sex属性存在于Person.prototype中
+  lyy.sex = "woman";
+  var isProto = lyy.hasOwnProperty("sex");  //true    sex属性存在于实例（lyy）中
+</pre>
+<script type="text/javascript">
+  function hasOwnPropertyFun(){
+    Person.prototype.sex = "man";
+    var lyy = new Person("lyy",26,"nurse");
+    alert(lyy.sex);
+    alert(lyy.hasOwnProperty("sex"));
+    lyy.sex = "woman";
+    alert(lyy.sex);
+    alert(lyy.hasOwnProperty("sex"));
+  }
+</script>
+<br />
+<h4>原型与in操作符</h4>
+<p class="ti2em">有两种方式使用in操作符：单独使用 和 在for-in循环中使用。</p>
+<p class="ti2em">in操作符会在通过对象能够访问的给定的属性时返回true，无论该属性在原型还是在实例中</p>
+<p class="ti2em">而hasOwnProperty(),只有当属性存在于实例中时才返回true</p>
+<button onclick="obj_in_method()">属性存在于原型对象中而不是实例中</button>
+<pre>
+    Person.prototype.sex = "man";
+    var lyy = new Person("lyy",26,"nurse");
+    function hasPrototypeProperty(obj,name){
+      return !obj.hasOwnProperty(name) && name in obj;
+             实例中没有返回false            原型中有
+    }
+</pre>
+<script type="text/javascript">
+  function obj_in_method(){
+    Person.prototype.sex = "man";
+    var lyy = new Person("lyy",26,"nurse");
+    function hasPrototypeProperty(obj,name){
+      return !obj.hasOwnProperty(name) && name in obj ;
+    }
+    var haveOrNot = hasPrototypeProperty(lyy,"sex");
+    alert(haveOrNot);
+  }
+</script>
+<br />
+<p>hasPrototypeProperty()方法：只有当属性存在于原型对象中时才 返回true , 如果该对象中有同名属性遮蔽原型中的属性，同样会返回false</p>
+<button onclick="ObjectHasPrototypeProperty()">hasPrototypeProperty()方法</button>
+<pre>
+  如：
+    Person.prototype.sex = "man";
+    var wfy = new Person("wfy",28,"enginner");
+    hasPrototypeProperty(wfy,"sex");   //  true;  wfy对象中没有sex属性，存在于对象的原型中
+
+    wfy.sex = "woman";
+    hasPrototypeProperty("sex");  //false ;  虽然在wfy的原型对象中也有sex属性，但在wfy对象本身也有
+</pre>
+<p class="fz20 cor_error">代码在chrome中不能实现</p> 
+<script type="text/javascript">
+  function ObjectHasPrototypeProperty(){
+    Person.prototype.sex = "man";
+    var wfy = new Person("wfy",28,"enginner");
+    try{
+      console.log(hasPrototypeProperty("sex"));
+    }catch(e){
+      alert(e.message);
+    }    
+  }
+</script>
+<br />
+<p>for-in  对象的枚举</p>
+<button onclick="forInFn()">for-in 方法</button>
+<pre>
+    如：
+      var wfy = new Person("wfy",28,"enginer");
+      for(var key in wfy){
+        console.log(key);
+      }
+</pre>
+<script type="text/javascript">
+  function forInFn(){
+    Person.prototype.instr = function(){
+      var txt = "my name is " + this.name + " ,my age is " + this.age + "。I am an " + this.job +"."
+      console.log(txt);
+    }
+    var wfy = new Person("wfy",28,"enginner");
+      for(var key in wfy){
+        console.log(key);
+        console.log(wfy[key]);
+      }
+    wfy.instr();
+  }
+</script>
+</body>
+</html>

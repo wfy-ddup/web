@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<title>数组的排列</title>
+<style type="text/css">
+    pre { font-size:14px; }
+    .ti2em { text-indent:2em }
+</style>
+</head>
+<body>
+<h2>数组的排列</h2>
+<p class="ti2em">数组中已经存在两个可以直接使用的重排列的方法：reverse()和sort()</p>
+<p class="ti2em">reverse():翻转数组项的顺序</p>
+<button onclick="arReverse()">reverse()反转数组项的排列</button>
+<pre>
+    var values = [1,2,3,4,5];
+    values.reverse(); 
+    alert(values)       //[5,4,3,2,1]
+</pre>
+<script type="text/javascript">
+    function arReverse(){
+      var values = [1,2,3,4,5];
+      values.reverse();
+      alert(values);
+    }
+</script>
+<p class="ti2em">sort():数组的排列，但存在问题，因为sort()调用每一项的toString()转型方法，然后比价字符串</p>
+<button onclick="arrSort()">数组自带sort()排列方法的问题</button>
+<pre>
+  var num = [0,15,1,5,10];
+  num.sort();
+  alert(num)      //[0,1,10,15,5]
+</pre>
+<script type="text/javascript">
+  function arrSort(){
+    var num = [0,15,1,5,10];
+    num.sort();
+    alert(num);
+  }
+</script>
+<p>因为sort()方法将数组每一项都通过toString()方法转换成字符串，在通过字符串进行比较的，所以"10" < "5"</p>
+<p class="ti2em">虽然sort()存在一些问题;但sort()可以传入一个函数作为参数</p>
+<button onclick="upOrder()">sort()升序</button>
+<button onclick="downOrder()">sort()降序</button>
+<pre>
+  var num = [0,15,1,5,10];
+  function compare(value1,value2){
+    return  value1 < value2 ? -1 : value1 > value2 ? 1 : 0;
+  }
+  num.sort(compare);
+</pre>
+<script type="text/javascript">
+  function upOrder(){
+    var num = [0,15,1,5,10];
+    function compare(value1,value2){
+      return value1 < value2 ? -1 : value1 > value2 ? 1 : 0;
+    }
+    num.sort(compare);
+    alert(num)
+  }
+
+  function downOrder(){
+    var num = [0,15,1,5,10];
+    function compare(value1,value2){
+      return value1 < value2 ? 1 : value1 > value2 ? -1 :0;
+    }
+    num.sort(compare);
+    alert(num)
+  }
+</script>
+<br />
+<p>如果是数值类型或 valueOf()方法返回是数值类型的对象类型</p>
+<button onclick="simpleSort()">全数值类型使用sort()</button>
+<pre>
+  function compare(value1,value2){
+    return value1 - value2;
+  }
+</pre>
+<script type="text/javascript">
+  function simpleSort(){
+    var num = [0,15,1,5,10,15];
+    function compare(value1,value2){
+      return value2-value1;
+    }
+    num.sort(compare);
+    alert(num);
+  }
+</script>
+</body>
+</html>

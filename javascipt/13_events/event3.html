@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<script type="text/javascript" src="../publicJs/public.js"></script>
+<title>events</title>
+</head>
+<body>
+  <div class="box">
+    <div class="independent_block">
+      <div class="test01" id="test01" style="height:100px;background:#ef3f3f;"></div>
+      <pre>
+        鼠标事件的button属性
+
+        (function(){
+          var div = document.getElementById("test01");
+          EventUtil.addHandler(div,"mousedown",function(event){
+            event = EventUtil.getEvent(event);
+            console.log(EventUtil.getButton(event));
+          });
+        })();
+      </pre>
+      <script>
+        (function(){
+          var div = document.getElementById("test01");
+          EventUtil.addHandler(div,"mousedown",function(event){
+            event = EventUtil.getEvent(event);
+            console.log(EventUtil.getButton(event));
+          });
+        })();
+      </script>
+    </div>
+
+    <div class="independent_block">
+      <p class="fz20">键盘与文本事件</p>
+      <pre>
+        keydown 当用户按下键盘上的任意键是触发，按住不放会反复触发
+        keypress 当用按下键盘上的字符键时触发，如果按住不放会反复触发，按下esc键也会触发
+        keyup 当用户释放键盘上的键是触发
+      </pre>
+      
+      <p>
+        ASCII码 <textarea style="vertical-align:top" id="ascii" cols="30" rows="10"></textarea>
+      </p>
+      <script>
+        (function(){
+          var asc = document.getElementById("ascii");
+          EventUtil.addHandler(asc,"keyup",function(event){
+            event = EventUtil.getEvent(event);
+            asc.value += "-ASCII-"+event.keyCode+";\n"; 
+          });
+        })();
+      </script>
+      <p>
+        字符编码 <textarea style="vertical-align:top" id="code_01" cols="30" rows="10"></textarea>
+      </p>
+      <pre>
+        字符编码
+
+        getCharCode:function(event){
+          if(typeof event.charCode == "number"){
+            return event.charCode;
+          }else{
+            return event.keyCode
+          }
+        }
+      </pre>
+      <script>
+        (function(){
+          var elem = document.getElementById("code_01");
+          EventUtil.addHandler(elem,"keypress",function(event){
+            event = EventUtil.getEvent(event);
+            console.log(EventUtil.getCharCode(event));
+          });
+        })();
+      </script>
+      <textarea style="vertical-align:top" id="code_02" cols="30" rows="10"></textarea>
+      <pre>
+        textInput事件 编辑框中输入字符是，就会触发这个事件
+
+        (function(){
+          var code = document.getElementById("code_02");
+          EventUtil.addHandler(code,"textInput",function(event){
+            event = EventUtil.getEvent(event);
+            console.log(event.data); //输入什么出入什么
+          });
+        })();
+      </pre>
+      <script>
+        (function(){
+          var code = document.getElementById("code_02");
+          EventUtil.addHandler(code,"textInput",function(event){
+            event = EventUtil.getEvent(event);
+            console.log(event.data); //输入什么出入什么
+          });
+        })();
+      </script>
+    </div>
+    <div class="independent_block">
+      <p class="fz20">变动事件</p>
+      <pre>
+        DOMSubtreeModified DOM结构中发生任何变化时触发，这个事件在其他任何事件触发后都会触发
+        DOMNodeInserted 在一个节点作为子节点被插入到另一个节点中时触发
+        DOMNodeRemoved 在节点中父节点中被移除是触发
+        DOMNodeInsertedIntoDocument 一个节点被直接插入文档或通过子树简介插入文档之后触发，这个事件在DOMNodeInserted之后触发
+        DOMNodeRemovedFromDocument 一个节点被直接文档中移除或通过子树简介从文档中移除之前触发，在DOMNodeRemoved之后触发
+        DOMAttrModified 在特性被修改之后触发
+        DOMCharacterDataModified 在文本节点的值发生变化是触发
+      </pre>
+      <div class="">
+        <ul class="list_style_ul_02" id="myList">
+          <li class="item">1</li>
+          <li class="item">2</li>
+          <li class="item">3</li>
+        </ul>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+</body>
+</html>

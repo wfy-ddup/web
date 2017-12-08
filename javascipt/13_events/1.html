@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>事件-01</title>
+</head>
+<body>
+  <div class="box">
+    <div class="independent_block">
+      <p class="fz18">事件的冒泡</p>
+      <p class="fz16 ti2em">
+        ie的事件流叫事件冒泡（event bubbling）,即事件开始时由最具体的元素（文档中嵌套层次最深的那个节点）接受，然后逐级向上传播到较为不具体的节点。
+      </p>
+      <div class="small_block">
+        <pre>
+          &lt;!DOCTYPE html>
+          &lt;html>
+            &lt;head>
+              &lt;title>event Bubbling example&lt;/title>
+            &lt;/head>
+            &lt;body>
+              &lt;div id="myDiv">click me&lt;/div>
+            &lt;/body>
+          &lt;/html>
+        </pre>
+        <p class="fz16">如果你单击了页面中的div元素，那么这个click事件会按照<br>
+        div <br>
+        body <br>
+        html <br>
+        document <br>
+        顺序进行传播(冒泡是由内向外进行的)
+        </p>     
+      </div>
+
+      <div class="small_block">
+        <p class="fz18">事件捕获</p>
+        <p class="fz16">
+          针对上面的文本片段，事件捕获的顺序<br>
+          document <br>
+          html <br>
+          body <br>
+          div <br>
+          事件的捕获(有外向内进行的)
+        </p>
+        <p class="fz18">事件流</p>
+        <p class="fz16 ti2em">事件的捕获阶段，处于目标阶段和事件的冒泡阶段<br>
+        捕获阶段不会涉及事件目标，从document到body <br>
+        然后是 处于目标阶段<br>
+        最后是 事件冒泡阶段<br>
+        </p>
+      </div>
+      <div id="test_01">53131</div>
+      <div class="independent_block">
+        <p class="fz18">事件处理程序</p>
+        <p class="fz16">事件就是用户或者浏览器自身真行的某种动作，onclick,onload...</p>
+        
+        <button id="myBtn" onclick="view()">btn</button>
+        <script>
+          function view(){
+            var btn = document.getElementById("myBtn");
+            btn.addEventListener("click",function(){
+              console.log(this);
+            },false);
+          }
+          var div = document.getElementById("test_01");
+          var handler = function(){alert(this.id)};
+          div.addEventListener("click",handler,false);
+          div.removeEventListener("click",handler,false);
+        </script>
+      </div>
+      <div id="test_02" style="background: #e4393c">222click me222</div>
+      <script>
+        var btnDiv = document.getElementById("test_02");
+        var ie = window.navigator.appVersion.indexOf("MSI") > -1;
+        ie?btnDiv.attachEvent("click",function(){console.log(this);},false):btnDiv.addEventListener("click",function(){console.log(this);},false);
+      </script>
+
+    </div>
+  </div>
+</body>
+</html>

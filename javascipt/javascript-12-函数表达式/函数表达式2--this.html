@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>关于闭包中的this</title>
+</head>
+<body>
+  <div class="box">
+    <h1 class="tac">下面不懂</h1>
+    <h3>闭包中this的指向</h3>
+    <p class="fz18">
+      1.this对象实在运行时基于函数的执行环境绑定的；在全局函数中，this等于window <br />  
+      3.当函数被作为某个对象的方法调用时，this等于那个对象。<br />
+      3.匿名函数的执行环境具有全局性，其this对象通常指向window<br />
+    </p>
+    <pre class="fz16">
+      var name = 'the window';
+      var object = {
+        name : 'my object',
+        getNameFunc : function(){                
+          return function(){ return this.name }  
+        }                                        
+      }
+      alert(object.getNameFunc()());
+    </pre>
+    <p class="fz16">每个函数在调用时，其活动对象都会自动获取this和arguments对象，内部函数在搜索这两个对象只搜索到活动对象为止，不可能直接访问外部函数</p>
+    <p class="fz24 fwb">不懂不懂</p>
+    <button onclick="object.getNameFunc.bind(object)()">不懂不懂</button>
+    <script type="text/javascript">
+      var name = 'the window';
+      var object = {
+        name : 'my object',
+        getNameFunc : function(){
+          return function(){ alert( this.name ) }   //闭包
+        }
+        //alert(object.getNameFunc.bind(object)()());
+      }
+      console.log(object.getNameFunc.bind(object)()());
+    </script>
+    <pre>
+      正确的写法：
+        var name = 'the window';
+        var object = {
+          name : 'my object',
+          getNameFunc : function(){ 
+            var that = this;               //转换this
+            return function(){ 
+                alert( that.name )
+            }
+          }
+        }
+    </pre>
+    <p class="fz16">转换了this</p>
+    <button onclick="object2.getNameFunc()()">转换this的方法</button>
+    <script type="text/javascript">
+      var object2 = { 
+        name : 'the object',
+        getNameFunc : function(){ 
+          var that = this;          //转换this
+          return function(){ 
+            console.log( that.name );
+          }
+        }
+      }
+    </script>
+    <br />
+    <br />
+    <br />
+    <p class="fz16">函数内部没有申明的全局变量也是闭包</p>
+    <pre class="fz18">
+      function a(){
+        var n = 99;
+        add = function(){ alert(n++) };
+        function c(){
+          alert(n++);
+        }
+        return c;
+      }
+    </pre>
+    <button onclick="add()">如上的add函数</button>
+    <script type="text/javascript">
+      function a(){
+        var n = 99;
+        add = function(){ alert(n++) };
+        function c(){
+          alert(n++);
+        }
+        return c;
+      }
+      var result = a();
+    </script>
+    <br />
+    <br />
+    <br />
+    <h3>javascript模仿块级作用域</h3>
+    <p class="fz14">块级作用域：是指在非javascript语言中，在一些语句中声明的变量，只属于属于语句内部（在Javascript中不适合，javascript在语句中声明的变量属于当前函数所在的作用域），只能在语句中使用，一旦语句结束变量则被销毁</p>
+    <pre>
+      如：
+      function outputNumbers( count ){ 
+        for(var i = 0; i < count; i++){ alert(i); }
+        alert(i);
+      }
+      只有调用outputNumbers();   才能得到i
+    </pre>  
+    <script type="text/javascript">
+      function pNum (){
+        function blockScope( conut ){
+          //for( var i = 0; i < count; i++ ){ console.log( i ); }
+          var i = document.getElementsByTagName('p').length;
+          return i;
+        }
+        var getBlockScopeVariable = blockScope();
+        alert( getBlockScopeVariable );
+      }
+    </script>
+    <button onclick="pNum()">模拟块级作用域：调用函数返回特定值</button>
+    <p class="fz16">
+      匿名函数：(function(){  })();<br /><br />
+      1.是一个块级作用域<br /><br />
+      2.私有作用域<br /><br />
+      3.()()的作用<br /><br />
+      4.前面一个()表示一个函数表达式<br /><br />
+      5.后面一个()表示立即调用此函数
+    </p>
+    <pre>
+      块级作用域：
+      (function(){ 
+        var now = new Date();
+        if(now.getMonth() == &&now.getDate() == 1){ 
+          alert("happy new year");
+        }
+      })();
+
+      块级作用域可以减少内存的占用，没有指向匿名函数的引用，执行完毕就立即被销毁。
+    </pre>
+
+
+
+
+
+
+
+
+
+
+
+
+  </div><!--box-->
+</body>
+</html>

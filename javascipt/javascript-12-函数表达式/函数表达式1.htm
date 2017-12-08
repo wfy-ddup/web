@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>函数表达式</title>
+</head>
+<body>
+  <h2>函数表达式</h2>
+  <h3>函数声明提前</h3>
+  <p class="ti2em">在执行代码之前会先读取函数声明,这意味着可以把函数声明放在调用它的语句之后</p>
+  <pre>
+  1.
+    sayHi();
+    function sayHi(){ alert("hi") }  //先把函数声明提前，
+    正确的方式
+
+    { 执行顺序
+      sayHi  // 函数声明提前  变量储存函数指针
+      sayHi();
+
+      function sayHi(){  }  // sayHi  指针指向这里
+    }
+  </pre>
+  <br />
+  <button onclick="getOutError()">下面函数抛出错误</button>
+  <pre>
+  2. 匿名函数
+    sayHi();
+    var sayHi = function(){ alert("hi") }
+
+    // sayHi is not 
+    
+    { 
+        执行顺序
+
+        var sayHi;  //  变量声明提前  sayHi 为空
+        sayHi();    // 此时执行 sayHi() 函数  抛出错误 sayHi is not a function
+        sayHi = function(){ alert("hi") }  //  函数执行到这才给 sayHi 变量赋值 指针
+        
+    }
+
+    这里对函数进行了初始化,代码执行出错
+  </pre>
+
+  <script type="text/javascript">
+    function getOutError(){
+      try{
+        sayHi();
+        throw new error( "var sayHi = function(){ alert('hi') }" );
+        // 或者 throw ( "var sayHi = function(){ alert('hi') }" );
+      }catch(error){
+        alert(error + "，在sayHi()之后");
+      }finally{ 
+        alert("正确写法 : \n sayHi();\n function sayHi(){ alert('hi') }");
+      }
+
+      var sayHi = function(){ alert("hi") }
+    }
+  </script>
+  <p>根据条件生成函数</p>
+  <pre>
+    var sayHi;
+    if(condition){ 
+      sayHi = function(){ return "hi" }
+    }else { 
+      sayHi = function(){ return "yo" }
+    }
+
+    错误：
+    if( condition ){ 
+      function sayHi(){ return "hi" }
+    }else{
+      function sayHi(){ return "yo" }
+    }
+  </pre>
+  <br /><br />
+  <p class="fz18">数组排列的sort方法，能接受一个函数</p>
+  <div>
+    <p>输出结果</p>
+    <p id="result"></p>
+  </div>
+  <button onclick="sortObjArr()">给sort传递函数</button>
+  <script type="text/javascript">
+    function sortObjArr(){
+      var objArr = [{ age : 18, pos : "AH",phone : "155555" },{ age : 26, pos : "AH",phone : "155555" },{ age : 80, pos : "AH",phone : "155555" },{ age : 16, pos : "AH",phone : "155555" },{ age : 20, pos : "AH",phone : "1555" }];
+      function createComparisonFunction(prototypeName){ 
+        return function(obj1,obj2){   //obj1,obj2 => objArr[i]
+          var val1 = obj1[prototypeName],val2=obj2[prototypeName];
+          if( val1 < val2 ){ return -1 }
+          if( val1 == val2 ){ return 0 }
+          if( val1 > val2 ){ return 1 }
+        }
+      }
+      var jsonTxt = JSON.stringify( objArr.sort(createComparisonFunction("age")) );
+      result.innerText = jsonTxt;
+    }
+  </script>
+  <pre>
+    function sortObjArr(){
+      var objArr = [{ age : 18, pos : "AH",phone : "155555" },{ age : 26, pos : "AH",phone : "155555" },{ age : 80, pos : "AH",phone : "155555" },{ age : 16, pos : "AH",phone : "155555" },{ age : 20, pos : "AH",phone : "1555" }];
+      function createComparisonFunction(prototypeName){ 
+        return function(obj1,obj2){ 
+          var val1 = obj1[prototypeName],val2=obj2[prototypeName];
+          if( val1 < val2 ){ return -1 }
+          if( val1 == val2 ){ return 0 }
+          if( val1 > val2 ){ return 1 }
+        }
+      }
+    }
+  </pre>
+  <br />
+  <br />
+  <br />
+  <br />
+  <h2>递归</h2>
+  <p class="fz18">函数自身调用自身的情况</p>
+  <button onclick="factorialFun()">运行下边的factorial函数</button>
+  <button onclick="changeFun()">运行下边的changeFun函数</button>
+  <pre>
+    function factorial(num){
+      if( num &lt;= 1 ){ return 1; }else{ return num*factorial(num-1) }
+    }
+    var changeFun = factorial;
+  </pre>
+  <script type="text/javascript">
+    function factorial(num){
+      if( num <= 1 ){ 
+        return 1; 
+      }else{ 
+        // return num*factorial( num-1 ); // 这样的写法受作用域的限制
+        return num*arguments.callee(num-1); //
+      }
+    };
+    function factorialFun(){ 
+      var factorialNum = factorial( 5 );
+      alert( factorialNum );
+    };
+    function changeFun(){ 
+      var factorialTwo = factorial;  // factorial 是一个全局函数 因此不会有影响
+      try{ 
+        var twoNum = factorialTwo(6);
+        alert(twoNum);
+      }catch(e){ 
+        alert( e.message );
+      }
+    }
+  </script>
+  <br />
+  <br />
+  <br />
+  <h1>以下不懂</h1>
+  <h3>闭包</h3>
+  <p class="fz18">闭包是指有权访问另一个函数作用域中的变量的函数，创建闭包的方式在一个函数中返回另一个函数</p>
+  <p class="fz14">
+    理解：<br />
+    1.闭包是一个函数<br />
+    2.该函数能访问另一个作用域中的变量
+  </p>
+  <br />
+  <pre>
+    createComparisonFunction(prototypeName){ 
+      return function(obj1,obj2) { 
+        var val1 = obj1[prototypeName],obj2 = obj2[prototype];
+        if( val1 &lt; val2 ){ 
+          return -1
+        }else if( val1 &gt; val2 ){ 
+          return 1
+        }else { 
+          return 0;
+        }
+      }
+    }
+  </pre>
+  <p class="fz14">返回的内部函数，在其他地方调用时，任然可以访问其执行环境中的变量，因为被返回出来的内部函数的指针中包含有其执行环境中逐级作用域的指针</p>
+  <button onclick="closure()">运行闭包函数</button>
+  <script type="text/javascript">
+    function closure(){ 
+
+      function createComparisonFunction( prototypeName ){ 
+        return function(obj1,obj2){
+          var val1 = obj1[prototypeName],val2 = obj2[prototypeName];
+          if( val1 < val2 ){
+            return -1
+          }else if( val1 > val2 ){
+            return 1 
+          }else{ 
+            return 0;
+          }
+        }
+      };
+      var ageArr = [{age : 18},{age : 10},{age : 120},{age : 110},{age : 5}];
+
+      var directComparison = createComparisonFunction("age");    //活动对象
+
+      var result = ageArr.sort(createComparisonFunction("age"));
+      //var result = directComparison({age : 18},{age : 10});
+      console.log( result );
+
+      console.log( directComparison );
+
+      directConparison = null;
+
+    }
+    
+  </script>
+  <br />
+  <br />
+  <br />
+  <h3>闭包与变量</h3>
+  <p class="fz16">作用域链的副作用：闭包只能取得任何变量中的最后一个值。</p>
+  <button onclick="errorFun()">作用域链的副作用</button>
+  <pre>
+    var errorResult = null;
+    function errorFun(){ 
+      function createFunction(){ 
+        var funArray = new Array();
+        for(var i = 0; i < 10; i++){ 
+          funArray[i] = function(){    //内部函数没有执行
+            alert( i );
+          }
+        }
+        return funArray;
+      }
+      errorResult = createFunction();
+      for(var index = 0; index < errorResult.length; index++ ){  
+        errorResult[index]();     // 每一次返回的都是 10
+      }
+    }
+  </pre>
+  <p class="fz16">
+    数组中每一个函数的作用域链中都保存着createFunction()函数的活动对象。所以他们每一次都引用的是同一个变量i = 10;
+  </p>
+  <p class="fz16">以下函数没有用到闭包</p>
+  <script type="text/javascript">
+    var errorResult = null;
+    function errorFun(){ 
+      function createFunction(){ 
+        var funArray = new Array();
+        for(var i = 0; i < 10; i++){ 
+          funArray[i] = function(){   //内部函数自调，函数执行了<!--  -->
+            alert( i );
+          }
+        }
+        return funArray;
+      }
+      errorResult = createFunction();
+      for(var index = 0; index < errorResult.length; index++ ){ 
+        errorResult[index]();
+      }
+    }
+  </script>
+  <p class="fz16">
+    错误原因：<br />
+    1.错函数上看，数组中每一个函数都应该返回各自的下标，但实际上每个函数都返回10；<br />
+    2.每个函数的作用域链中都保存着 createFunction() 函数对象，所以他们都引用同一个变量i；<br />
+    3.当createFunction()函数执行返回后，变量i的值是10，而每个函数都同时引用变量i;<br />
+    4.闭包的作用域链：有内部函数作用域链逐级向上，直到window
+    <img src="bibao_scope_chain.png" alt="" />
+  </p>
+  <br />
+  <br />
+  <br />
+  <br />
+  <br />
+  <p class="fz18">正确的方法</p>
+  <p class="fz14">用到闭包</p>
+  <pre>
+    var trueArray = null;
+    function trueFun(){ 
+      function createFunction(){
+        var funArray = new Array();
+        for(var i = 0; i < 10; i++){ 
+          funArray[i] = function(num){
+            return function(){ 
+              alert( num );
+            }
+          }(i);
+        }
+        return funArray;
+      }
+      trueArray = createFunction();
+      
+      for(var index = 0; index < trueArray.length; index++ ){ 
+        trueArray[index]();
+      }
+    }
+  </pre>
+  <button onclick="trueFun()">上述正确的做法</button>
+  <script type="text/javascript">
+    var trueArray = null;
+    function trueFun(){ 
+      function createFunction(){
+        var funArray = new Array();
+        for(var i = 0; i < 10; i++){ 
+          funArray[i] = function(num){         //自调函数
+            return function(){ 
+              alert( num );
+            }
+          }(i);
+        }
+        return funArray;
+      }
+      trueArray = createFunction();
+      
+      for(var index = 0; index < trueArray.length; index++ ){ 
+        trueArray[index]();
+      }
+    }
+  </script>
+  <p>page201页</p>
+  
+
+</body>
+</html>

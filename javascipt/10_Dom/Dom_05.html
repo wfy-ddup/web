@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>Dom_05</title>
+</head>
+<body>
+<div class="box">
+  <div class="independent_block">
+    <h3>创建元素</h3>
+    <p class="fz20">document.createElement()方法创建新元素。这个方法接受一个参数，及要创建元素的标签。参数最好保持区分大小写。</p>
+    <div class="small_block">
+      var div = document.createElement("div");<br />
+      可以直接操作元素的特性进行添加子节点 <br />
+      div.id = "div_01";<br />
+      div.className = "specified_div"<br />
+      document.body.appendChild(div);
+    </div>
+    <p class="fz16">
+    在ie中使用另一种方式使用createElement() <br />
+    var iframe = document.createElement("&lt;div id=\"my_div\">&lt;/div>") <br />
+    为什么试过不起作用呢
+    </p>
+  </div>
+
+  <div class="independent_block">
+    <p class="fz24">元素的子节点</p>
+    <div class="">
+      <ul id="myList">
+        <li class="item">1</li>
+        <li class="item">2</li>
+        <li class="item">3</li>
+      </ul>
+    </div>
+    <pre>
+      如下边：
+      &lt;ul id="myList">
+        &lt;li class="item">1&lt;/li>
+        &lt;li class="item">2&lt;/li>
+        &lt;li class="item">3&lt;/li>
+      &lt;/ul>
+    </pre>
+    <p class="fz14">在ie8以下及兼容模式打印出来的是3，其他浏览器是7；因为ie8以下及兼容模式下childNodes不包含文本节点，在去掉空格的情况下，这是相同的</p>
+    <script type="text/javascript">
+      function getSon(){ 
+        var son = document.getElementById("myList").childNodes;
+        console.log(son.length);
+
+        function traverse(){
+          for(var i = 0 , arr = [] , len = son.length ; i < len; i++){
+            if( son[i].nodeType == 1 ){
+              arr.push(son[i]);
+            }
+          }
+          console.log(arr);
+        }
+
+        return traverse;
+
+      }
+    </script>
+    <button onclick="getSon()">使用childNodes在ie下输出myList的子节点</button><br />
+    <button onclick="getSon()()">使用节点类型来遍历子节点，对符合条件的子节点进行操作</button>
+  </div>
+
+  <div class="independent_block">
+    <p class="fz24">text类型</p>
+    <p class="ti2em">text类型包含有：文本，空格，换行</p>
+    <pre class="fz20">
+    
+
+      这是文本节点的操作，不是作用在nodeValue上的
+
+
+      nodeType  3
+      nodeValue 节点的内容
+      nodeName  #text
+      parentNode Element
+      appendData(text)  将text添加到节点的末尾
+      deleteData(start,count)  从开始位置删除，删除几个字符窜
+      insertData(start,text)   从开始位置插入，插入的字符窜
+      replaceData(start,count,text) 从开始位置特换，特换字符窜的个数，替换的字符窜
+      splitData(start)  从指定位置开始，将字符窜截成两个文本
+      substringData(start,count)  提取start位置开始字符串，提取的总数
+    </pre>
+    <p class="fz18 cor_red">与数组的方式很想象</p>
+    <pre class="fz20">
+      数组的一些操作方法
+      var arr1 = ["w","f","y"];
+      var arr2 = ["l","y","y"];
+
+      concat();拼接
+      arr1.concat(arr2);  将两个数组拼接起来 ["w","f","y","l","y","y"]
+
+      slice();提取
+      arr1.slice(1,2);   含头不含尾，提取两个，元素组不便
+
+      substring() 对字符串的提取  window.location.search 中有用到过
+
+      splice();  可删除，替换，插入   返回被删除项组成的数组
+      
+    </pre>
+
+    <div id="test_text">返回被删除项组成的数组</div>
+    <script type="text/javascript">
+      function testTextType(){
+        var tt = document.getElementById("test_text").firstChild;
+        console.log(tt.nodeType);
+        console.log(tt.nodeName);
+        console.log(tt.nodeValue);
+        tt.appendData("text");
+        //tt.deleteData(1,4);
+      }
+    </script>
+    <button onclick="testTextType()">试试#text的方法</button>
+    <br /><br />
+    <p class="fz24">创建文本节点</p>
+    <p class="ti2em">document.createTextNode()创建文本节点，这个方法接受一个参数--要参入节点的文本。</p>
+    <p class="fz18">如：var txtNode = document.createTextNode("&lt;strong>hello&lt;/strong>world!");</p>
+    <div class="test_01" id="test_01" style="height:100px;"></div>
+    输入为本：<input type="text" name="ipt_01" />
+    <script type="text/javascript">
+      function createTxt(){
+        var elem = document.createElement("p");
+        elem.className = "p1";
+        var txt = document.getElementsByName("ipt_01")[0].value;
+        if(txt.length == 0){ return false }
+
+        var txtNode = document.createTextNode(txt);
+        elem.appendChild(txtNode)
+
+        var other = document.createTextNode("hello world");
+        elem.appendChild(other);
+
+        var anther = document.createTextNode("能看出效果吗");
+        elem.appendChild(other);
+
+        //elem.normalize();
+        test_01.appendChild(elem);
+      }
+    </script>
+    <button onclick="createTxt()">创建文本</button>
+    <p class="fz16">规范化文本节点 normalize():用于在向一个节点中添加多个文本时，取消文本之间空格</p>
+    <p class="">同级节点彼此之间没有空格</p>
+
+    <p class="fz16">splitText()分隔文本节点</p>
+
+  </div>
+
+  <div class="independent_block">
+    <h3>Comment 类型</h3>
+    <p class="fz14">注释在DOM中时通过Comment类型来表示的。Comment节点具有下列特征：</p>
+    <pre>
+      nodeType 8
+      nodeName #comment
+      nodeValue 注释的内容
+      parentNode Document / Element
+    </pre>
+    <div id="comment_div">
+      <!--A Comment-->
+    </div>
+    <script type="text/javascript">
+      function testComment(){ 
+        var comment = comment_div.childNodes.item(1);
+        console.log(comment.nodeType);
+        console.log(comment.nodeName);
+        console.log(comment.nodeValue);
+      }
+    </script>
+    <button onclick="testComment()">Comment类型</button>
+    <br />
+    <br />
+    <br />
+    <p class="fz16">CDATASection类型：只针对XML的文档</p>
+    <div class=""><![CDATA[this is some Content]]></div>
+    <p class="fz16">DocumentType类型：近有FireFox,Safari,Opera支持</p>
+    <br />
+    <br />
+    <br />
+    <p class="fz24">DocumentFragment类型</p>
+    <p class="fz16">DocumentFragment在文档中没有对应的标记。DOM规定文档片段（document fragment）是一种“轻量级”的文档</p>
+    <pre>
+      nodeType 11
+      nodeName #document-fragment
+      nodeValue null
+      parentNode null
+    </pre>
+    <p class="fz14">
+      文本片段不能直接添加到文档中，可以将它作为一个“仓库”来使用<br />
+      使用 <strong class="fz16">document.createDocumentFragment()</strong> 方法创建
+    </p>
+    <ul class="list_style_ul_02" id="myListTwo"></ul> 
+    <script type="text/javascript">
+      function testFragment(){
+        var fragment = document.createDocumentFragment();
+        var ul = document.getElementById("myListTwo");
+        var li = null;
+        for(var i = 0; i < 5; i++){ 
+          li = document.createElement("li");
+          li.appendChild(  document.createTextNode("item"+(i+1)) );
+          fragment.appendChild(li);
+        }
+        ul.appendChild(fragment);
+      }
+    </script>
+    <button onclick="testFragment()">document.createDocmentFragment()</button>
+    <br />
+    <br />
+    <br />
+    <p class="fz24">Attr类型</p>
+    <pre>
+      nodeType 11
+      nodeName 特性的属性
+      nodeValue 特性的值
+      parentNode null
+    </pre>
+    <p class="fz16" id="beforeExemple">
+      之前的例子<br />
+      var attr = document.createAttribute("date-time");<br />
+      attr.value = new Date().getTime();
+      beforeExemple.setAttributeNode(attr);
+    </p>
+    <p class="fz16">
+      attr对象有3个属性：name,value,specified.  name特性名称nodeName，value特性的值nodeValue,specified是一个布尔值。
+    </p>
+    <p class="fz16">最长使用的是getAttribute("attrName"),setAttribute("attrName","value"),removeAttribute("attrName")</p>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+</body>
+</html>

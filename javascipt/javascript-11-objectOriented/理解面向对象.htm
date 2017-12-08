@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>面向对象的程序设计</title>
+</head>
+<body>
+  <div class="box">
+    <h2>面向对象的程序设计</h2>
+    <p>对象的定义：无序属性的集合，其属性可以包括基本值，对象或者函数。（对象时一组没有特定顺序的值。对象的属性和方法都有一个名字，每个名字都映射到一个值。）</p>  
+    <h3>对象的理解</h3>
+    <p class="ti2em">最简单方式就是创建一个Object的实例，然后再为他添加属性和方法</p>
+    <pre>
+      如：
+        var person = new Object();
+        person.name = "nicholas";
+        person.age = 29;
+        person.job = "software Engineer";
+        person.sayName = function(){
+          alert(this.name);
+        }
+    </pre>
+    <p class="ti2em">person的对象，为它添加了三个属性（name,age,job）和一个方法（sayName）;是通过构造函数来创建的</p>
+    <p class="ti2em">通过对象字面量方式创建</p>
+    <button onclick="personName()">person-sayName</button>
+    <pre>
+      如：
+        var person = {
+          name : "nicholas",
+          age : 29,
+          job : "software Engineer",
+          sayName : function(){
+            alert(this.name);
+          }
+        }
+    </pre>
+    <script type="text/javascript">
+      function personName(){
+        var person = {
+          name : "nicholas",
+          age : 29,
+          job : "software Engineer",
+          sayName : function(){
+            alert(this.name);
+          }
+        }
+        person.sayName();
+      }
+    </script> 
+    <h4>属性类型</h4>
+    <p class="ti2em">[[Configurable]]:表示能否通过delete删除属性从而重写属性，能否修改属性的特性，能否把属性修改为访问属性（true or false）</p>
+    <p class="ti2em">[[Enumberable]] : 能否通过for-in循环返回属性(true or false)</p>
+    <p class="ti2em">[[Writable]] : 能否修改属性的值</p>
+    <p class="ti2em">[[Value]] : 包含这个属性的数据值。读取属性值的时候，从这个位置读，写入属性的时候把新值保存在这个位置。默认为undefined</p>
+    <pre>
+      如：
+        var person = {
+          name : "nicholas"
+        }
+    </pre>
+    <p class="fz20 ti2em">要修改某个对象默认的特性：必须使用objec.defineProperty()方法</p>
+    <p class="ti2em">object.defineProperty()方法：要修改属性的对象，对象的属性名称，描述符对象</p>
+    <p class="ti2em">描述符对象属性必须是：configurable,enumberabe,writable 和 value (属性名琛的值)</p>
+    <button onclick="amendObjectProperty()">修改对象的数据属性</button>
+    <pre>
+      如：  
+          var person = {};
+          Object.defineProperty(person,"name",{  //修改了person对象，name的数据属性
+            writable : false,   //  将name的数据属性设置为  不可修改的
+            value : "nicholas"
+          });
+          alert(person.name);
+          person.name = "wfy";
+          alert(person.name);
+    </pre>
+    <script type="text/javascript">
+      function amendObjectProperty(){
+        var person = {};
+        Object.defineProperty(person,"name",{
+          writable : false,
+          value : "nicholas"
+        });
+        alert(person.name);
+        person.name = "wfy";
+        alert(person.name);
+      }
+    </script>
+    <h4>访问器属性</h4>
+    <p class="ti2em fz20">包含两个函数：getter()和setter()方法。</p>
+    <p class="ti2em">在读取访问器属性时，调用getter()函数返回有效值</p>
+    <p class="ti2em">在写入访问器属性时，调用setter()函数，进行处理</p>
+    <button onclick="objectGetSetFun()">对象的get()，set()方法</button>
+    <pre>
+      如： 
+        var book = {
+          _year : 2004,         // 下划线是常用的标记，表示只能通过对象方法访问的属性
+          edition : 1
+        };
+        Object.defineProperty(book,"year",{
+          get : function(){
+            return this._year;
+          },
+          set : function(newValue){     //newValue  是year设置的新值
+            if(newValue > 2004){
+              this._year = newValue;
+              this.edition += newValue-2004;
+            }
+          }
+        });
+        book.year = 2005;
+        alert(book.edition);
+    </pre>
+    <script type="text/javascript">
+      function objectGetSetFun(){
+        var book = {
+          _year : 2004,
+          edition : 1
+        };
+        Object.defineProperty(book,"year",{
+          get : function(){
+            return this._year;
+          },
+          set : function(val){
+            if(val > 2004){
+              this._year = val;
+              this.edition += val - 2004;
+            }
+          }
+        });
+        book.year = 2005;
+        for(key in book){alert(book[key]);}
+        alert(book.year);
+      }
+    </script>
+    <h4>定义多个属性</h4>
+    <p class="ti2em">Object.defineProperties()方法：接受两个参数，第一是要添加和修改的对象，第二个是要给第一个参数添加或修改的对象</p>
+    <button onclick="moreObjectProperty()">实验多个属性</button>
+    <pre>
+      如：
+        var book = {};
+        Object.defineProperties(book,{
+          _year : {
+            value : 2004
+          },
+          edition : {
+            value : 1
+          },
+          year : {
+            get : function(){
+              return this._year;
+            },
+            set : function(val){
+              if(val > 2004){
+                this._year = val;
+                this.edition += val - 2004;
+              }
+            }
+          }
+        });
+    </pre>
+    <script type="text/javascript">
+      function moreObjectProperty(){
+        var book = {};
+        Object.defineProperties(book,{
+          _year : {writable : true, value : 2004 },
+          edition : {writable : true, value : 1 },
+          year : {
+            get : function(){ return this._year },
+            set : function(val){
+              if(val > 2004){
+                this._year = val;
+                this.edition += val - 2004;
+                console.log(val);
+              }
+            }
+          }
+
+        });
+        book.year = 2008;
+
+        alert(book._year);
+        alert(book.edition);
+        alert(book.year);
+      }
+    </script>
+    <p>chrome,ie上在执行此函数时要将_year的writable属性设置为true</p>
+    <h4>读取属性的特性</h4>
+    <p class="ti2em">Object.getOwnPropertyDescriptor()方法：传入两个参数 一个是对象，一个是该对象的属性名,返回一个对象</p>
+    <pre>
+        如：
+          var book = {};
+          Object.defineProperties(book,{
+            _year : {writable : true,value : 2004},
+            edition : {writable : true,value : 1},
+            year : {
+              get : function(){return this._year;},
+              set : function(val){
+                if(val > 2004){
+                  this._year = val;
+                  this.edition += val - 2004;
+                }
+              }
+            }
+          });
+          var descriptor = Object.getOwnPropertyDescriptor(book,"_year");
+          alert(descriptor.value)
+    </pre>
+    <p class="ti2em">上面是对一个对象的属性进行定义特性configurable:true/false(可重写,可删除)，enumberable:true/false;(可列举)，writable:true/false(可重写)，还有访问器属性get(),set()方法分别在读取和赋值的时候进行调用，但这些方法都只能通过对象的Object.defineProperty()方法和Object.defineProperties()（同事设置多个属性）方法进行设置</p>
+    <p class="ti2em">Object.getOwnPropertyDescriptor()方法：读取对象属性的特性</p>
+  </div>
+</body>
+</html>

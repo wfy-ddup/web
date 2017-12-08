@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>Document</title>
+</head>
+
+<body>
+  <div class='box'>
+    <h2>location对象</h2>
+    <p class="fz14">提供了党庆窗口中加载的文档有关的信息，还提供了了一些导航功能，window.location与documnet.location引用的是同一个对象。</p>
+    <h5>location对象的属性</h5>
+    <style type="text/css">
+      .table_01 tbody tr{ text-align:center; }
+    </style>
+    <table class="table_01 fz14" style="width:100%;">
+      <colgroup>
+        <col style="width:15%" />
+        <col style="width:35%" />
+        <col style="width:50%"/>
+      </colgroup>
+      <thead>
+        <tr>
+          <th class="fz20" colspan='3'>location对象的属性</th>
+        </tr>
+        <tr>
+          <th class="fwn fz18">属性名</th>
+          <th class="fwn fz18">例子</th>
+          <th class="fwn fz18">解释</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>hash</td>
+          <td>#a1</td>
+          <td class="tal">返回URL中(#后面的内容--锚点),如果没有锚点则返回空字符串，</td>
+        </tr>
+        <tr>
+          <td>host</td>
+          <td>'127.0.0.1或www.baidu.com:80'</td>
+          <td class="tal">返回服务器名称和端口号（如果有端口号）</td>
+        </tr>
+        <tr>
+          <td>hostname</td>
+          <td>'127.0.0.1或www.baidu.com'</td>
+          <td class="tal">返回服务器地址不带端口号</td>
+        </tr>
+        <tr>
+          <td>href</td>
+          <td>"http://127.0.0.1/mine/&emsp;javascipt/8_BOM/BOM2.html"</td>
+          <td class="tal">返回当前页面完整URL，有锚点还包括锚点</td>
+        </tr>
+        <tr>
+          <td>pathname</td>
+          <td>"/mine/javascipt/8_BOM/BOM2.html"</td>
+          <td class="tal">返回window.location.href中的文件目录与文件夹名</td>
+        </tr>
+        <tr>
+          <td>port</td>
+          <td>"8080"或""</td>
+          <td class="tal">返回URL中指定的端口号，如果没有则返回空字符串</td>
+        </tr>
+         <tr>
+          <td>protocol</td>
+          <td>"http:"或"https:"</td>
+          <td class="tal">返回页面使用的协议</td>
+        </tr>
+         <tr>
+          <td>search</td>
+          <td>"?q=javascript"</td>
+          <td class="tal">返回url中传递的请求数据</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <br /><br />
+    <p class="fz16">查询字符串，查询请求传递的数据</p>
+    <pre>
+    注释都是不记得的
+
+      function getRequestStringArgs(){
+        // 查询页面的url中是否传递请求数据，如果有从第一位开始截取到最有以为      // q=javascript&h=wfy
+        var qs = window.location.search.length> 0 ? window.location.search.substring(1) : ''; 
+        var args = {};
+        //split() 以特定符号分割字符串，如果没有传入符号或者字符串中没有相应的符号则将字符串整体放入一个数组中，如果传入的是空字符串则将字符串分开到数组每一项
+        var items = qs.length ? qs.split('&') : [];    //qs.split('&') 以&截取保存到数组中.items.length至少为1
+        var item = null;
+        var name = null;
+        var value = null;
+        for(var i = 0; i&lt;items.length;i++){ 
+          item = items[i].split("=");
+          name = decodeURIComponent(item[0]);       //decodeURIComponent()解码    decodeURI()编码
+          value = decodeURIComponent(item[1]);
+          if(name.length){ args[name] = value; }    // args['字符串']，访问对象或给对象添加属性的另一种方式
+        }
+        return args;
+      }
+
+      function getRequestMsg(){
+        var requestMsg = getRequestStringArgs();
+        console.log(requestMsg);
+      }
+    </pre>
+    <button onclick="getRequestMsg()">查询请求传递的数据</button>
+    <p>测试前在url后面加上 ?q=javascrit&h=wfy</p>
+    <script type="text/javascript">
+      function getRequestStringArgs(){
+        var qs = window.location.search.length > 0 ? window.location.search.substring(1) : '';
+        var args = {};
+        var items = qs.length ? qs.split('&') : [];  //qs.split('&') 以&截取保存到数组中 
+        var item = null;
+        var name = null;
+        var value = null;
+        for(var i = 0; i<items.length;i++){ 
+          item = items[i].split("=");
+          name = decodeURIComponent(item[0]);  
+          value = decodeURIComponent(item[1]);
+          if(name.length){ args[name] = value; }
+        }
+        return args;
+      }
+
+      function getRequestMsg(){
+        var requestMsg = getRequestStringArgs();
+        console.log(requestMsg);
+      }
+    </script>
+    <br /><br />
+
+    <h3>网站访问位置的操作</h3>
+    <p>利用上面的location属性进行修改网站的地址</p>
+    <button onclick="goBd()">通过location.href访问百度</button>
+    <script type="text/javascript">
+      function goBd(){ 
+        window.location.href = 'http://www.baidu.com';
+      }
+    </script>
+    <br /><br />
+    <button onclick='neverBack()'>无法返回的访问百度,window.location.replace('http://www.baidu.com'),网页首次打开</button>
+    <script type="text/javascript">
+      function neverBack(){ 
+        setTimeout(function(){
+          location.replace('http://www.baidu.com')
+        },1000)
+      }
+    </script>
+    <br /><br />
+    <button onclick='reloadWeb()'>reload()重新加载页面</button>
+    <p>
+      window.location.reload();//重新加载，可能从缓存中重新加载<br />
+      window.location.reload(true); //重新加载，重服务器上重新加载
+    </p>
+    <script type="text/javascript">
+      function reloadWeb(){ 
+        setTimeout(function(){window.location.reload(true)},1000)
+      }
+    </script> 
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <h2>navigator对象</h2>
+    <p class="fz20">ie.chrome/safari.opera.firefox都有的对象</p>
+    <table class="table_01" style="width:100%;">
+      <colgroup>
+        <col style="width:20%"/>
+        <col style="width:40%"/>
+        <col style="width:10%"/>
+        <col style="width:10%"/>
+        <col style="width:10%"/>
+        <col style="width:10%"/>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>属性方法</th>
+          <th>说明</th>
+          <th>IE</th>
+          <th>Firefox</th>
+          <th>safari/chrome</th>
+          <th>Opera</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>appCodeName</td>
+          <td class="tal">浏览器名称，通常是mozilla，非Mozilla浏览器也是</td>
+          <td>3.0+</td>
+          <td>1.0+</td>
+          <td>1.0+</td>
+          <td>7.0+</td>
+        </tr>
+        <tr>
+          <td>appName</td>
+          <td class="tal">浏览器完整名称</td>
+          <td>3.0+</td>
+          <td>1.0+</td>
+          <td>1.0+</td>
+          <td>7.0+</td>
+        </tr>
+        <tr>
+          <td>appVersion</td>
+          <td class="tal">版本信息，一般与实际浏览器版本不对应</td>
+          <td>3.0+</td>
+          <td>1.0+</td>
+          <td>1.0+</td>
+          <td>7.0+</td>
+        </tr>
+        <tr>
+          <td>cookieEnable</td>
+          <td class="tal">是否开启cookie 返回true与false</td>
+          <td>4.0+</td>
+          <td>1.0+</td>
+          <td>1.0+</td>
+          <td>7.0+</td>
+        </tr>
+        <tr>
+          <td>javaEnable()</td>
+          <td class="tal">浏览器是否启用java</td>
+          <td>4.0+</td>
+          <td>1.0+</td>
+          <td>1.0+</td>
+          <td>7.0+</td>
+        </tr>
+        <tr>
+          <td>platform</td>
+          <td class="tal">浏览器所在的系统平台</td>
+          <td>3.0+</td>
+          <td>1.0+</td>
+          <td>1.0+</td>
+          <td>7.0+</td>
+        </tr>
+        <tr>
+          <td>plugins</td>
+          <td class="tal">浏览器中的插件信息数组</td>
+          <td>4.0+</td>
+          <td>1.0+</td>
+          <td>1.0+</td>
+          <td>7.0+</td>
+        </tr>
+        <tr>
+          <td>userAgent</td>
+          <td class="tal">浏览器用户代理字符串</td>
+          <td>4.0+</td>
+          <td>1.0+</td>
+          <td>1.0+</td>
+          <td>7.0+</td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+    <br />
+    <br />
+    <p class="20">检测插件</p>
+    <pre>
+      function searchPlugins(){
+        function hasPlugins(name){ 
+          name = name.toLowerCase();
+          for(var i = 0; i < window.navigator.plugins.length;i++){ 
+            if( window.navigator.plugins[i].name.toLowerCase().indexOf(name) > -1 ){ 
+              return true;
+              //console.log(window.navigator.plugins[i]);
+            }
+          }
+          return false;
+        }
+        var isHasFlash = hasPlugins('flash');
+        alert(isHasFlash);
+      }
+    </pre>
+    <button onclick='searchPlugins()'>检测flash插件，不支持ie</button>
+    <script type="text/javascript">
+      function searchPlugins(){
+        function hasPlugins(name){ 
+          name = name.toLowerCase();
+          for(var i = 0; i < window.navigator.plugins.length;i++){ 
+            if( window.navigator.plugins[i].name.toLowerCase().indexOf(name) > -1 ){ 
+              return true;
+              //console.log(window.navigator.plugins[i]);
+            }
+          }
+          return false;
+        }
+        var isHasFlash = hasPlugins('flash');
+        alert(isHasFlash);
+      }
+    </script>
+    <!-- [if IE]>
+      <script type="text/javascript">
+        function searchPlugins(){ 
+          function hasPlugins(name){
+             try{ 
+              new ActiveXobject(name);
+              return true;
+            }catch(ex){ 
+              return false;
+            }
+          
+          }
+         alert(hasPlugins('ShockwaveFlash.ShockwaveFlash'));
+         alert(hasPlugins('QuickTime.QuickTime'));
+        }
+      </script>
+      
+    <![endif] -->
+  <h2>8.32注册处理程序  p232</h2><br />
+  <br />
+  <br />
+  <h2>8.4screen对象  p233</h2>
+  
+  <button onclick='adjustScreenSize()'>调整屏幕的大小</button>
+  <p>window.resizeTo(window.screen.availWidth,window.screen.availHeight); 被禁用</p>
+  <script type="text/javascript">
+    function adjustScreenSize(){ 
+      window.resizeTo(window.screen.availWidth,window.screen.availHeight);
+    }
+  </script>
+  <br />
+  <br />
+  <br />
+  <h2>8.5 history对象</h2>
+  <p class="ti2em">保存用户的上网记录</p>
+  <table style="width:100%">
+    <colgroup>
+      <col style="width:50%"/>
+      <col style="width:50%;"/>
+    </colgroup>
+    <tbody>
+      <tr>
+        <td>window.history.go(-1)</td>
+        <td>后退一页</td>
+      </tr>
+      <tr>
+        <td>window.history.go(0)</td>
+        <td>刷新</td>
+      </tr>
+      <tr>
+        <td>window.location.reload(true)</td>
+        <td>重新从服务器加载</td>
+      </tr>
+      <tr>
+        <td>window.history.go(1)</td>
+        <td>前进一页</td>
+      </tr>
+      <tr>
+        <td>window.history.go(2)</td>
+        <td>前进二页</td>
+      </tr>
+      <tr>
+        <td>window.history.go('baidu.ocm')</td>
+        <td>访问最近访问的百度</td>
+      </tr>
+      <tr>
+        <td>window.history.back()</td>
+        <td>后退一页</td>
+      </tr>
+      <tr>
+        <td>window.history.forward()</td>
+        <td>前进一页</td>
+      </tr>
+    </tbody>
+  </table>
+  <button onclick='window.history.go(0)'>window.history.go(0)</button>
+  <button onclick='window.location.reload(true)'>window.location.reload(true)</button> 
+<!--   <script type="text/javascript" src="getInteger.js"></script>   -->
+</div>
+
+</body>
+</html>

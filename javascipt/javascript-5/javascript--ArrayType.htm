@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<style type="text/css">
+  pre { font-size:14px; }
+  .ti2em { text-indent:2em }
+</style>
+<title>Array类型（数组类型）</title>
+</head>
+<body>
+<h3>Array类型（数组类型）</h3>
+<p>在ECMAScript中数组每一项可以保存任何类型的数据</p>
+<hr />
+<p>数组的创建方法</p>
+<pre>
+
+  方法一:使用Array构造函数来
+    var colors = new Array()    //此处的new可以不用，直接colors = Array()
+    var colors = new Array(20)  //创建一个length为20的数组
+    var colors = new Array("#111","#222","#333")   //创建一个length为3，值分别为#111，#222，#333数组
+    如果在Array构造函数中直接添加参数时，如果传入的参数唯一并且是number类型，则会创建一个length为n的空数组 
+    如： arr = new Array(3) 不能这样写
+
+  方法二:使用数组字面量来表示 []
+    var colors = ["#111","#222","#333"];
+    var colors = [,,]       //不要这样写，ie8以下会识别成[ undefinedx3 ]
+</pre>
+<br />
+<p>length属性:不是制度属性，可以通过设置length属性想元素中移除或添加新项，但是移除过后就不能再恢复回来</p>
+<button onclick="arrLenChange()">改变数组的length</button>
+<pre>
+    通过设置length属性来向数组中移除或添加新项，但是移除后不能恢复回来
+    var arr = ["111","222","333"];
+    arr.length = 4;
+    arr.length = 2;
+    arr.length = 3;
+</pre>
+<div id="arrChange"></div>
+<script type="text/javascript">
+  function arrLenChange(){
+    var elems = document.getElementById("arrChange"),txt="";
+    var arr = ["111","222","333"];
+
+    elems.innerHTML += "开始时数组: " + arr + "\n\n\n\n" + "length: " +arr.length +  "<br>";
+    arr.length = 4;
+    elems.innerHTML += "当length为: " + arr.length + "\n\n\n\n" + "arr数组为:" + arr + "<br>";
+    arr.length = 2;
+    elems.innerHTML += "当length为: " + arr.length + "\n\n\n\n" + "arr数组为:" + arr + "<br>";
+    arr.length = 3;
+    elems.innerHTML += "当length为: " + arr.length + "\n\n\n\n" + "arr数组为:" + arr + "<br>";
+    elems.innerHTML += "数组通过length移除项后，不能恢复回来";
+  }
+</script>
+<p>读取与设置数组的值</p>
+<button onclick="changeArr()">数组的读取与设置</button>
+<pre>
+    var colors = ["red","blue","green"];
+    var names = [];
+    colors.length = 3;
+    names.length = 0;
+
+    读取数组：
+    arr[n]
+
+    改变数组的值：
+    arr[2] = "black";
+    arr[100] = 100100;     //如果设置的想中间有空项，数组的length会改变，空想继续空着
+
+    添加数组的值
+    arr.push("last") 或 arr[arr.length] = "last"      //从最后插入数据
+    arr.pop()                         //从尾部出，数组改变，越来越短
+    arr.unshift("first")             //从头开始插入数
+    arr.shift()                      //从头开始获取数据，数组改变，越来越短
+</pre>
+<script type="text/javascript">
+    function changeArr(){
+      var arr = ["red","blue","green"];
+      alert("读取数组的第一个： " + arr[0] + " 原数组为： " + arr);
+      arr[1] = "white";
+      alert("改变数组的第二个值: arr[1] = 'white' , 数组变为：" + arr);
+      arr[arr.length] = "black";
+      alert("数组最后插入一个值：arr[arr.length] = 'white' 或 arr.push('white'),数组为: " + arr);
+      arr.unshift("first");
+      alert("从数组开头插入一个值：arr.unshift('first'),数组为：" + arr);
+      arr.shift();
+      alert("从数组开头开始读取值：arr.shift() " + arr.shift() + " 数组为：" + arr + " 数组改变");
+
+    }
+</script>
+<br />
+<h3>数组的检测</h3>
+<pre>
+  使用 instanceof Array
+  arr = [];
+  arr instanceof Array       //true
+  arr instanceof Object      //true
+  arr instanceof RegExp;     //false
+
+  obj = {};
+  obj instanceof Array;     //false
+  obj instanceof Object;    //true
+  obj instanceof RegExp;    //false
+
+  reg =new RegExp() || /\d+/;
+  reg instanceof Array;      //false
+  reg instanceof Object;     //true
+  reg instanceof RegExp;     //true
+</pre>
+<br />
+<h3>装换方法</h3>
+<p>所有对象都具有toLocaleString(),toString(),valueOf()方法。</p>
+<p>toString()方法会返回有数组中每个值的字符串形式拼接而成的一个以逗号分隔的字符串。</p>
+<p>valueOf返回的是一个数组,如果是对象则字节返回对象</p>
+<p>toLocaleString(),toString()都返回数组每个值的字符串形式拼接而成的一个以逗号分隔的字符串，在对象中toString（），toLocaleString()的方法则要自定义</p>
+<p>valueOf()返回的是数组</p>
+<button onclick="transition()">toLocaleString(),toString(),valueOf()</button>
+<pre>
+    function transition(){
+      var person1 = {
+        toLocaleString : function(){
+          return "toLocaleString1";
+        },
+        toString : function(){
+          return "toString1";
+        },
+        valueOf : function(){
+          return "valueOf1"
+        }
+      };
+      var person2 = {
+        toLocaleString : function(){
+          return "toLocaleString2";
+        },
+        toString : function(){
+          return "toString2";
+        },
+        valueOf : function(){
+          return "valueOf2"
+        }
+      }
+
+      var people = [person1,person2];
+      alert("数组: "+people);
+      alert("toString: "+people.toString());
+      alert("toLocaleString: "+people.toLocaleString());
+      alert("valueOf: "+people.valueOf())
+    }
+</pre>
+<script type="text/javascript">
+  function transition(){
+    var person1 = {
+      toLocaleString : function(){
+        return "toLocaleString1";
+      },
+      toString : function(){
+        return "toString1";
+      },
+      valueOf : function(){
+        return "valueOf1"
+      }
+    };
+    var person2 = {
+      toLocaleString : function(){
+        return "toLocaleString2";
+      },
+      toString : function(){
+        return "toString2";
+      },
+      valueOf : function(){
+        return "valueOf2"
+      }
+    }
+
+    var people = [person1,person2];
+
+    alert("数组: "+people);
+    alert("toString: "+people.toString());
+    alert("toLocaleString: "+people.toLocaleString());
+    alert("valueOf: "+people.valueOf())
+  }
+</script>
+<p>输出数组数组时与toString()方法一样都是调用了每一项的toString()方法</p>
+<br />
+<h3>join()方法:</h3>
+<p class="ti2em">join(),以指定字符串作为分隔符，分隔数组每一项，以字符窜形式返回</p> 
+<p class="ti2em">如果join(),不指定分隔符 或分隔符为 undefined，则以逗号的方式分隔</p>
+<p>toLocaleString(),toString(),valueOf(),在默认情况下都会以 逗号分隔 的字符串的形式返回数组项</p>
+<pre>
+  var arr = ["0","00","000"];
+  var arrString = arr.join("|");       //arrString = "0|00|000"
+  var reArr = arrString.split("|");    //reArr = ["0","00","000"]
+</pre>
+<p>如果数组中有一项是 null 或者 undefined，那么join(),toLocaleString(),toString(),valueOf()的方法返回结果中以空字符串表示</p>
+<br />
+<h3>栈方法</h3>
+<p>数组可以表现像栈一样，可以插入和删除的数据结构</p>
+<p class="ti2em">push(),从尾部插入;pop(),从尾部读取</p>
+<button onclick="arrPush()">push()和pop()</button>
+<pre>
+  var colors = [];
+  colors.push("#f00")    //push()可以同时插入几个数据push(#f00","#fff")  返回的是数组的 length
+  colors.pop()           //pop()从数组尾部取值，返回的是 取出的值 数组length减一
+  colors.unshift()       //unshift()从头插入
+  colors.shift()         //从头部开始读取
+</pre>
+<script type="text/javascript">
+    function arrPush(){
+      var arr = [];
+      arr.push("#ff0","#f00");
+      alert("为数组添加两项push('#ff0','#f00') " + arr );
+      alert("从数组尾部项 pop() " + arr.pop() + " 数组变为 " + arr);
+    }
+</script>
+<p>ie7及之前的版本 unshift()会返回 undefined 而不是 数组的长度</p>
+</body>
+</html>
+ 

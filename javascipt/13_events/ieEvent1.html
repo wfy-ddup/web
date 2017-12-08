@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<script type="text/javascript" src="../publicJs/public.js"></script>
+<title>ie事件处理程序</title>
+</head>
+<body>
+  <div class="box">
+    <div class="independent_block">
+      <div id="test01">这是一个test01</div>
+      <p class="fz20">ie中的事件对象</p>
+      <p class="fz14">
+        要访问ie对象有几种不同的方式，取决于指定事件处理程序的方法，如果事件处理程序是使用attachEvent()添加的，n那么就会有一个event队形作为参数被传入事件处理程序函数中。<br>
+        attachEvent 的ie绑定事件，ie11视乎不支持，没有这个属性。
+      </p>
+      <script>
+        (function(){
+
+          function test1(event){
+              var e = event || window.event;
+              alert(e.type)
+            }
+          var btn =  document.getElementById("test01");
+
+          if(btn.addEventListener){
+            btn.addEventListener("click",test1,false);
+          }else{
+            btn.attachEvent("onclick",test1);
+          }
+          
+        })();
+      </script>
+      <p class="fz18">
+        ie的event对象同样也包含与创建它的事件相关的属性和方法。<br>
+        cancelBubble boolean o/i 默认为false，将其设置为true可以取消事件冒泡，stopPropagation()<br>
+        returnValue boolean o/i 默认为true，但将其设置为false可以取消事件的默认行为,preventDefault()<br>
+        srcElement element o 事件的目标<br>
+        type string o 被触发的事件类型
+      </p>
+      <input type="button" id="test02" value="test02">
+      <script>
+        (function(){
+          var btn = document.getElementById("test02");
+
+          btn.onclick = function(){
+            // 事件的目标是等于 this
+            alert(window.event.srcElement === this)
+          };
+
+          if(btn.addEventListener){
+            btn.addEventListener("click",function(event){
+              alert(event.srcElement === this);
+            },false);
+          }else{
+            btn.attachEvent("onclick",function(event){
+              alert(event.srcElement === this);
+            });
+          }
+        })();
+      </script>
+      <br>
+      <a href="www.baidu.com" id="test03">test03 取消默认事件，此链接就不会跳转了</a>
+      <script>
+        (function(){
+          var myLink = document.getElementById("test03");
+          myLink.onclick = function(event){
+            window.event.returnValue = false;
+          }
+        })();
+      </script>
+      <br>
+      <p class="fz18">跨浏览器的事件对象</p>
+      <pre>
+        var EventUtil = {
+          addHandler:function(element,type,handler){
+            // 此处的handler函数需要单独提出来写
+            if(element.addEventListener){
+              //DOM2 ie11 非ie11-
+              element.addElementListener(type,handler,false);
+            }else if(element.attachEvent){
+              //DOM2 ie10-
+              element.attachEvent("on"+type,handler);
+            }else{
+              //DOM0 ie
+              element["on"+type] = handler;
+            }
+          },
+          removeHandler:function(element,type,handler){
+            // 此处的handler函数需要单独提出来写
+            if(element.removeEventListener){
+              element.removeEventListener(type,handler);
+            }else if(element.detachEvent){
+              element.detachEvent("on"+type,handler)
+            }else{
+              element["on"+type] = null;
+            }
+          },
+          getEvent:function(event){
+            return event || window.event
+          },
+          getTarget:function(event){
+            var e = event || window.event;
+            return e.srcElement || e.target;
+          },
+          preventDefault:function(event){
+            var e = event || window.event;
+            if(e.preventDefault){
+              e.preventDefault();
+            }else{
+              e.returnValue = false;
+            }
+          },
+          stopPropagation:function(event){
+            var e = event || window.event;
+            if(e.stopPropagation){
+              e.stopPropagation();
+            }else{
+              e.cancelBubble = true;
+            }
+          }
+        }
+
+
+        var btn4 = document.getElementById("test04");
+        var link5 = document.getElementById("test05");
+        btn4.onclick = function(event){
+          var event = EventUtil.getEvent(event);
+          console.log("事件对象");console.log(event);
+          var target = EventUtil.getTarget(event);
+          console.log("目标元素");console.log(target);
+        }
+        link5.onclick = function(event){
+          var event = EventUtil.getEvent(event);
+          EventUtil.preventDefault(event);
+        }
+      </pre>
+      <input type="button" id="test04" value="test04"><br>
+      <a href="http://www.baidu.com" id="test05">test05 夸浏览器取消默认事件，此链接就不会跳转了</a>
+      <script>    
+        (function(){
+          var btn4 = document.getElementById("test04");
+          var link5 = document.getElementById("test05");
+          btn4.onclick = function(event){
+            var event = EventUtil.getEvent(event);
+            console.log("事件对象");console.log(event);
+            var target = EventUtil.getTarget(event);
+            console.log("目标元素");console.log(target);
+          }
+          link5.onclick = function(event){
+            var event = EventUtil.getEvent(event);
+            EventUtil.preventDefault(event);
+          }
+        })();
+      </script>
+    </div>
+    <div class="independent_block">
+      <p class="fz18">事件类型</p>
+      <p class="fz16">
+        UI事件：用户页面的元素交互触发<br>
+        焦点事件：元素获得或失去焦点是触发 focus blur<br>
+        鼠标事件：click.mouseover,mouseout,mousemove,mousedown,mouseup <br>
+        滚轮事件：鼠标滚动滚轮<br>
+        键盘事件：keydown,keyup (keyCode) <br>
+        合成事件：输入法编辑器输入字符是触发<br>
+        变动事件：当底层DOM发生变化时触发<br>
+      </p>
+      <pre>
+        DOMActivate  表示元素也被用户操作（通过鼠标 或 键盘）激活，DOM3中被废弃
+        load  当页面完全加载后在window上触发
+        unload  ??? 页面卸载后在window上触发
+        error javascript错误是window上触发
+        select  用户选择文本框（input select）时触发
+        resize  窗口或框架大小发生变化时触发
+        scroll  滚动是触发
+      </pre>
+      <p class="ov" style="width:200px;height:200px;">
+        <img id="myImage01" src="../images/1111.gif" style="width:100%;height:100%;" >
+      </p>
+      <script>
+        (function(){
+          var image = document.getElementById("myImage01");
+          EventUtil.addHandler(image,'load',function(event){
+            var event = EventUtil.getEvent(event);
+            //alert(EventUtil.getTarget(event).src);
+          });
+        })();
+      </script>
+      <br>
+      <div id="testArea01" style="height:200px;width:200px;margin: 0 auto;">
+        
+      </div>
+      <script>
+        EventUtil.addHandler(window,"load",function(){
+          var image = document.createElement("img");
+          EventUtil.addHandler(image,"load",function(event){
+            var event = EventUtil.getEvent(event);
+            console.log(EventUtil.getTarget(event).src);
+          });
+          document.getElementById("testArea01").appendChild(image);
+          image.style.cssText = "height:200px;width:200px";
+          image.src = "../images/1111.gif";
+        });
+
+        (function(){
+          EventUtil.addHandler(window,"load",function(){
+            var image = new Image();
+            EventUtil.addHandler(image,"load",function(event){
+              console.log("8M图片加载完成");
+              console.log("图片加载时间："+(Date.now()-beginTime));
+            });
+            image.src = "../images/000.gif";
+            var beginTime = Date.now();
+          });
+        })();
+      </script>
+      <pre>
+        script标签同样有load的事件，引入js
+
+        EventUtil.addHandler(window,"load",function(){
+          var script = document.createElement("script");
+          EventUtil.addHandler(script,"load",function(event){
+            console.log("js加载完成");
+            console.log("jquery加载时间："+(Date.now()-beginTime))
+          });
+          script.src = "../publicJs/jquery.js";
+          document.body.appendChild(script);
+          var beginTime = Date.now();
+        });
+      </pre>
+      <script>
+        (function(){
+          EventUtil.addHandler(window,"load",function(){
+            var script = document.createElement("script");
+            EventUtil.addHandler(script,"load",function(event){
+              console.log("js加载完成");
+              console.log("jquery加载时间："+(Date.now()-beginTime))
+            });
+            script.src = "../publicJs/jquery.js";
+            document.body.appendChild(script);
+            var beginTime = Date.now();
+          });
+        })();
+      </script>
+      <pre>
+        css 的加载
+        EventUtil.addHandler(window,"load",function(){
+          var linkObj = document.createElement("link");
+          link.type = "text/css";
+          link.rel = "styleSheet";
+          EventUtil.addHandler(linkObj,"load",function(){
+            console.log("css添加时间"+(Date.now()-begin))
+          });
+          document.getElementsByTagName("head")[0].appendChild(linkObj);
+          linkObj.href = "http://365jia.cn/sfCombine/css/8f912d0d1be2d619e573fecc18ce654b.css";
+          var begin = Date.now();
+        });
+      </pre>
+      <pre>
+        EventUtil.addHandler(window,"scroll",function(){});
+      </pre>
+      <script>
+        (function(){
+          EventUtil.addHandler(window,"load",function(){
+            var linkObj = document.createElement("link");
+            linkObj.type = "text/css";
+            linkObj.rel = "styleSheet";
+            EventUtil.addHandler(linkObj,"load",function(){
+              console.log("css添加时间"+(Date.now()-begin))
+            });
+            document.getElementsByTagName("head")[0].appendChild(linkObj);
+            linkObj.href = "http://365jia.cn/sfCombine/css/8f912d0d1be2d619e573fecc18ce654b.css";
+            var begin = Date.now();
+          });
+        })();
+      </script>
+      <pre>
+        resize 事件
+        当浏览器窗口被调整到一个新的高度或者宽度时，就会触发resize事件。
+        EventUtil.addhandler(window,"resize",function(){
+          alert("resized")
+        });
+      </pre>
+      <script>
+        (function(){
+          EventUtil.addHandler(window,"resize",function(){
+            var w = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+            console.log(w);
+          })
+        })();
+      </script>
+      <pre>
+        scroll 事件
+        Event.addHandler(window,"scroll",function(event){
+          if(document.compatMode == "CSS1Compat"){
+            var w = document.docuemtElement.scrollTop || document.body.scrollTop;
+            // document.documentElement.scrollTop  ie非兼容模式
+            // document.body.scrollTop ie兼容模式，chrome
+            console.log(document.documentElement.scrollTop);
+          }else{
+            console.log(document.body.scrollTop);
+          }
+        });
+      </pre>
+      <script>
+        (function(){
+          EventUtil.addHandler(window,"scroll",function(){
+            if(document.compatMode == "CSS1Compat"){
+              var h = document.documentElement.scrollTop || document.body.scrollTop;
+              console.log(h);
+            }else{
+              console.log(document.body.scrollTop);
+            }
+          })
+        })();
+      </script>
+      <pre>
+        scroll resize 事件中尽量不要有太多的计算，由于事件变化过快，大量的计算会导致浏览器反应明显变慢。
+      </pre>
+    </div>
+
+
+  </div>
+</body>
+</html>

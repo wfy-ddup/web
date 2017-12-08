@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<script type="text/javascript" src="FunAsArguments.js"></script>
+<title>作为值的函数（给函数出入函数）</title>
+</head>
+<body>
+ <h3>作为值的函数</h3> 
+ <button onclick="FunAsArgs()">将函数作为参数传递给另一个函数</button>
+ <p class="ti2em">函数本身就是个变量，所以函数也可以作为值来使用。</p>
+ <p class="ti2em">1.传递参数一样，把一个函数传递给另一个函数</p>
+ <p class="ti2em">2.将一个函数作为另一个函数的结果返回</p>
+ <pre>
+    1.将一个函数作为变量传递给另一个函数
+      如：
+          function callSomeFunction(someFunction,someArgument){
+            return someFunction(someArgument);
+          }
+    callSomeFuntion() 函数接受两个参数 ，一个是函数 ，一个是变量
+          function add10(num){
+            return num + 10;
+          }
+
+          var result = callSomeFunction(add10,10);   // 20
+
+          function getGreeting(name){
+            return "hello " + name;
+          }
+
+          var personName = callSomeFunction(getGreeting,"nichola");  //hello nichola
+ </pre>
+ <script type="text/javascript">
+    function FunAsArgs(){
+      function callSomeFunction(someFunction,argument){
+        return someFunction(argument);
+      }
+      function add10(num){
+        return num + 10;
+      }
+      alert(callSomeFunction(add10,10));
+      function getGreeting(name){
+        return "hello " + name;
+      }
+      alert(callSomeFunction(getGreeting,"nichola"));
+    }
+ </script>
+ <br />
+ <p>讲一个函数作为另一个函数的结果返回</p>
+ <p class="ti2em">使用数组方法sort()，给对象数组 data = [{name:"www",age:32},{name:"wfy",age:26}]; 排列</p>
+ <div id="FunAsArguments"></div>
+ <button onclick="objArrayArrange()">使用sort()方法按age大小排列</button>
+ <button onclick="changeUp()">不使用将一个函数作为另一个函数的结果返回</button>
+ <pre>
+    function createComparisonFunction(propertyName){     //propertyName
+      return function(obj1,obj2){
+        var value1 = obj1[propertyName],value2 = obj2[propertyName];
+        if(value1 < value2){
+          return -1;
+        }else if(value1 > value2){
+          return 1;
+        }else{
+          return 0;
+        }
+      }
+    }
+    var data = [{name:"000",age:32},{name:"www",age:26}];
+    data.sort(createComparisonFunction("age"));
+    // obj1 = arr[1];
+    // obj2 = arr[2];
+ </pre>
+ <p class="ti2em">函数中的obj，obj2分别是data数组中的data[i],data[i+1]</p>
+ <p class="ti2em">createComparisonFunction()函数始终返回的是内部函数执行的结果-1,0,1,sort()是通过判断createCompartisonFunction()返回的值进行判断大小的。</p>
+ <p class="ti2em">只是将以前的直接通过数组的值进行比较 换成了 数组中对象的某个属性的值进行比较</p>
+ <p class="ti2em">不影响结果，也可以改成</p>
+ <pre>
+      不使用将一个函数作为另一个函数的结果返回
+  function compare(value1,value2){
+    var val1 = value1.age , val2 = value2.age;
+    if(value1 < value2){
+        return -1;
+      }else if(value1 > value2){
+        return 1;
+      }else{
+        return 0;
+      }
+  }
+  var data = [{name:"000",age:32},{name:"www",age:26}];
+  data.sort(compare);
+ </pre>
+ <script type="text/javascript">
+  function changeUp(){
+    function compare(value1,value2){
+      var val1 = value1.age , val2 = value2.age;
+      if(val1 < val2){
+          return -1;
+        }else if(val1 > val2){
+          return 1;
+        }else{
+          return 0;
+        }
+    }
+    var data = [{name:"000",age:32},{name:"www",age:26}];
+    data.sort(compare);
+    var elem = document.querySelector("#FunAsArguments");
+    elem.innerHTML = JSON.stringify( data );
+  }
+ </script>
+</body>
+</html>

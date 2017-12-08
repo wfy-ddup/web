@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<title>检测类型--typeof--instanceof</title>
+<style type="text/css">
+  pre { font-size:14px; }
+</style>  
+</head>
+<body>
+  <h2>检测一个变量是不是基本数据类型typeof instanceof</h2>
+  <h3>typeof</h3>
+  <p>typeof操作符是确定一个变量是字符串，数值，布尔值，undefined的最佳工具，但变量如果是对象，null，数组则typeof都会返回 object</p>
+  <pre>
+    var s = "nicholas",
+        b =true,
+        num = 22,
+        u ,
+        n = null,
+        o = new Object();
+   alert(typeof s);  //string
+   alert(typeof b);  //boolean
+   alert(typeof num);//Number
+   alert(typeof u);  //undefined
+   alert(typeof n);  //object
+   alert(typeof o);  //object
+  </pre>
+  <p>typeof 检测 null , [] , {} 时 返回 object</p>
+  <br />
+  <h3 num="h3">instanceof</h3>
+  <p>instanceof （arr/obj/reg instanceof Array/Object/RegExp）只能判断数组，对象，正则表达式，是则返回true不是则返回false</p>
+  <button onclick="clickDetection()">点击判断</button>
+  <div id="write-box"></div> 
+  <pre>    [] {}               {}                   //ig {}
+    var arr = new Array() , obj = new Object() , reg = new RegExp , txt = '';
+      var countArr = [arr,obj,reg];
+      for(var key in countArr){
+        var isArr = countArr[key] instanceof Array ,
+            isReg = countArr[key] instanceof RegExp;
+        if(isArr){
+          txt += "countArr[" + key + "]" + "是数组(Array)";
+        }else if(!isArr && !isReg){
+          txt += "countArr[" + key + "]" + "是对象(Object)";
+        }else if(isReg){
+          txt += "countArr[" + key + "]" + "是正则(RegExp)";
+        }
+      }
+  </pre>
+  <script type="text/javascript">
+  function clickDetection(){
+      var arr = new Array() , obj = new Object() , reg = new RegExp , txt = '';
+      var countArr = [arr,obj,reg];
+      for(var key in countArr){
+        var isArr = countArr[key] instanceof Array ,
+            isReg = countArr[key] instanceof RegExp;
+        if(isArr){
+          txt += "countArr[" + key + "]" + "是数组(Array)<br/>";
+        }else if(!isArr && !isReg){
+          txt += "countArr[" + key + "]" + "是对象(Object)<br/>";
+        }else if(isReg){
+          txt += "countArr[" + key + "]" + "是正则(RegExp)";
+        }
+      }
+      document.getElementById('write-box').innerHTML = txt;
+   }
+  </script>
+  <p>instanceof 能判断Array,Object,RegExp（引用类型值）</p>
+  <p>在判断 数组 时，instanceof Array 与 instanceof Object 都会返回 true</p>
+  <p>在判断 正则 时，instanceof RegExp 与 instanceof Object 都会返回 true</p>
+</body>
+</html>

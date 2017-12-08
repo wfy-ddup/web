@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>对象之间的继承关系</title>
+</head>
+<body>
+<h2>对象之间的继承关系</h2>
+<p><img src="对象之间的继承关系.png" alt="" /></p>
+<button onclick="OOrelation()">对象之间的继承关系</button>
+<pre>
+  function SuperType(){ 
+    this.property = true;
+  } //构造函数1
+
+  SuperType.prototype.getSuperValue = function(){
+    return this.property;
+  } //构造函数的原型
+
+  function SubType(){
+    this.subproperty = false;
+  } //构造函数2
+
+  SubType.prototype = new SuperType(); //实例化构造函数2的原型对象为构造函数1的实例。  此时Subype.prototype的构造函数，为SuperType() 因为Subtype.prototype被重写的原因，此时Subtype.prototype中没有constructor属性，继承了SuperType构造函数原型对象的constructor属性
+
+  SubType.prototype.getSubValue = function(){
+    return this.subproperty;
+  } 
+
+  var instance = new SubType();  //instance的构造函数，为SuperType()
+  alert(instance.getSuperValue());
+
+  //原型的搜索机制
+  首先在实例中搜索--实例中没有在构造函数的原型对象中搜索（由于原型对象实现了继承）
+</pre>
+<br />
+<h3>默认的原型</h3>
+<div>
+  所有函数的默认原型（默认原型是一个对象）都是Object的实例，所以所有构造函数的原型对象都继承了toString(),valueOf()等方法
+  <img src="对象之间的继承关系2.png" alt="" />
+</div>
+<script type="text/javascript">
+  //对象之间的关系
+  function OOrelation(){
+    function SuperType(){
+      this.property = true;
+    }
+
+    SuperType.prototype.getSuperTypeValue = function(){
+      return this.property ;
+    }
+
+    function SubType(){
+      this.subProperty = false;
+    }
+
+    SubType.prototype = new SuperType();
+
+    SubType.prototype.getSubValue = function(){
+      return this.subProperty;
+    }
+
+    var instance = new SubType();
+    alert(instance.getSuperTypeValue());
+  };
+</script>
+<h3>确定原型和实例的关系</h3>
+<p class="ti2em">
+  两种方法<br />
+  1.使用 instanceof 操作符<br />
+  2.使用 isPrototypeOf()
+</p>
+<pre>
+  使用 instanceof
+
+  alert(instance instanceof Object); true    //
+  alert(instance instanceof SuperType);true  //SubType.prototype = new SuperType();
+  alert(instance instanceof SubType);true    //instance = new SubType();
+
+  原型对象之间的相互继承
+</pre>
+<br />
+<pre>
+  使用 isPrototypeOf()
+
+  alert(Object.prototype.isPrototypeOf(instance));   // true
+  alert(SuperType.prototype.isPrototypeOf(instance));//true
+  alert(SubType.prototype.isPrototypeOf(instance));  //true
+</pre>
+<button onclick="twoMethod()">instanceof操作符 与 isPrototypeOf()方法</button>
+<script type="text/javascript">
+  function twoMethod(){
+    function SuperType(){ 
+      this.property = true;
+    }
+    SuperType.prototype.getPropertyValue = function (){ 
+      return this.Property;
+    }
+    function SubType(){ 
+      this.subProperty = false;
+    }
+    SubType.prototype = new SuperType();
+    SubType.prototype.getSubTypeValue = function(){ 
+      return this.subProperty;
+    }
+    var instance = new SubType();
+
+    alert(Object.prototype.isPrototypeOf( instance ));
+    alert(SuperType.prototype.isPrototypeOf( instance ));
+    alert(SubType.prototype.isPrototypeOf( instance ));
+  }
+</script>
+<h3>谨慎定义方法</h3>
+<button onclick="prudentUse()">给原型添加方法一定要放在替换原型语句之后</button>
+<p class="ti2em">给原型添加方法时一定要放在替换原型语句之后</p>
+<pre>
+  如：
+    function SuperType(){
+      this.property = true;
+    }
+
+    SuperType.prototype.getSuperTypeValue = function(){ 
+      return this.property;
+    }
+    function SubType(){
+      this.SubProperty = false;
+    }
+
+    SubType.prototype = new SuperType();
+    SubType.prototype.getSubTypeValue = function(){  //给SubType.prototype添加新方法
+      return this.SubProperty;
+    }
+    SubType.Prototype.getSuperTypeValue = function(){ //SubType.prototype添加getSuperTypeValuef方法时屏蔽了从SuperType.prototype中继承来的getSuperTypeValuef方法
+      return false;
+    }
+    var instance = new SubType();
+    alert(instance.getSuperTypeValue());  // false
+
+
+</pre>
+<script type="text/javascript">
+  function prudentUse(){ 
+
+    function SuperType(){ 
+      this.property = true;
+    }
+
+    SuperType.prototype.getSuperTypeValue = function(){
+      return this.property;
+    }
+
+    function SubType(){ 
+      this.subProperty = false;
+    }
+
+    SubType.prototype = new SuperType();
+
+    SubType.prototype.getSubTypeValue = function(){ 
+      return this.subProperty ;
+    }
+
+    SubType.prototype.getSuperTypeValue = function(){ 
+      return false;
+    }
+    //alert(SubType.prototype.constructor)
+    var instance = new SubType();
+    alert(instance.getSuperTypeValue());
+
+  }
+</script>
+<p class="fz18 ti2em">通过原型链实现继承时，不能使用对象字面量创建原型方法</p>
+<button onclick="errorMethod()">原型链实现继承后，不能使用对象字面量方法再从新创建原型方法</button>
+<pre>
+  如：
+  function SuperType(){ 
+    this.property = true;
+  }
+
+  SuperType.prototype.getSuperValue = function(){ 
+    return this.property;
+  }
+
+  function SubType(){ 
+    this.subProperty = false;
+  }
+
+  SubType.prototype = new SuperType();
+
+  SubType.prototype = { 
+    getSubValue : function(){ return this.subProperty },
+    someOtherMethod : function(){}
+  }
+
+  var instance = new SubType();
+
+  alert(instance.getSuperValue()) ; // error
+
+  上述代码在SubType.prototype继承SuperType原型后，再次使用对象字面量重新编写SubType的原型，切断了之前的继承的原型
+</pre>
+<script type="text/javascript">
+  function errorMethod(){  
+    function SuperType(){ 
+    this.property = true;
+    }
+
+    SuperType.prototype.getSuperValue = function(){ 
+      return this.property;
+    }
+
+    function SubType(){ 
+      this.subProperty = false;
+    }
+
+    SubType.prototype = new SuperType();
+
+    SubType.prototype = { 
+      getSubValue : function(){ return this.subProperty },
+      someOtherMethod : function(){}
+    }
+
+    var instance = new SubType();
+   /* alert( instance.getSuperValue() );*/
+    // error alert(instance.getSuperValue()) ;
+    try{
+     instance.getSuperValue();
+    }catch(e){
+     alert(e.message)
+    }
+  }
+</script>
+<h3>原型链的问题</h3>
+<button onclick="OOproblem()">原型链的问题</button>
+<pre>
+  function SuperType(){ 
+    this.colors = ["red","blue","green"];
+  }
+
+  function SubType(){}
+
+  SubType.prototype = new SuperType();  //这里继承了SuperType的原型，同时在SubType.prototype原型中继承了构造函数SuperType()的属性，所以在构造函数SubType()的原型中有引用类型的属性。所以SubType()的所有实例都能共享改属性，同时也能改变该属性
+
+  var instance1 = new SubType();
+  instance1.colors.push("black"); //前面了解过，原型对象中的属性是所有实例都能共享并且能改变的
+  var instance2 = new SubType();
+  alert(instance2.colors); //["red","blue","green","black"];
+
+  创建子类型的实例时，不能向超类型的构造函数中传递参数。但是能够屏蔽超类型中的属性
+</pre>
+<script type="text/javascript">
+  function OOproblem(){ 
+    function SuperType(){
+      this.colors = ["red","blue","green"];
+    }
+    function SubType(){}
+
+    SubType.prototype = new SuperType();
+    
+    var instance1 = new SubType();
+
+    instance1.colors.push("black");
+
+    var instance2 = new SubType();
+
+    alert( instance2.colors );
+  }
+</script>
+<h3>借用构造函数</h3>
+<button onclick="callConstructor()">使用call(),apply()绑定作用</button>
+<pre>
+  function SuperType(){ this.colors = ["red","blue","green"]; }
+  function SubType(){ SuperType.call(this) }
+
+  SubType.prototype = new SuperType();  //此时SubType.prototype中也有colors属性
+
+  var instance1 = new SubType();      //instance1的原型中也有colors属性， 但在调用SubType()时，在instance1中调用SuperType.call(this),重新创建一个colors属性而屏蔽了原型中的colors属性
+  instance1.colors.push("black");
+  var instance2 = new SubType();
+  alert(instance2.colors);
+</pre>
+<script type="text/javascript">
+  function callConstructor(){
+    function SuperType(){ this.colors = ["red","blue","green"] }
+    function SubType(){ SuperType.apply(this); }
+    SubType.prototype = new SuperType();
+
+    var instance1 = new SubType();
+    instance1.colors.push("black");
+    alert( instance1.colors );
+    var instance2 = new SubType();
+    alert(instance2.colors);
+  }
+</script>
+
+<p class="ti2em">借用构造函数绑定this时 传递参数</p>
+<button onclick="bindTransmit()">借用构造函数绑定this时，传递构造函数</button>
+<pre>
+  function SuperType(name){ this.name = name }
+  function SubType(){ SuperType.call(this,"nicholas");this.age = 29 }
+
+  var instance = new SubType();
+  alert( instance.name );
+  alert( instance.age );
+</pre>
+<script type="text/javascript">
+  function bindTransmit(){ 
+    function SuperType(name){ this.name = name }
+    function SubType(){ SuperType.apply(this,["nicholas"]);this.age = 29 }
+    var instance = new SubType();
+    alert( instance.name );
+    alert( instance.age );
+  }
+</script>
+<br />
+<h3>组合模式的使用</h3>
+<button onclick="useTwo()">组合模式使用</button>
+<pre>
+  function SuperType(name){ 
+    this.name = name;
+    this.colors = ["red","blue","green"];
+  }
+
+  SuperType.prototype.sayName = function(){ alert(this.name) }
+
+  function SubType(name,age){ 
+    SuperType.call(this,name);
+    this.age = age;
+  }
+
+  SubType.prototype = new SuperType();
+
+  SubType.prototype.sayAge = function(){ alert(this.age) };
+
+  var instance1 = new SubType("wfy",29);
+  instance1.sayName();
+  isntance1.sayAge();
+  instance1.colors.push("black");
+  alert(instance1.colors);
+
+  var instance2 = new SubType("luu",15);
+  instance2.sayName();
+  instance2.sayAge();
+  alert(instance2.colors);
+</pre>
+<script type="text/javascript">
+  function useTwo(){ 
+     function SuperType(name){ 
+        this.name = name;
+        this.colors = ["red","blue","green"];
+      }
+
+      SuperType.prototype.sayName = function(){ alert(this.name) }
+
+      function SubType(name,age){ 
+        SuperType.call(this,name);
+        this.age = age;
+      }
+
+      SubType.prototype = new SuperType();
+
+      SubType.prototype.sayAge = function(){ alert(this.age) };
+
+      var instance1 = new SubType("wfy",29);
+      instance1.sayName();
+      instance1.sayAge();
+      instance1.colors.push("black");
+      alert(instance1.colors);
+
+      var instance2 = new SubType("luu",15);
+      instance2.sayName();
+      instance2.sayAge();
+      alert(instance2.colors);
+  }
+</script>
+<h3>原型式继承</h3>
+<pre>
+  function object( o ){ 
+    function F(){};
+    F.prototype = o;
+    return new F();
+  }
+
+  var person = { 
+    name : "nicholas",
+    friends : ["Shelby","Court","Van"]
+  }
+
+  var anotherPerson = object( person );
+  anotherPerson.name = "Grag";
+  anotherPerson.friends.push( "rob" );
+</pre>
+<h2 class="ti2em">6.3没有看</h2>
+</body>
+</html>

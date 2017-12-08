@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+<title>测试代码 - html5</title>
+<link rel="stylesheet" href="http://365jia.cn/css/basic.css" type="text/css" />
+
+</head>
+
+<body>
+  <p class="code">
+	    <textarea class="textatea" rows="15" cols="90" >
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;
+&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+&lt;head&gt;
+
+&lt;link rel=&quot;stylesheet&quot; href=&quot;style/&quot; type=&quot;text/css&quot; /&gt;
+
+&lt;/head&gt;
+
+&lt;body&gt;
+  &lt;div contenteditable=&quot;true&quot; style=&quot;width: 400px;
+    min-height: 120px;
+    max-height: 300px;
+    _height: 120px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 3px;
+    outline: 0;
+    border: 1px solid #a0b3d6;
+    font-size: 12px;
+    word-wrap: break-word;
+    overflow-x: hidden;
+    overflow-y: auto;
+    _overflow-y: visible;
+&quot;&gt;&lt;br /&gt;&lt;/div&gt; 
+
+
+&lt;/body&gt;
+&lt;/html&gt;
+
+		</textarea>
+      </p>  
+      <div class="btn">
+		<input class="codeBtn" type="submit" onclick="runCode(0)" name="Submit" value="运行代码" />
+		<input class="codeBtn" type="submit" onclick="copyCode(0)" name="Submit" value="复制代码" />
+		<input class="codeBtn" type="submit" onclick="saveCode(0)" name="Submit" value="另存代码" />
+		提示：可以先修改部分代码再运行
+	  </div>
+    </div>
+
+
+<script type="text/javascript">
+function runCode(num){   
+    var obj=document.getElementsByTagName("textarea");   
+    for(var i=0;i<obj.length;i++){   
+        if(num==i){   
+            var newWin=window.open('',"_blank",'');   
+            newWin.document.open('text/html','replace');   
+            newWin.opener=null  
+            var testCode=obj[num].value;   
+            newWin.document.write(testCode);   
+            newWin.document.close();   
+        }                  
+    }   
+}   
+/*****保存代码为html页面，现阶段只支持IE******/  
+//firefox不兼容的主要原因就是因为ff不支持execCommand('saveas','','filename');         
+function saveCode(num){   
+    var obj=document.getElementsByTagName("textarea");   
+    for(var i=0;i<obj.length;i++){   
+        if(num==i){   
+            var newWin=window.open('','_blank','top=10000');   
+            newWin.document.open('text/html','replace');   
+            var testCode=obj[num].value;   
+            newWin.document.write(testCode);   
+            newWin.document.execCommand('saveas','','code.htm');   
+            newWin.close();   
+        }   
+    }   
+}   
+function copyCode(num){   
+    var obj=document.getElementsByTagName("textarea");   
+    for(var i=0;i<obj.length;i++){   
+        if(num==i){        
+            var testCode=obj[num].value;   
+            if(copy2Clipboard(testCode)!=false)   
+            {   
+                alert("生成的代码已经复制到粘贴板，你可以使用Ctrl+V 贴到需要的地方！");   
+            }   
+        }   
+    }   
+}   
+copy2Clipboard=function(txt){   
+    if(window.clipboardData){   
+        window.clipboardData.clearData();   
+        window.clipboardData.setData("Text",txt);   
+    }   
+    else if(navigator.userAgent.indexOf("Opera")!=-1){   
+        window.location=txt;   
+    }   
+    else if(window.netscape){   
+        try{netscape.security.PrivilegeManager.enablePrivilege(   
+"UniversalXPConnect");   
+    }   
+    catch(e){   
+        alert("");   
+        return false;   
+    }   
+    var clip=Components.classes['@mozilla.org/widget/clipboard;1'].createInstance(Components.interfaces.nsIClipboard);   
+    if(!clip)   
+    return;   
+    var trans=Components.classes['@mozilla.org/widget/transferable;1'].createInstance(Components.interfaces.nsITransferable);   
+    if(!trans)   
+    return;   
+    trans.addDataFlavor('text/unicode');   
+    var str=new Object();   
+    var len=new Object();   
+    var str=Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);   
+    var copytext=txt;str.data=copytext;trans.setTransferData("text/unicode",str,copytext.length*2);   
+    var clipid=Components.interfaces.nsIClipboard;if(!clip)   
+    return false;   
+    clip.setData(trans,null,clipid.kGlobalClipboard);   
+    }   
+}    
+</script>
+
+</body>
+</html>

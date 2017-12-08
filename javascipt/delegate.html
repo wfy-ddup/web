@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    *{
+      padding:0;
+      margin:0;
+      border: 0;
+      list-style: none;
+      font-size: 14px;
+      font-family: "微软雅黑";
+      line-height: 1.5;
+    }
+    .out_side {width: 80%;margin: 0 auto;}
+    .item1 {
+      background: #f9f9f9;
+
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="out_side">
+    <p class="">事件委派的原生</p>
+    <button class="btn1">添加元素</button>
+    <ul class="ul_01">
+      <li class="item1">item1</li>
+      <li class="item1">item1</li>
+      <li class="item1">item1</li>
+    </ul>
+  </div>
+</body>
+<script>
+  // 原生的事件委派原理 
+  (function(){
+    document.querySelector(".btn1").onclick=function(){
+      var oli = document.createElement("li");
+      oli.className = "item1";
+      oli.innerHTML = "tiem";
+      document.querySelector(".ul_01").appendChild(oli);
+    }
+    document.querySelector(".ul_01").onclick=function(){
+      var e = event || window.event;
+      var target = e.target;
+      console.log(target);
+      target.style.cssText = "background:#e4393c;color:#fff";
+      var pre = target.previousElementSibling;
+
+      var next = target.nextElementSibling;
+      while(pre != null){
+        pre.style.cssText = '';
+        pre = pre.previousElementSibling;
+      }
+      while(next != null){
+        next.style.cssText = '';
+        next = next.nextElementSibling;
+      }
+
+    }
+  })();
+</script>
+</html>

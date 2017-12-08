@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<title>引用类型--操作方法</title>
+<style type="text/css">
+  pre { font-size:14px }
+  .ti2em { text-indent:2em }
+  #spliceMethod { font-size:16px;color:#666 }
+</style>
+</head>
+<body>
+  <h2>数组操作方法</h2>
+  <p class="ti2em">concat() 方法:</p>
+  <p class="ti2em">concat 先创建当前数组一个副本，然后将接收到的参数添加到这个副本的尾部，返回重新构建的数组。</p>
+  <p class="ti2em">如果没有给concant()方法传参数，返回数组的副本</p>
+  <p class="ti2em">如果传入的是一个或多个数组，该方法会将数组中的每一项添加到数组副本中。如果传递的不是数组，这些值会简单的添加到副本数组的尾部，不改变原来的数组</p>
+  <button onclick="arrConcat()">concat()方法，合并数组</button>
+  <pre>
+      var arr1 = ["red","green","blue"];
+      var arr2 = ["#f00","#0f0","#00f"];
+      var arr3 = ["红","绿","蓝"];
+
+      var colors1 = arr1.concat("arr2",arr2);
+      var colors2 = arr1.concat(arr2,arr3);
+      var colors3 = arr1.concat(arr3);
+  </pre>
+  <script type="text/javascript">
+    function arrConcat(){
+      var 
+          arr1 = ["red","green","blue"],
+          arr2 = ["#f00","#0f0","#00f"],
+          arr3 = ["红","绿","蓝"];
+
+      var colors1 = arr1.concat("arr2",arr2);
+      var colors2 = arr1.concat(arr2,arr3);
+      var colors3 = arr1.concat(arr3);
+      alert(colors1);
+      alert(colors2);
+      alert(colors3);
+    }
+  </script>
+  <br />
+  <p>slice()方法</p> 
+  <p class="ti2em">slice(),基于一个数组中的一个或多个项创建一个新数组（数组的截取）。slice()可以传入一个或者两个参数，传入一个参数时 是开始截取数组的位置直到最后；传入两个参数时，是开始截取数组的位置 与 最后一个截取的位置；slice()截取数组时含头不含尾，不改变原来的数组</p>
+  <button onclick="arrSlice()">slice(),数组的截取</button>
+  <pre>
+      var colors = ["red","green","blue","yellow","purple"];
+      var colors1 = colors.slice(1);      //green,blue,yellow,purple
+      var colors2 = colors.slice(1,4);   //green,blue,yellow   含头不含尾
+  </pre>
+  <script type="text/javascript">
+      function arrSlice(){
+        var colors = ["red","green","blue","yellow","purple"];
+        var colors1 = colors.slice(1);
+        var colors2 = colors.slice(1,4);
+        alert(colors1);alert(colors2);
+      }
+  </script>
+  <p>substring()对字符串的截取，slice()对数的截取，substring()不可以传入负数，slice()可以传入负数</p>
+  <br />
+  <p>splice()方法</p>
+  <p class="ti2em">数组的删除，插入，替换，始终返回一个数组，该数组为删除的项组成，原数组被改变</p>
+  <button onclick="arrSplice()">splice(),数组的插入，删除，替换的方法</button>
+  <p></p>
+  <br />
+  <div id="spliceMethod"></div>
+  <br />
+  <p class="ti2em">删除：可以删除任意数量的的项，只需2个参数：要删除第一项的位置和要删除的项数</p>
+  <pre>
+      如:
+        splice(0,2)    删除两项，从第0项开始删除，删除两项
+  </pre>
+  <p class="ti2em">插入：可以向指定任意位置插入项，需提供至少3个参数：起始位置，要删除的项数，插入的项数，....</p>
+  <p class="ti2em">插入的项可以是数组，对象，字符串，如果是数组，对象，则会将数组和对象原封不动的插入原数组，使数组和对象成为原数组的项</p>
+  <pre>
+      如：
+        splice(2,0,"#f00","#fff",...)    从第二项开始删除，删除零项，在第二项后插入"#f00",...
+  </pre>
+  <p class="ti2em">替换：与插入的方法相同，先删除在插入</p>
+  <pre>
+      如：
+        splice(2,1,"#fff",..)            从第二项开始，删除一项，在第二项后插入"#fff",....
+  </pre>
+  <pre style="font-size:18px;">
+    javascript
+
+      var 
+        colors = ["red","blue","green","#f00","#ff0","#f0f"],
+        elem = document.getElementById("spliceMethod"),
+        elemTxt = '' ;
+        elemTxt += "原数组为：" + colors;
+        elem.innerHTML = elemTxt;
+        //alert(elemTxt);
+
+        colors.splice(2,1);   //删除
+        elemTxt += "删除：colors.splice(2,1),从第二项开始删除，删除一项（green）后，数组为：" + colors;
+       //alert(elemTxt);
+        elem.innerHTML = elemTxt;
+
+
+        colors.splice(2,0,"蓝色");   //插入
+        elemTxt += "插入：colors.splice(2,0,'蓝色'),从第二项开始删除，删除0项后,在第二项位子插入一项'蓝色'，数组为：" + colors;
+        //alert(elemTxt);
+        elem.innerHTML = elemTxt;
+
+
+        colors.splice(3,2,"#000","红色");   //替换
+        elemTxt += "替换：colors.splice(3,2,'#000','红色'),从第三项开始删除，删除2项后,在第三项位子插入项''红色','#000'这两项，数组为：" + colors;
+        //alert(elemTxt);
+        elem.innerHTML = elemTxt;
+  </pre>
+  <script type="text/javascript">
+    function arrSplice(){
+      var 
+          colors = ["red","blue","green","#f00","#ff0","#f0f"],
+          elem = document.getElementById("spliceMethod"),
+          elemTxt = '' ;
+          elemTxt += "原数组为：" + colors + "<br>";
+          elem.innerHTML = elemTxt;
+          //alert(elemTxt);
+
+          colors.splice(2,1);   //删除
+          elemTxt += "删除：colors.splice(2,1),从第二项开始删除，删除一项（green）后，数组为：" + colors +"<br>";
+         //alert(elemTxt);
+          elem.innerHTML = elemTxt;
+
+
+          colors.splice(2,0,"蓝色");   //插入
+          elemTxt += "插入：colors.splice(2,0,'蓝色'),从第二项开始删除，删除0项后,在第二项位子插入一项'蓝色'，数组为：" + colors +"<br>";
+          //alert(elemTxt);
+          elem.innerHTML = elemTxt;
+
+
+          colors.splice(3,2,"#000","红色");   //替换
+          elemTxt += "替换：colors.splice(3,2,'#000','红色'),从第三项开始删除，删除2项后,在第三项位子插入项''红色','#000'这两项，数组为：" + colors;
+          //alert(elemTxt);
+          elem.innerHTML = elemTxt;
+    }
+  </script>
+</body>
+</html>

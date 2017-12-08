@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<script type="text/javascript" src="../publicJs/public.js"></script>
+<title>events</title>
+<style rel="styleSheet" type="text/css">
+  .test01 {
+    width: 400px;
+    height: 200px;
+    line-height: 200px;
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    background: #e4393c;
+    margin: 10px auto;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  <div class="box">
+    <div class="independent_block">
+      <p class="fz18">使用原生DOM方法访问表单元素，每个表单都有elements属性，该属性是表单中所有元素的集合。</p>
+      <fieldset id="form0" class="fieldset">
+        <form action="">
+          姓名：<input type="text"><br>
+          Email：<input type="text"><br>
+          <input type="radio" name="color" value="red">Red <br>
+          <input type="radio" name="color" value="blue">Blue
+        </form>
+      </fieldset>
+      <script>
+        (function(){
+          var form = document.getElementById("form0");
+          var field = form.elements;
+          console.log(field);
+        })();
+      </script>
+      <fieldset id="form1"  class="fieldset">
+        <form action="" method="get">
+          <ul>
+            <li><input type="radio" name="color" value="red">Red</li>
+            <li><input type="radio" name="color" value="green">Green</li>
+            <li><input type="radio" name="color" value="blue">Blue</li>
+            <li><input type="submit" name="submit-btn"></li>       
+          </ul>
+        </form>
+      </fieldset>
+      <pre>
+        &lt;li>&lt;input type="submit" name="submit-btn">&lt;/li>
+        (function(){
+          var form = document.getElementById("form1");
+          EventUtil.addHandler(form,"submit",function(event){
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event)
+
+            var btn = target.elements["submit-btn"];
+            
+            console.log(btn);
+
+            btn.disabled = true;
+            //alert(btn)
+          });
+          这里的elements["nameValue"]
+        })();  
+      </pre>
+      <script>
+        (function(){
+          var form = document.getElementById("form1");
+          EventUtil.addHandler(form,"submit",function(event){
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event)
+
+            var btn = target.elements["submit-btn"];
+            
+            console.log(btn);
+
+            btn.disabled = true;
+            //alert(btn)
+          });
+        })();
+      </script>
+      <pre>
+        change 事件在不同的表单中有不同的表现，在input，textarea 中，value发生改变 且失去鼠标时 触发
+        在 select 中随时改变
+      </pre>
+      <script>
+        (function(){
+            var textBox = document.forms[0].elements[0];
+            EventUtil.addHandler(textBox,"focus",function(event){
+              event = EventUtil.getEvent(event);
+              var target = EventUtil.getTarget(event);
+
+              if(target.style.backgroundColor != 'red'){
+                target.style.backgroundColor = "#fff";
+              }
+            });
+            EventUtil.addHandler(textBox,"blur",function(event){
+              event = EventUtil.getEvent(event);
+              var target = EventUtil.getTarget();
+              if( /[^\d]/.test(target.value) ){
+                target.style.backgroundColor = "#f9f9f9";
+              }else{
+                target.style.backgroundColor = '';
+              }
+            });
+            EventUtil.addHandler(textBox,"textInput",function(event){
+              event = EventUtil.getEvent(event);
+              //alert(event);
+              var target = EventUtil.getTarget(event);
+              function bg3(){
+                var r = Math.floor(Math.random()*256);
+                var g = Math.floor(Math.random()*256);
+                var b = Math.floor(Math.random()*256);
+                return "rgb("+r+","+g+","+b+")";
+              }
+              var color = bg3();
+              console.log(color);
+              target.style.color = bg3();
+            });
+        })();
+      </script>
+    </div>
+
+
+
+    <div class="independent_block">
+      <p class="fz20">文本框脚本</p>
+      <div class="">
+        输入框：<input type="text" size="25" maxlength="50" value="initial value"> <br>
+        <textarea id="textarea" cols="30" rows="10">文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本文本框脚本
+        </textarea>
+        <pre>
+          取得选择的文本
+          通过select事件我们可以直达用户什么时候选择了文本，
+
+          selectionStart  文本的开头位置
+          selectionEnd    文本的结尾位置
+
+          textBox.value.substring(selectionStart,selectionEnd);
+          
+          var textBox = document.getElementById("textarea");
+          EventUtil.addHandler(textBox,"select",function(){
+            // alert("text selected"+textBox.value);
+            var textvalue = function(elem){
+              return elem.value.substring(elem.selectionStart,elem.selectionEnd)
+            }(textBox);
+            console.log(textvalue);
+          })
+
+          substring()方法基于字符串的偏移量执行操作
+
+          ie8 及 之前的版本不支持这两个方法
+        </pre>
+        <script>
+          (function(){
+            var textBox = document.getElementById("textarea");
+            EventUtil.addHandler(textBox,"select",function(){
+              // alert("text selected"+textBox.value);
+              var textvalue = function(elem){
+                return elem.value.substring(elem.selectionStart,elem.selectionEnd)
+              }(textBox);
+              console.log(textvalue);
+            })
+          })();
+        </script>
+        <textarea name="" id="text-box" cols="80" rows="20">级更早的版本中有一个 document.selection对象，保存着用户在整个文档范围内选择的文本信息substring()方法基于字符串的偏移量执行操作ie8 及 之前的版本不支持这两个方法通过select事件我们可以直达用户什么时候选择了文本，框脚本文本框脚本文本框脚本文本框脚本文本框脚本</textarea>
+        <pre>
+          ie8 级更早的版本中有一个 document.selection对象，保存着用户在整个文档范围内选择的文本信息
+
+          function getSelectedText(textBox){
+            if(typeof textBox.selectionStart == "number"){
+              return textBox.value.substring(textBox.selectionStart,textBox.selectionEnd);
+            }eles{
+              return document.selection.createRange().text;
+            }
+          }
+        </pre>
+        <script>
+          (function(){
+            var textBox = document.getElementById("text-box");
+            EventUtil.addHandler(textBox,"select",function(){
+                var textvalue = "";
+              if(typeof textBox.selectionStart == "number"){
+                textvalue = textBox.value.substring(textBox.selectionStart,textBox.selectionEnd)
+              }else{
+                textvalue = document.selection.createRange().text;
+              }
+              console.log(textvalue);
+            })
+          })();
+        </script>
+      </div>
+      <div class="">
+        <pre>
+          textBox.value = "hello world";
+
+          //选择所有文本
+          textBox.setSelectionRange(0,textBox.value.length); //hellow world
+
+          //选择前3个字符窜
+          textBox.setSelectionRange(0,3); // "hel"
+
+          //选择第4到第6个字符串
+          textBox.setSelectionRange(4,7); //"w o"
+        </pre>
+      </div>
+      <textarea name="" id="textarea_03" cols="60" rows="20"></textarea>
+      <div class="">
+        <p class="fz18">屏蔽字符</p>
+        <pre>
+          var textBox = document.getElementById("textarea_03");
+          EventUtil.addHandler(textBox,"keypress",function(event){
+            event = EventUtil.getEvent(event);
+            var target = EventUtil.getTarget(event);
+            var charCode = EventUtil.getCharCode(event)
+          });
+        </pre>
+      </div>
+    </div>
+
+    
+
+
+
+
+
+
+
+
+
+
+  </div>
+</body>
+</html>

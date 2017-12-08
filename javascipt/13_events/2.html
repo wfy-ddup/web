@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>ie事件处理程序</title>
+<style>
+  .independent_block_02 {
+        padding: 30px 15px;
+    margin-bottom: 30px;
+    border: 1px solid #afafaf;
+    background: #f3f3f3;
+  }
+  .wp80_auto{
+    width: 80%;
+    height: 80%;
+    margin: 10% auto;
+    overflow: hidden;
+  }
+  .bg1 { background: yellow }
+  .bg2 { background: blue }
+  .bg3 { background: red }
+  .bg4 { background: pink }
+  .bg5 { background: grey }
+  .bg6 { background: green }
+</style>
+</head>
+<body>
+  <div class="box">
+    <div class="independent_block">
+      <p class="fz18">ie事件处理程序</p>
+      <p class="fz14">DOM中类似的两个方法：attachEvent() 和 detachEvent(),这两个方法接受相同的两个参数</p>
+
+      <div id="test_01">this is a test block</div>
+      <div id="test_02">this is other test block</div>
+
+
+      <script>
+        var btn = document.getElementById("test_01");
+        function event(){console.log(this)}
+        //window.navigator.appVersion.indexOf("MSI") > -1 ? btn.attachEvent("onclick",function(){console.log(this)}):btn.addEventListener("click",function(){console.log(this)},false);
+      </script>
+
+      <p class="fz16">跨浏览器的时间处理方法</p>
+      <pre>
+        1.创建两个方法，第一个是addHandler(),它的职责是视情况分别使用DOM0级方法，DOM2级方法或IE方法来添加事件，接受三个参数要操作的元素，事件名称和事件处理函数。
+        2.第二个，removeHandler()方法，移除之前添加的事件处理程序
+
+        var btn = document.getElementById("test_01");
+        function event(){console.log(this)}
+
+        var EventUtil = {
+          addHandler:function(element,type,handler){
+            if(element.addEventListener){
+              element.addEventListener(type,handler,false)
+            }else if(element.attachEvent){
+              element.attachEvent("on"+type,handler)
+            }else{
+              element["on"+type] = handler
+            }
+          },
+          removeAddHandler:function(element,type,handler){
+            if(element.removeElementListener){
+              element.removeElementListener(type,handler)
+            }eles if(element,type,handler){
+              element.detachEvent("on"+type,handler)
+            }else{
+              element["on"+type] = null
+            }
+          }
+        }
+
+        EventUtil.addHandler(btn,"click",event);  //这里调用event()在ie8— ，为什么this指向window，别的指向btn
+      </pre>
+      <script>
+        var EventUtil = {
+          addHandler:function(element,type,handler){
+            if(element.addEventListener){
+              element.addEventListener(type,handler,false);
+            }else if(element.attachEvent){
+              element.attachEvent("on"+type,handler);
+            }else{
+              element["on"+type] = handler;
+            }
+            console.log(this);
+          },
+          removeHandler:function(element,type,handler){
+            if(element.removeEventListener){
+              element.removeEventListener(type,handler);
+            }else if(element.detachEvent){
+              element.detachEvent("on"+type,handler);
+            }else{
+              element["on"+type] = null;
+            }
+          }
+        }
+        EventUtil.addHandler(btn,"click",event);
+      </script>
+    </div>
+
+
+    <div class="independent_block_02">
+      <p class="fz18">事件对象</p>
+      <p class="fz16 it2em">在触发DOM上的某个事件时，会产生一个事件对象event，这个对象中包含所有的与事件有关的信息。</p>
+      <p class="fz16">兼容DOM的浏览器会将一个event对象传入到事件处理过程中，DOM0与DOM2都会传入Event对象</p>
+      <ul class="list_style_ul_02" id="test_ul">
+        <li>测试事件类型与js实现delegate方法</li>
+        <li>测试事件类型与js实现delegate方法</li>
+        <li>测试事件类型与js实现delegate方法</li>
+      </ul>
+      <button class="btn1">tianjia</button>
+      <pre>
+        var e = event || window.event; 的属性
+
+        bubbles   boolean   表明事件是否冒泡
+        stopPropagation   function    bubbles为true时可用
+        cancelable    boolean   表明是否可以取消事件的默认行为
+        preventDefault    function    cancelable为true是可用
+
+        target    element   事件的目标
+        type    String    被触发事件的类型
+      </pre>
+      <div class="bg1 ov" style="width:200px;height: 200px;margin: 0 auto;">
+        <div class="wp80_auto bg2">
+          <div class="wp80_auto bg3">
+            <div class="wp80_auto bg4">
+              <div class="wp80_auto bg5">
+                <div class="wp80_auto bg6">
+                
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <pre>
+        var stopProp = false;
+          var checkboxs= document.querySelectorAll("[type='checkbox']");
+          checkboxs[0].onclick=function(){
+            stopProp = true;
+            this.checked?checkboxs[1].checked = false:0;
+          }
+          checkboxs[1].onclick=function(){
+            stopProp = false;
+            this.checked?checkboxs[0].checked = false:0;
+          }
+          function conCN(event){
+            var e = event || window.event;
+            stopProp ? e.stopPropagation():0;
+            alert(this.className);
+          };
+          var wpList = document.getElementsByClassName("wp80_auto");
+          for(var i = 0; i < wpList.length; i++){
+            wpList[i].onclick=conCN;
+          }
+      </pre>
+      <input type="checkbox" class="noArrow">取消冒泡
+      <input type="checkbox" class="arrow" checked>允许冒泡
+      <p class="fz16">允许冒泡与取消冒泡</p>
+      <script>
+        (function(){
+          document.querySelector(".btn1").onclick=function(){
+            var oli = document.createElement("li");
+            oli.className = "item1";
+            oli.innerHTML = "tiem";
+            document.querySelector("#test_ul").appendChild(oli);
+          }
+          document.querySelector("#test_ul").onclick=function(event){
+            var e = event || window.event;
+            console.log(this);
+            console.log(e.type);
+            console.log(e.bubbles);
+            console.log(e.cancelable);
+            var target = e.target;
+            console.log(target);
+            target.style.cssText = "background:#e4393c;color:#fff";
+            var pre = target.previousElementSibling;
+
+            var next = target.nextElementSibling;
+            while(pre != null){
+              pre.style.cssText = '';
+              pre = pre.previousElementSibling;
+            }
+            while(next != null){
+              next.style.cssText = '';
+              next = next.nextElementSibling;
+            }
+
+          }
+        })();
+        (function(){
+          var stopProp = false;
+          var checkboxs= document.querySelectorAll("[type='checkbox']");
+          checkboxs[0].onclick=function(){
+            stopProp = true;
+            this.checked?checkboxs[1].checked = false:0;
+          }
+          checkboxs[1].onclick=function(){
+            stopProp = false;
+            this.checked?checkboxs[0].checked = false:0;
+          }
+          function conCN(event){
+            var e = event || window.event;
+            stopProp ? e.stopPropagation():0;
+            alert(this.className);
+          };
+          var wpList = document.getElementsByClassName("wp80_auto");
+          for(var i = 0; i < wpList.length; i++){
+            wpList[i].onclick=conCN;
+          }
+        })();
+      </script>
+      <p class="fz18">事件内部对象的this始终德育currentTarget的值，target只是包含实践的实际目标</p>
+      <div id="test04" class="bg1" style="width:200px;height:200px;margin:0 auto;">
+      </div>
+      <pre>
+        // 这个可以理解
+        (function(){
+          var btn  = document.getElementById("test04");
+          btn.onclick=function(event){
+            alert(event.target == this);
+            alert(this == event.currentTarget)
+          }
+        })();
+
+        document.body.onclick = function(){
+          alert(event.currentTarget == document.body); //true 这个可以理解
+          alert(this === document.body) // true 这个可以理解
+
+          alert(event.target == document.getElementById("myBtn")) //true 这个不能理解
+        }
+      </pre>
+      <script>
+        (function(){
+          var btn  = document.getElementById("test04");
+          btn.onclick=function(event){
+            alert(event.target == this);
+            alert(this == event.currentTarget)
+          }
+        })();
+      </script>
+      <p class="fz16">通过一个函数处理多个事件</p>
+      <div id="test05" class="bg1" style="width:200px;height:200px;margin:0 auto;"></div>
+      <pre>
+        var testObj = document.getElementById("test05");
+          var handler = function(event){
+            var e = event || window.event;
+            switch(e.type){
+              case "click":
+                alert("本次事件为："e.type);
+                break;
+              case "mouseover":
+                alert("本次事件为："e.type);
+                break;
+              case "mouseout":
+                alert("本次事件为："e.type);
+                break;
+            }
+          }
+          testObj.onclick = handler;
+          testObj.onmouseover = handler;
+          testObj.onmouseout = handler;
+      </pre>
+      <script>
+        (function(){
+          var testObj = document.getElementById("test05");
+          var handler = function(event){
+            var e = event || window.event;
+            switch(e.type){
+              case "click":
+                console.log("本次事件为："+e.type);
+                break;
+              case "mouseover":
+                console.log("本次事件为："+e.type);
+                break;
+              case "mouseout":
+                console.log("本次事件为："+e.type);
+                break;
+            }
+          }
+          testObj.onclick = handler;
+          testObj.onmouseover = handler;
+          testObj.onmouseout = handler;
+        })();
+      </script>
+      <br>
+      <a href="" id="myLink" class="fz16 cor_01">取消默认事件</a><br>
+      <p class="fz14">只有当事件对象的cancelable属性为true时，才可以使用preventDefault()取消默认事件的方法，cancelable为只读属性</p>
+      <script>
+        (function(){
+          var myLink = document.getElementById("myLink");
+          myLink.onclick=function(event){
+            var e = event||window.event;
+            e.cancelable = false;
+            event.preventDefault();
+          }
+        })();
+      </script>
+      <p class="fz14">e.propagation(),取消事件的冒泡，取消进一步事件的捕获或冒泡。</p>
+      <a href="javascript:;" class="cancelableBubble">取消事件的冒泡</a>
+      <script>
+        (function(){
+          var btn = document.querySelector(".cancelableBubble");
+          btn.onclick=function(event){
+            var e = event||window.event;
+            alert("如果没有取消冒泡事件，document.body绑定的事件将会触发,可以任意点击文档执行");
+            e.stopPropagation();
+          }
+        })();
+      </script>
+      <br><br>
+      <p class="fz14">
+      事件对象的eventPhase属性：可以用来确定事件当前正位于事件流的那个阶段<br>
+      捕获阶段  eventPhase等于1 <br>
+      事件处理程序处于目标对象上 eventPhase等于2 <br>
+      冒泡阶段  eventPhase等于3
+      </p>
+      <button class="eventPhaseBtn">eventPhase 测试</button>
+      <script>
+        (function(){
+          var btn = document.querySelector(".eventPhaseBtn");
+          btn.onclick = function(event){
+            var e = event||window.event;
+            console.log("eventPhaseBtn"+e.eventPhase);
+          }
+          document.body.addEventListener("click",function(event){console.log("body.addEventListener"+event.eventPhase)},true);
+          document.body.onclick = function(event){
+            console.log("body.onclick"+event.eventPhase);
+          }
+        })();
+      </script>
+      <p class="fz16">
+        只有在事件处理程序执行期间，event对象才会存在；一旦事件处理程序执行完成，event对象就会被销毁。
+      </p>
+    </div>
+    
+  </div>
+</body>
+</html>

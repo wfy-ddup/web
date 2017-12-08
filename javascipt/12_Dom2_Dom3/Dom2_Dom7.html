@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>Dom2_Dom7</title>
+</head>
+<body>
+  <div class="box">
+    <p class="fz18 fwb">TreeWalker</p>
+    <p class="ti2em fz16">
+      TreeWalker是NodeIterator的一个高级的版本。除了包括nextNode(),和previousNode()在内的相同的功能之外，这个类型还提供了下列的用于不同方向上遍历DOM结构的方法。
+    </p>
+    <pre>
+      parentNode() :遍历当前节点的父节点
+      firstChild() :遍历到当前节点的第一个子节点
+      lastChild() :遍历到当前节点的最后一个子节点
+      nextSibling() :遍历到当前节点的下个同级节点
+      previousSibling :遍历到当前节点的上一个同辈节点
+    </pre>
+    <ul class="list_style_ul_01">
+      <li class="item">item0 <p>item4</p></li>
+      <li class="item">item1</li>
+      <li class="item">item2</li>
+      <li class="item">item3</li>
+    </ul>
+    <p class="fz16">
+      创建TreeWalker对象要是用document.createTreeWalker()方法，接受四个参数与document.createIterator()方法相同<br>
+      1、遍历起点的根节点<br>
+      2、要显示的节点类型<br>
+      3、过滤器<br>
+      4、是否扩展实体引用的布尔值
+    </p>
+    <script type="text/javascript">
+      function fun_01(){
+        var div = document.querySelector(".list_style_ul_01");
+        var filter = function(node){
+          return node.tagName.toLowerCase() == "li"?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP;
+        }
+        var walker = document.createTreeWalker(div,NodeFilter.SHOW_ELEMENT,filter,false);
+        var node = walker.nextNode();
+        console.log(walker);
+        while(node !== null){
+          //alert(node.tagName);
+          node = walker.nextNode();
+        }
+      }
+      fun_01();
+    </script>
+
+    <div class="independent_block">
+      <p class="fz14">dom2在document类型中定义了createRange()方法。在兼容DOM的浏览器中，这个方法属于document对象，使用hasFeatur()或者检测该方法，都可以确定浏览器是否支持范围。</p>
+      <pre>
+        检测方法一：
+        var surportRange = document.implementation.hasFeature("range","2.0")
+        检测方法二：
+        var alsoSupportsRange = (typeof document.createRange == "function");
+      </pre>
+      <p class="fz14">
+        1.新创建的范围也可以直接与创建它的文档关联在一起，不能用于其他文档<br>
+        2.创建了防卫之后，接下来可以使用它在后台选择文档中的特定部分。<br>
+        3.二创建防卫并设置了位置之后，还可以针对范围的内容执行很多种操作，从而实现对底层DOM树更精细的控制。
+      </p>
+      <pre>
+        每一个范围由一个range类型的实例表示，这个实例包含很多属性和方法。当前范围在文档中的位置信息。
+        startContainer：包含范围起点的节点 （选取中第一个节点的父节点）
+        startOffset：范围在startContainer中起点的偏移量。
+        endContainer: 包含范围终点的节点（选区中最后一个节点的父节点）
+        endOffset: 范围在endContainer中终点的偏移量
+        commonAncestorContainer:startContainer和endContainer共同的祖先节点在文档树中位置最深的那个。
+      </pre>
+      <div id="test_range"><strong>hello</strong>World</div>
+      <div class="small_block">
+        <p class="">用DOM范围实现简单选择</p>
+        <p class="">
+          要是用范围来选择文档中的一部分，最简单的方式就是使用selectNode()或者selectNodeContents()。这两个方法都接受一个参数DOM节点。
+        </p>
+        <script>
+          function testRange(){
+            var range1 = document.createRange(),
+                range2 = document.createRange(),
+                test = document.getElementById("test_range");
+            range1.selectNode(test);
+            range2.selectNodeContents(test);
+            console.log(range2.endOffset);
+          }
+          testRange();
+        </script>
+        <pre>
+          在调用selectNode()时，startContainer endContainer commonAnc
+          estorContainer都等于传入节点的父节点，#test_RangeD的父节点
+
+          startOffset属性等于给定点在其父节点的childNodes集合中的索引
+
+
+          在调用selectNodeContents()时，startContainer、endconteainer 和 commonAncestorContainer等于传入的节点#test_Range，startOffset属性始终等于0（从给定节点的第一个子节点开始），
+
+          endOffset等于子节点数量（node.ChildNodes.length）
+
+          节点包含的范围中，还可以使用下列方法
+
+          setStartBefore( refNode ):将范围的起点设置在refNode之前，因
+          此refNode也就是范围选区中的第一个子节点，同时会将startConta
+          iner属性设置为 refNode.parentNode,将startOffset属性设置为re
+          fNode在其父节点childNodes集合中的索引。
+
+          setStartAfter(refNode): 将范围的起点设置在refNode之后，因此refNode也就不再范围之内，其下一个同辈节点才是范围的起点选取中的第一个子节点
+
+          setEndBefore(refNode): 将范围的种地那设置在refNode之前，因此refNode也就不在范围之内，其上一个同辈节点才是范围选取中的最后一个节点
+
+
+          ... p353
+        </pre>
+        <script>
+          function testRange2(){
+            var range1 = document.createRange(),
+                range2 = document.createRange(),
+                div1 = document.getElementById("test_range");
+            var i,
+                dIndex = -1,
+                len = div1.parentNode.childNodes.length;
+            //debugger;
+            for( i = 0; i < len; i++ ){
+              console.log(div1.parentNode.childNodes[i].nodeType);
+              if(div1.parentNode.childNodes[i] == div1){
+                dIndex = i;
+                break;
+              }
+            }
+
+            range1.setStart(div1.parentNode,dIndex);
+            range1.setEnd(div1.parentNode,dIndex+1);
+            range1.setStart(div1,0);
+            range1.setEnd(div1,div1.parentNode.length);
+          }
+
+          testRange2();
+        </script>
+        <pre>
+          &lt;div id="test_range">&lt;strong>hello&lt;/strong>World&lt;/div>
+          从上边的节点中，选择hello的llo到world的o
+
+          var div1 = document.getElementById("test_range");
+          var helloNode = div1.firstChild.firstChild;
+          var worldNode = div1.lastChild;
+          var range = document.createRange();
+          range.setStart(helloNode,2);
+          range.setEnd(worldNode,2);
+        </pre>
+      </div>
+      <div id="test_range_02"><strong>hello</strong>world</div>
+      <div class="small_block">
+        <p class="fz16">操作DOM范围的内容</p>
+        <pre>
+          deleteContents() 这个方法能够从文档中删除范围所包含的内容
+
+          var div1 = document.getElementById("test_range_02");
+          var helloNode = div1.firstChild.firstChild;
+          var worldNode = div1.lastChild;
+          var range = document.createRange();
+          range.setStart(helloNode,2);
+          range.setEnd(worldNode,2);
+          range.deleteContents();
+
+
+          此时 DOM被修改成为
+          &lt;div id="test_range">&lt;strong>he&lt;/strong>rld&lt;/div>
+
+          内部实现的步骤 p355
+        </pre>
+        <script>
+          function revampDOM(){
+            var div1 = document.getElementById("test_range_02");
+          var helloNode = div1.firstChild.firstChild;
+          var worldNode = div1.lastChild;
+          var range = document.createRange();
+          range.setStart(helloNode,2);
+          range.setEnd(worldNode,2);
+          range.deleteContents();
+          }
+        </script>
+        <button onclick="revampDOM()">deleteContents()方法</button>
+        <p class="fz14">
+          deleteContents()方法与extracContents()方法像是都会从文本中移除范围选区<br>
+          这两个方法的区别在于，extractContents(),会返回范围的文档片段，可以将返回的文本片段插入到文档中的其他地方。
+        </p>
+        <div>
+          <div id="test_range_03"><strong>hello</strong>world</div>  
+        </div>
+        
+        <pre>
+          extractContents(),这个方法删除范围，返回删除的文本片段
+
+          var div1 = document.getElementById("test_range_03");
+          var helloNode = div1.firstChild.firstChild;
+          var worldNode = div1.lastChild;
+          var range = document.createRange();
+
+          range.setStart(helloNode,2);
+          range.setEnd(worldNode,2);
+
+          var deleteFlagElement = range.extractContents();
+          div1.appendChild(deleteFlagElement);
+        </pre>
+        <script>
+          function extractContents(){
+            var div1 = document.getElementById("test_range_03");
+            var helloNode = div1.firstChild.firstChild;
+            var worldNode = div1.lastChild;
+            var range = document.createRange();
+
+            range.setStart(helloNode,2);
+            range.setEnd(worldNode,2);
+
+            var deleteFlagElement = range.extractContents();
+
+            div1.parentNode.appendChild(deleteFlagElement);
+          }
+        </script>
+        <button onclick="extractContents()">extractContents()方法</button>
+      </div>
+      <div id="test_range_04"><strong>hello</strong>world</div>
+      <div class="small_block">
+        <p class="fz14">
+          cloneContents();<br>
+          创建范围对象的一个副本
+        </p>
+        <script>
+          function cloneContents(){
+            var div1 = document.getElementById("test_range_04");
+            var helloNode = div1.firstChild.firstChild;
+            var worldNode = div1.lastChild;
+            var range = document.createRange();
+            range.setStart(helloNode,2);
+            range.setEnd(worldNode,2);
+            var clone = range.cloneContents();
+            div1.appendChild(clone);
+          }
+        </script>
+        <button onclick="cloneContents()">cloneContents方法</button>
+        <p class="fz16">插入DOM范围中的内容</p>
+        <p class="fz16">createRange中insertNode()方法</p>
+        <script>
+          function insertNode(){
+            var div1 = document.getElementById("test_range_04");
+            var helloNode = div1.firstChild.firstChild;
+            var worldNode = div1.lastChild;
+            var range = document.createRange();
+            range.setStart(helloNode,2);
+            range.setEnd(worldNode,2);
+            var p = document.createElement("p");
+            p.style.cssText = "color:red;font-size:24px;";
+            p.appendChild(document.createTextNode("我是新加的"));
+            range.insertNode(p);
+          }
+        </script>
+        <button onclick="insertNode()">createRange中的insertNode()方法</button>
+      </div>
+      <div id="test_range_05"><strong>hello</strong>world</div>
+      <div class="small_block">
+        createRange属性繁多，没有看完，p358
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<title>javascript--variable--actionScope--RAM(变量，作用域，内存问题)</title>
+<style type="text/css">
+  pre { font-size:14px; }
+</style>
+</head>
+<body>
+<h2 id="title">javascript--variable--actionScope--RAM(变量，作用域，内存问题)</h2>
+  <h3 style="text-indent:2em">基本类型和引用类型的值</h3>
+  <p style="text-indent:2em">基本类型的值:简单的数据段</p>
+  <p style="text-indent:2em">引用类型的值:可能有多个值构成的对象</p>
+<p>基本数据类型：undefined、null、boolean、string、Number。这5种基本数据类型是安置访问</p>
+<hr />
+<br />
+<h3>动态的属性</h3>
+<p>基本类型值与引用类型值的定义方式类似：创建一个变量并为其赋值。对于不同类型值的操作却大不相同</p>
+<p>引用类型：可以添加属性和方法</p>
+<button onclick="objType()">点击</button>
+<pre>
+  var person = new Object();
+  person.name = "nicholas";
+  alert(person.name);
+</pre>
+<script type="text/javascript">
+  function objType(){
+    var person = new Object();
+    person.name = "nicholas";
+    alert(person.name);
+  }
+</script>
+<br />
+<br />
+<h3>赋值变量值</h3>
+<p>①基本类型的值的复制：在变量对象上创建一个新值，然后把该值复制到为新变量分配的位置上。</p>
+<pre>
+    var num1 = 5;
+    var num2 = num1;
+</pre>
+<p>②引用类型的复制:将存储在变量对象中的值复制一份放到新变量分配的空间中。</p>
+<p style="text-indent:2em">但是这个值的副本实际上是一个指针，指针指向存储在堆中的一个对象。两个变量实际上引用同一个对象。</p>
+<br />
+<br />
+<h3>传递参数</h3>
+<p>按值传递（传递基本类型）:把函数外部的值复制给函数内部的参数，就和把值从一个变量复制到另一个变量一样</p>
+<p>按引用传递（传递引用类型值）:会把这个值在内存中的地址复制给一个局部变量，因此局部变量的变化会反映在函数的外部。</p>
+<h5>按值传递---传递的是值</h5>
+<button onclick="passByValue()" fun="value">点击</button>
+<pre>
+  function addTen(num){
+    num += 10;
+    return num;
+  }
+  var count = 20;
+  var result = addTen(count);
+  alert(count);
+  alert(result);
+</pre>
+<script type="text/javascript">
+    function passByValue(){
+      function addTen(num){
+      num += 10;
+      return num;
+    }
+    var count = 20;
+    var result = addTen(count);
+    alert("全局变量count："+count);
+    alert("局部变量num："+result);
+  }
+</script>
+<p>按值传递:将全局变量count的值复制一份给局部变量num,变量count,num中各自都保存一份值</p>
+<h5>按引用传递---传递对象的指针</h5>
+<button onclick="passByObject()">点击-例1</button>
+<pre>
+例1：
+  function setName(obj){
+    obj.name = "nicholas";
+  }
+  var person = new Object();
+  setName(person);
+  alert(person.name);
+</pre>
+<script type="text/javascript">
+  function passByObject(){
+    function setName(obj){
+      obj.name = "nicholas";
+    }
+  var person = new Object();
+  setName(person);
+  alert("外部变量是否收到影响："+person.name);    //nicholas
+  }
+</script>
+<p>setName(person)传递的是person对象的指针指向的位置，将此指针传递给obj变量，person与obj同指向同一个对象，通过setName函数改变的其实是person对象</p>
+<button onclick="passByObject2()">点击-例2</button>
+<pre>
+ 例2：
+ function setName(obj){
+    obj.name = "nicholas"; //此时obj变量指针指向的是person的对象，改变的是obj,person共同指向的对象
+    obj = new Object();    //obj是一个局部对象
+    obj.name = "Grey";     //给obj局部对象的属性name赋值Grey
+    alert("setName函数中的obj.name"+obj.name); //obj.name 指向的是局部变量obj （局部有则找局部，局部没有则找全局）
+ }
+ var person = new Object();
+ setName(person);
+ alert("外部对象person中的person.name"+person.name);
+</pre>
+<script type="text/javascript">
+  function passByObject2(){
+    function setName(obj){
+      obj.name = "nicholas";
+      obj = new Object();
+      obj.name = "Grey";
+      alert("obj对象中obj.name: "+obj.name);
+    }
+    var person = new Object();
+    setName(person);
+    alert("person对象中的person.name: "+person.name);
+  }
+</script>
+</body>
+</html>

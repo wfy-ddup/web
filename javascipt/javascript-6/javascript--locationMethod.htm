@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<title>数组的位置方法</title>
+<style type="text/css">
+  pre { font-size:14px }
+  .ti2em { text-indent:2em }
+</style>
+</head>
+<body>
+  <h2>数组的位置方法</h2>
+  <button onclick="searchIndex()">indexOf(),lastIndexOf(),检索数组中某个值的下标</button>
+  <p class="ti2em">数组有两个位置方法：indexOf()和lastIndexOf()，以数组中某个值为参数,返回这个值的小标</p>
+  <p class="ti2em">indexOf()从头部 检索 数组中 某个值 的位置</p>
+  <p class="ti2em">lastIndexOf()从尾部 检索 数组中 某个值 的位置</p>
+  <pre>
+    var colors = ["red","blue","white","green","purple"];
+    var beforeSearchIndex = colors.indexOf("blue");
+    var lastSearchIndex colors.lastIndexOf("green");
+  </pre>
+  <script type="text/javascript">
+    function searchIndex(){
+      var colors = ["red","blue","white","green","purple"];
+      var beforeSearchIndex = colors.indexOf("green");
+      var afterSearchIndex = colors.lastIndexOf("blue");
+      alert("indexOf('green'): " + beforeSearchIndex + " alastIndexOf('blue'): " + afterSearchIndex);
+    }
+  </script>
+  <p>ie9+</p>
+  <br />
+<h3>迭代的方法</h3>
+<p class="ti2em">数组定义了5个迭代的方法，每个方法都可以接受两个参数：要在数组每一项上运行的函数和（可选的）运行该函数的作用域对象--影响this.传入这些方法中的函数会接受三个参数，数组的项（item）、项的下标（index）、数组（array），位置不能改变</p>
+<button onclick="iterationMothed()">数组迭代方法,every,filter,map,forFEach,some()</button>
+<p></p>
+<br />
+<div id="allIterate"></div>
+<pre>
+    如：
+      var numbers = [1,2,3,4,5,4,3,2,1];
+      var arr = [];
+      numbers.forEach(function (val,i,array){
+        val > 2 && arr.push(val);
+      })
+</pre>
+<p class="ti2em">every()方法:对数组中每一项运行给定函数，如果该函数对每一项都返回true，则返回true</p>
+<pre>
+    如：
+      var numbers = [1,2,3,4,5,4,3,2,1];
+      var everyResult = numbers.every(function(item,index,Array){
+        return item > 2;
+      });
+      everyResult ;  // false
+</pre>
+<p class="ti2em">filter()方法:对数组中每一项运行给定函数，返回该函数会返回true的项组成的数组。</p>
+<pre>
+    如:
+      var numbers = [1,2,3,4,5,4,3,2,1];  
+      var filterResult = numbers.filter(function(item,index,Array){
+        return item > 2;
+      });
+      filterResult ;     // [3,4,5,4,3]
+</pre>
+<p class="ti2em">forEach()方法:对数组中每一项运行给定函数，forEach()方法没有返回值</p>
+<pre>
+    var numbers = [1,2,3,4,5,4,3,2,1];  
+    var starArr = [];
+    numbers.forEach(function(item,index,Array){
+      if(item > 2){
+        for(var i = 0, star = '';i < index;i++){
+          star += "*" ;
+        }
+        starArr.push(star);
+      }
+    });
+    starArr;  //["**","***","****","*****","******"];
+</pre>
+<p class="ti2em">map()方法:对书中每一项运行给定函数，返回每次函数调用的结果组成的数组</p>
+<pre>
+    var numbers = [1,2,3,4,5,4,3,2,1]; 
+    var mapResult = map(function(item,index,Array){
+        return item * 2;
+    });
+    mapResult;      //[2,4,6,8,10,8,6,4,2]
+</pre> 
+<p class="ti2em">some()方法:对数组的每一项运行给定函数，如果该函数对任一项返回true，则返回true</p>  
+<pre>
+    如：
+      var numbers = [1,2,3,4,5,4,3,2,1]; 
+      var someResult = number.some(function(item,index,Array){
+          return item >= 5;
+      });
+      someResult;     //true;
+</pre>
+<script type="text/javascript">
+  function iterationMothed(){
+    var numbers = [1,2,3,4,5,4,3,2,1] , allTxt = '' , txt = '';
+    //1
+    var everyResult = numbers.every(function(item,index,Array){
+        return item > 3;
+    });
+    txt = "数组迭代方法every(), number.every(function(item,index,Array){return item > 3})  " + everyResult;
+    allTxt += txt + "<br>";
+    alert(txt);
+    //2
+    var filterResult = numbers.filter(function(item,index,Array){
+        return item > 3;
+    });
+    txt = "数组迭代方法filter(), number.filter(function(item,index,Array){return item > 2})  " + filterResult;
+    allTxt += txt + "<br>";
+    alert(txt);
+    //3
+    var forEachResult = [];
+    numbers.forEach(function(item,index,Array){
+        forEachResult.push(item * 2);
+    });
+    txt = "数组迭代方法forEach(), var forEachResult = [] ,number.forEach(function(item,index,Array){return item * 2}),forEach()不返回值，新数组forEachResult为： " + forEachResult;
+    allTxt += txt + "<br>";
+    alert(txt);
+    //4
+    var someResult = numbers.some(function(item,index,Array){
+        return item >= 5;
+    });
+    txt = "数组迭代方法some(), number.some(function(item,index,Array){return item >= 5})  " + someResult;
+    allTxt += txt + "<br>";
+    alert(txt);
+    //5
+    var mapResult = numbers.map(function(item,index,Array){
+        return item * 5;
+    });
+    txt = "数组迭代方法map(), number.map(function(item,index,Array){return item * 5})  " + mapResult;
+    allTxt += txt + "<br>";
+    alert(txt);
+    document.getElementById("allIterate").innerHTML = allTxt;
+  }
+</script>
+<p>ie9+</p>
+<br />
+<h3>缩小方法</h3>
+<p class="ti2em">两个缩小数组的方法：reduce(),reduceRight()</p>
+<p class="ti2em">reduce():从数组的第一项开始，逐个遍历到最后;</p>
+<p class="ti2em">reduceRight():从数组的最后一项开始，逐个遍历到第一项;</p>
+<p class="ti2em">这两个方法都传入两个参数：一个在每一项上调用的函数和（可选的）作为缩小基础的初始值。传给reduce()和reduceRight()的函数接受4个参数：前一个值，当前值，想的索引和数组对象。这个函数返回的任何值都会作为第一个参数自动传给下一项</p>
+<pre>
+  var values = [1,2,3,4,5,4,3,2,1];
+  var sum1 = values.reduce(function(prev,cur,index,array){
+    return prev + cur;
+  });
+  var sum2 = values.reduceRight(function(prev,cur,index,array){
+    return prev + cur;
+  });
+</pre> 
+<p>ie9+</p>
+</body>
+</html>

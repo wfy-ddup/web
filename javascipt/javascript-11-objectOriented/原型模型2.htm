@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>面向对象的程序设计</title>
+<script type="text/javascript">
+  function Person(name,age,job){
+    this.name = name;
+    this.age = age;
+    this.job = job;
+  }
+</script>
+</head>
+<body>
+<h2>原型模式</h2>
+<p>Object.keys()方法：接受一个对象作为参数，返回所有可枚举属性的字符串数组</p>
+<p>Object.getOwnPropertyNames()方法：返回对象中说有属性，无论是否可枚举</p>
+<button onclick="ObjectKeysFn()">对象的Object.keys()方法：接受一个对象作为参数，返回所有可枚举属性的字符串数组,console中</button>
+<pre>
+    如：
+      Person.prototype.sex = "man";
+      Person.prototype.classies = "five";
+      Person.prototyoe.locate = "anHui";
+      Person.prototype.son = "nicholas";
+      var wfy = new Person("wfy",26,"enginner");
+      var keys = Object.keys(wfy);  // ["name","age","job"]  //Object.keys()返回此对象中所有可枚举的属性
+      var PrototypeKeys = Object.keys(Person.prototype);  // Object.keys();返回此对象中所有属性
+      var propertyNames = Object.getOwnPropertyNames(wfy); //Object.getOwnPropertyNames() 返回该对象的所有属性，无论是否可枚举
+</pre>
+<script type="text/javascript">
+  function ObjectKeysFn(){
+    Person.prototype.sex = "man";
+    Person.prototype.classies = "five";
+    Person.prototype.locate = "anHui";
+    Person.prototype.son = "nicholas";
+    var wfy = new Person("wfy",26,"enginner");
+    var keys = Object.keys(wfy);
+    console.log(keys);
+    var prototypeKeys = Object.keys(Person.prototype);
+    console.log(prototypeKeys);
+    var propertyNames = Object.getOwnPropertyNames(wfy);
+    console.log(propertyNames);
+  }
+</script>
+<br />
+<p>简化构造函数原型对象的写法</p>
+<p class="ti2em">再给对象添加原型对象时 需反复用到 Person.prototype 为了简化</p>
+<button onclick="simpleConstructorPrototype()">简化构造函数的原型对象的写法</button>
+<pre>
+  如：
+    Person.prototype = {
+      class : "five",
+      son : "nicholas",
+      location : "AnHui",
+      sayName : function(){alert(this.name)}
+    }
+
+  ////简化写法只能在 构造函数创建任何新对象之前
+
+
+  此方法等同于覆盖了Person()构造函数期初的 原型对象 直接使用了一个以对象字面量创建的与prototype属性同名的对象
+
+  因为是以对象字面量创建的 对象 所以它的constructor（构造函数）就指向了 Object()构造函数
+
+  所以呢：自定义constructor属性，因为自定义的是 可枚举的 原始的是不可枚举的，可以重新设置属性的特性
+
+  Object.defineProperty(Person.prototype,"constructor",{
+    enumerable : false,
+    value : Person
+  });
+</pre> 
+<script type="text/javascript">
+  function simpleConstructorPrototype(){
+    Person.prototype = {
+      sayName : function(){alert(this.name)},
+      sex : "man",
+      son : "nicholas",
+      classies : "five"
+    }
+    Object.defineProperty(Person.prototype,"constructor",{
+      enumerable : false,
+      value : Person
+    });
+    var wfy = new Person("wfy",28,"enginner");
+    //wfy.sayName();
+    //alert(wfy.sex);
+    var enumerableProperty = Object.keys(Person.prototype);
+    alert(JSON.stringify(enumerableProperty));
+    // 获取所有属性名，无论是否可枚举
+    var numerableProperty = Object.getOwnPropertyNames(Person.prototype);
+    alert(JSON.stringify(numerableProperty));
+    alert(Person.prototype.constructor);
+  }
+</script>
+<br />
+<p class="fz20 cor_error">构造函数初始的原型对象 与 重写原型对象的区别</p> 
+<p class="ti2em">1：使用构造函数的初始原型对象</p>
+<pre>
+    如：
+      var wfy = new Person("wfy",28,"enginner");   // 实例在创建后就继承构造函数原型对象的属性
+      Person.prototype.sex = "man"; // 给构造函数原型对象添加属性和方法
+      wfy.sex;   // man     //
+</pre>
+<p class="ti2em">2.重写构造函数的 prototype对象</p> 
+<button onclick="reWritePrototype()">重写构造函数的prototype 可能的错误</button>
+<pre>
+    如：
+      ① var wfy = new Person("wfy",28,"enginner"); // ①实例中的 _proto_ 指针已经指向了构造函数默认的原型对象
+      ② Person.prototype = {            // ②重新定义了Person构造函数的原型对象 （  ①  ② 指针不一样）
+        sex : "man",
+        son : "nicholas"
+      }
+      wfy.sex;   // undefined     （wfy的prototype属性的指针 指向的是 原构造函数 默认的原型对象的地址；而不是②定义的Person.prototype的地址 ）
+</pre>
+<script type="text/javascript">
+  function reWritePrototype(){
+    var wfy = new Person("wfy",28,"enginner");
+    Person.prototype = {
+      sex : "man"    
+    }
+    alert(wfy.sex);   //  undefined
+  }
+</script>
+<img src="重写原型对象可能出错的地方.jpg" alt="0" />
+<p class="ti2em fz20">通过构造函数创建实例时，实例创建完就立刻继承了构造函数原型对象，如果之后在定义构造函数的prototype属性 对实例没有实质的影响，因为实例中指向原型的指针已经确定</p>
+<br />
+<p class="fz18">原生对象的原型：Array String </p>
+<p class="ti2em">原生对象的原型中给 原生对象添加新的方法和属性</p>
+<button onclick="alert_arrayPrototypeEvery()">Array.prototype.every;是一个函数</button>
+<button onclick="giveArrayAddFun()">得到数组的第一个值console</button>
+<script type="text/javascript">
+  function alert_arrayPrototypeEvery(){ alert(Array.prototype.every); }
+  function giveArrayAddFun(){
+    Array.prototype.getFirst = function(){ 
+      return this[0];
+    }
+    var arr = [10,2,3,5];
+    console.log( arr.getFirst() );
+  }
+</script>
+<pre>
+  function Array(){ 
+    
+  }
+  Array.prototype.getFirst = function(){ 
+    this            //    this指向不同的实例
+  }
+
+  尽量不要在原生对象中添加新的属性或方法，可能导致代码冲突
+</pre>
+<p class="fz18 bgRed">原型对象的问题</p>
+<p class="ti2em">1.构造函数传递参数忽略</p>
+<p class="ti2em">2.原型对象中的引用类型的值，存在问题</p>
+<button onclick="constructorProblem()">在构造函数的原型对象中使用 引用类型 的属性，会导致明显的错误 console.log中</button>
+<pre class="fz18">
+  function constructorProblem(){ 
+    function Man(){  }
+    Man.prototype = { 
+      constructor : Man,
+      name : "wfy",
+      age : 20,
+      job : "engineer",
+      friends : ['fr','wg'],    //是在原型对象中所有实例都会共享到
+      sayName : function(){ alert(this.name) }
+    }
+    var preson1 = new Man();
+    var preson2 = new Man();
+    preson1.friends.push('zb');  //这里有问题，修改preson1的friends，但friends是引用类型，最终将构造函数中的friends修改了
+    console.log( preson1.friends );
+    console.log( preson2.friends );
+    console.log( preson1.friends == preson2.friends );
+  }
+
+  在这里 preson1对象 与 person2对象的friends属性同时指向 Man构造函数中的friends属性，通过person1 和 person2修改friends值时 都会修改掉对象的原型中的值
+</pre>
+
+
+<script type="text/javascript">
+  function constructorProblem(){ 
+    function Man(){ 
+      
+    }
+    Man.prototype = { 
+      constructor : Man,
+      name : "wfy",
+      age : 20,
+      job : "engineer",
+      friends : ['fr','wg'],
+      sayName : function(){ alert(this.name) }
+    }
+    var preson1 = new Man();
+    var preson2 = new Man();
+    preson1.friends.push('zb');
+    console.log( preson1.friends );
+    console.log( preson2.friends );
+    console.log( preson1.friends == preson2.friends );
+  }
+</script>
+</body>
+</html>

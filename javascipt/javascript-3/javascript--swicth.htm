@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<title>javascript--switch语句</title>
+<style type="text/css">
+  pre { font-size:14px; }
+</style>
+</head>
+<body>
+<h1>javascript--switch语句</h1>
+<br /><br />
+<h2>switch语句 与 if...else..语句</h2>
+<h4>if...else..语句</h4><button onclick="ifStatement()">点击执行</button>
+<pre>
+  var i = 25;
+    if(i === 25){
+      alert("25");
+    }else if(i === 35){
+      alert("35");
+    }else if(i === 45){
+      alert("45");
+    }else{
+      alert("other");
+    }
+</pre>
+<script type="text/javascript">
+  function ifStatement(){
+    var i = 25;
+    if(i === 25){
+      alert("25");
+    }else if(i === 35){
+      alert("35");
+    }else if(i === 45){
+      alert("45");
+    }else{
+      alert("other");
+    }
+  }
+</script>
+<br />
+<h4>switch语句</h4>
+<button onclick="switchStatement()">点击执行</button>
+<pre>
+  switch(i){
+    case 25:
+      alert("25");
+      break;
+    case 35:
+      alert("35");
+      break;
+    case 45:
+      alert("45");
+      break;
+    default:
+      alert("other");
+  }
+</pre>
+<script type="text/javascript">
+  function switchStatement(){
+    var i = 25;
+    switch(i){
+      case 25:
+        alert("25");
+        /*break;*/
+      case 35:
+        alert("35");
+        break;
+      case 45:
+        alert("45");
+        break;
+      default:
+        alert("other");
+    }
+  }
+</script>
+<p>switch语句中的break防止同时执行多个case代码</p>
+<br /><br /><br /><br />
+
+
+<h2>case的值</h2>
+  <p>常量</p>
+  <p>变量</p>
+  <p>表达式</p>
+<h4>表达式--字符拼接</h4>
+<button onclick="stringSplice()">点击</button>
+<pre>
+    switch("hello world"){
+      case "hello" + " world":
+        alert("hello world");
+        break;
+      case "goodbye":
+        alert("goodbye");
+        break;
+      default:
+        alert("other");
+    }
+</pre>
+<script type="text/javascript">
+  function stringSplice(){
+    switch("hello world"){
+        case "hello" + " world":
+          alert("hello world");
+          break;
+        case "goodbye":
+          alert("goodbye");
+          break;
+        default:
+          alert("other");
+      }
+  }
+</script>
+<br />
+<h4>表达式--判断运算符一起使用--true/false</h4>
+<button onclick="booleanType()">点击</button>
+<pre>
+  var num = 25;
+  switch(true){
+    case num < 0:
+      alert("Less than 0");
+      break;
+    case num >= 10 && num <=10:
+      alert("between 0 and 10 ");
+      break;
+    case num > 10 &&num <= 20:
+      alert("between 10 an 20");
+      break;
+    default:
+      alert("More than 20");
+  }
+</pre>
+<p>switch语句传递表达式true，是因为每个case值都可以返回一个布尔值</p>
+<script type="text/javascript">
+  function booleanType(){
+    var num = 25;
+    switch(true){
+      case num < 0:
+        alert("Less than 0");
+        break;
+      case num >= 10 && num <=10:
+        alert("between 0 and 10 ");
+        break;S
+      case num > 10 &&num <= 20:
+        alert("between 10 an 20");
+        break;
+      default:
+        alert("More than 20");
+    }
+  }
+</script>
+</body>
+</html>

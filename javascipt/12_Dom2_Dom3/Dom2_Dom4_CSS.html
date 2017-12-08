@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<link rel="stylesheet" href="../css/test.css">
+<title>Dom2_Dom4</title>
+</head>
+<body>
+  <div class="box">
+    
+    <div class="independent_block">
+      <p class="fz20">CSS规则</p>
+      <p class="fz18 ti2em">CSSRule对象表示样式表中的每一条规则。CSSRule是一个提供其他多种类型继承的基类型，其中最常见的就是CSSStyleRule类型，</p>
+      <pre>
+        cssText 返回整条规则队形的文本，ie不支持这个属性
+
+        parentRule 如果当前规则是导入的规则，这个属性引入的就是导入规则，否则为null
+
+        parentStyleSheet 当前规则所属的样式表， ie不支持
+
+        selectorText 返回当前规则的选择符文本， fireFox Safari 
+        chrome ie中是只读属性，opera中允许修改selectorText.
+
+        style 一个CSSStyleDeclatation通过它设置和取得规则中的特定的样式值
+
+        type 表示规则类型的常量值
+
+
+        其中三个最常用的属性 cssText selectorText style
+      </pre>
+      <div class="test_div test_02_div"></div>
+      <pre>
+        &lt;div class="test_div">&lt;/div>
+      </pre>
+      <pre>
+        function getStyleMsg(){
+          var sheet = document.styleSheets[1];    //引入样式的集合  包含style中的  从获取第几个
+          var rules = sheet.cssRules || sheet.rules;  // 得到二个样式表中的样式列表
+          var rule = rules[0];                     //获取样式列表中的第一个样式
+          //如果样式列表中又引入了别的样式表 则重复上边获取获取引入样式，在获取样式表中样式
+          rule.selectorText;
+          console.log(rule.selectorText);
+          console.log(rule.style.marginLeft);
+        }
+      </pre>
+      <script type="text/javascript">
+        function getStyleMsg(){
+          var sheet = document.styleSheets[1];  // 
+          var rules = sheet.cssRules || sheet.rules;
+          var rule = rules[1];
+          console.log(rule.selectorText);
+          console.log(rule.style.backgroundColor);
+          console.log(rule.style.height);
+        }
+      </script>
+      <button onclick="getStyleMsg()">获取style信息</button>
+      <pre>
+        使用这种方式修改元素样式信息
+        var sheet = document.styleSheets[1];
+        var rules = sheet.cssRules || sheet.rules;
+        var rule = rules[1];
+        rule.selectorText;
+        rule.style.backgroundColor;
+        rule.style.width;
+      </pre>
+      <script>
+        function revamp(){
+          var sheet = document.styleSheets[1];
+          var rules = sheet.cssRules || rules;
+          var rule = rules[1];
+          console.log(rule.selectorText);
+          rule.style.backgroundColor = "#f0f0f0";
+        }
+      </script>
+      <button onclick="revamp()">修改元素的样式</button>
+    </div>
+
+    <div class="independent_block">
+      <p class="fz20">创建规则</p>
+      <p class="fz16">向样式表中添加新规则，需要使用insetRule()方法，这个方法接受两个参数：规则文本和表示在哪里插入规则的索引</p>
+      <pre>
+        var sheet = document.styleSheets[0];
+        sheet.insertRule("body{background-color:#silver}",0);
+      </pre>
+      <script>
+        function useInsertRule(){
+          var sheet = document.styleSheets[0];
+          sheet.insertRule("body{background-color:silver}",0);
+        }
+      </script>
+      <button onclick="useInsertRule()">userInsertRule改变背景颜色</button>
+      <div class="small_block">
+        <p class="fz14">ie8及更早版本支持一个类似的方法，addRule();接受两个必选参数：选择符文本 和 css样式信息；一个可选参数：插入规则的位置。</p>
+        <pre>
+          sheet.addRule("body","background-color:silver",0);
+        </pre>
+        <script>
+          function useAddRule(){
+            var sheet = document.styleSheets[0];
+            sheet.addRule("body","background-color:silver",0);
+          }
+        </script>
+        <button onclick="useAddRule()">addRule()方法，支持ie8之前的</button>
+        <p class="fz14">addRule()使用时最多添加4095条样式规则。</p>
+        <br>
+        <p class="fz16">要以夸浏览器的方式向样式表中插入规则</p>
+        <pre>
+          function insertRule(sheet,selectorText,cssText,position){
+            if(sheet.insertRule){
+              sheet.insertRule(selectorText+"{"+cssText+"}",position);
+            }else{
+              sheet.addRule(selectorText,cssText,position)
+            }
+          }
+        </pre>
+        <script>
+          function compateIe(){
+            var sheet = document.styleSheets[1],
+                selectorText = ".test_02_div",
+                cssText = "border:2px solid #000",
+                pos = 1;
+            insertRule(sheet,selectorText,cssText,pos);
+            function insertRule(sheet,selectorText,cssText,position){
+              if(sheet.insertRule){
+                sheet.insertRule(selectorText+"{"+cssText+"}",0)
+              }else if(sheet.addRule){
+                sheet.addRule(selectorText,cssText,position);
+              }
+            }
+          }
+        </script>
+        <button onclick="compateIe()">styleSheet,rules/cssRules,添加样式</button>
+      </div>
+      <div class="small_block">
+        <p class="fz20">删除规则</p>
+        <p class="ti2em fz16">从样式表中删除规则的方法是deleteRule(),这个方法接受一个参数：要删除的规则的位置</p>
+        <pre>
+          sheet.deleteRule()
+
+          function deleteRule(){
+            var sheet = document.styleSheets[1];
+            sheet.deleteRule(1);
+          }
+        </pre>
+        <script>
+          function deleteRule(){
+            var sheet = document.styleSheets[1];
+            sheet.deleteRule(1)
+          }
+        </script>
+        <button onclick="deleteRule()">deleteRule()</button>
+        <pre>
+          ie中removeRule()与deleteRule()相同，同样接受一个位置参数
+
+          兼容方法
+            function deleteRule(sheet,index){
+              sheet.deleteRule ? sheet.deleteRule(index) : sheet.removeRule(index)
+            }
+        </pre>
+      </div>
+    </div>
+
+    
+
+
+
+  </div>
+</body>
+</html>

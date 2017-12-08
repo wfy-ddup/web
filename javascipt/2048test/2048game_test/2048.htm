@@ -1,0 +1,42 @@
+<!DOCTYPE doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+            <meta content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" name="viewport"/>
+            <link href="../css/style.css" rel="stylesheet">
+                <title>
+                    2048
+                </title>
+            </link>
+        </meta>
+    </head>
+    <body>
+        <div class="container" id="container">
+        </div>
+        <div class="gameOver">
+            <div class="popupBox">
+                <div class="title">
+                    GameOver
+                </div>
+                <div class="lastScore">
+                    总分 :
+                    <span class="fwb countScore">
+                        2555
+                    </span>
+                </div>
+                <div class="reStart">
+                    <a class="backBtn" href="javascript:;" onclick="window.history.go(-1)">
+                        返回
+                    </a>
+                    <a class="restarGame" href="javascript:;">
+                        重新开始
+                    </a>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script src="../js/zepto.min.js" type="text/javascript">
+    </script>
+    <script src="../js/2048.js" type="text/javascript">
+    </script>
+</html>

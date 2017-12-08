@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dom2_Dom5</title>
+  <link rel="stylesheet" href="../css/simple.css" />
+  <link rel="stylesheet" href="../css/test.css">
+</head>
+<body>
+  <div class="box">
+    <p class="fz20">
+      偏移量与滚动距离与getBoundingClientRect()的结合使用有点模糊<br>
+      浏览器窗口滚动距离的兼容<br>
+      window.pageYOffset <br>
+      document.body.scrollTop <br>
+      document.documentElement.scrollTop <br>
+      scrollTntoView方法的使用<br>
+      始终滚动在底部<br>
+      elem.scrollTop = elem.scrollHeight
+    </p>
+    <div class="indenpendent_block">
+      <p class="fz20 tac">元素大小</p>
+      <p class="fz16">所有浏览器都支持这些属性</p>
+      <div class="small_block">
+        <p class="fz18 tac">偏移量</p>
+        <p class="ti2em">偏移量：包括元素在品目占用的所有课件空间。元素的可见大小由其高度，宽度决定，包括所有内边距，滚动条和表边框大小，可见大小不包括外边距</p>
+      </div>
+
+      <pre>
+        offsetHeigth 元素在垂直方向上占用的空间大小，以像素计。包括元素的高度、水平滚动条的高度，上下边框的高度，上下内边距的高度。
+        offsetWidth 元素在水平方向上占用的空间大小，以像素计，包括元素的宽度，垂直滚动条的宽度，左右边框的宽度；
+        offsetLeft 元素的左外边边框至包含元素的做内边框之间的像素距离。
+        offsetTop 元素的上外边框至包含元素的上内边框之间的距离。
+
+        其中offsetLeft与offsetTop 与包裹的元素有关，通常包裹的元素就是父
+        元素，但td的父元素是table而不是tr；则offsetParent不与parentNode
+        相同
+
+      </pre>
+
+      <p class="fz18">
+        想知道某个元素在页面上的偏移量，将这个元素offsetLeft和offsetTop与offsetParent相同数相加，如此循环知道根元素，就可以得到一个基本基准的值。
+      </p>
+      <div class="test_div"></div>
+      <pre>
+        function getElementLeft(element){
+          var actualLeft = element.offsetLeft;
+          var current = element.offsetParent;
+          while (current !== null){
+            actualLeft += current.offsetLeft;
+            current = current.offsetParent;
+          }
+        }
+      </pre>
+      <script>
+        function getElementLeft(element){
+
+          var actualLeft = element.offsetLeft;
+          var current = element.offsetParent;
+          
+          
+          while(current !== null){
+            actualLeft += current.offsetLeft;
+            current = current.offsetParent;
+          }
+          console.log(actualLeft);
+
+        }
+
+        function getElementTop(element){
+
+          var actualTop = element.offsetTop;
+          var current = element.offsetParent;
+          
+          
+          while(current !== null){
+            actualTop += current.offsetTop;
+            current = current.offsetParent;
+            console.log(current);
+          }
+          console.log(actualTop);
+
+        }
+      </script>
+      <button onclick="getElementLeft(document.querySelector('.test_div'))">取得红色部分的左边位置 `</button>
+      <button onclick="getElementTop(document.querySelector('.test_div'))">取得红色部分的上边位置 `</button>
+    </div> 
+
+    <div class="independent_block">
+      <p class="fz20 tac">客户区域大小 clientWidth clientHeight</p>
+      <p class="fz18 ti2em">
+        客户区大小：元素内容以及内边距占据的空间，不包含border，滚动条
+      </p>
+      <pre>
+        之前确定浏览器可视窗口大小的方法
+          window.innerHeigth ie9+
+          window.innerWidth  ie9+
+
+          document.documentElement.clientWidth/clientHeight  ie费兼容模式
+          document.body.clientWidth/clientHeigth  ie7-  ie兼容模式
+
+          function getViewport(){
+            if( document.compatMode == "BackCompat" ){// BackCompat 混合模式  CSS1Compat标准模式
+              return {
+                width : document.body.clientWidth,
+                height : document.body.clientHeight
+              };
+            }else{
+              return {
+                width : document.documentElement.clientWidth,
+                height : docuemnt.documentElement.clientHeight
+              };
+            }
+          }
+          
+          首先检测浏览器的浏览器的渲染模式，在通过渲染模式来考虑兼容性
+          
+
+          function getTestDivClientWidth(){
+            console.log(document.querySelector(".test_div").clientWidth);
+            console.log(document.querySelector(".test_div").clientHeigth);
+          }
+
+          客户区大小与偏移量相似，都是每次访问都要重新计算。
+      </pre>
+      <script>
+        function getViewport(){
+          if(document.compatMode == "BackCompat"){
+            return {
+              width : document.body.clientWidth,
+              heigth : document.body.clientHeight
+            };
+          }else{
+            return {
+              width : document.documentElement.clientWidth,
+              heigth : document.documentElement.clientHeight
+            };
+          }
+        }
+        function viewport(){
+          console.log(getViewport());
+        }
+      </script>
+      <button onclick="viewport()">document.body/document.documentElement</button>
+      <br>
+      <script>
+        function getTestDivClientWH(){
+          console.log(document.querySelector(".test_div").clientWidth);
+          console.log(document.querySelector(".test_div").clientHeight);
+        }
+      </script>
+      <button onclick="getTestDivClientWH()">获取.test_div的clientWidth/clientHeight</button>
+    </div>
+
+    <div class="independent_block">
+      <p class="fz20">滚动大小</p>
+      <p class="ti2em fz18">包含滚动内容的元素的大小。</p>
+      <pre>
+        scrollHeight   在没有滚动条的情况下，元素内容的总高度。
+        scrollWidth    在没有滚动条的情况下，元素内容的总宽度。
+        scrollLeft     被隐藏 在内容区域最侧的像素数。水平滚动的位置。
+        scrollTop      被隐藏在内容区域上方的像素数。垂直滚动的距离
+      </pre>
+      <pre>
+        scrollWidth
+        scrollTop
+        用于确定元素内容的实际大小
+
+        如 document.documentELement.scrollHeight; 页面的总高度
+      </pre>
+      <style>
+        .scroll_box {
+          width:300px;
+          height: 100px;
+          overflow-y: scroll;
+          background:#f99;
+          margin: 0 auto;
+        }
+
+        .scroll_insert {
+          width: 200px;
+          height: 300px;
+          margin: 0 auto;
+          background: #e4393c
+        }
+      </style>
+      <div class="scroll_box">
+        <div class="scroll_insert">
+          
+        </div>
+      </div>
+      <pre>
+        在不含滚动条的页面里
+          scrollWidth 和 scrollHeight  与 clientWidth 和 clientHeight之间的关系不是一定的。
+        document.documentElement.scrollWidth/scrollHeight/clientWidth/clientHeight
+
+        scrollLeft/scrollTop可以确定当前元素滚动的状态，也可以设置元素滚动的位置。
+
+        scrollLeft > 0 元素向左滚动了
+        scrollTop > 0 元素向右滚动了
+        
+
+        document.documentElement.clientHeight  //窗口的高度
+        document.documentELement.scrollHeight  //body的总高度
+        ie 支持
+      </pre>
+      <pre>
+        结合onscroll事件，输出scrollTop
+
+        var scroll = document.querySelector(".scroll_box");
+        scroll.onscroll = function(){
+          console.log(this.scrollTop);
+        }
+
+        元素的滚动是针对可以滚动的元素的
+
+        window.onscroll = function(){
+          console.log(document.documentElement.clientHeight);
+          console.log(document.documentElement.scrollHeight);
+        }
+
+      </pre>
+      <script>
+        // var scroll = document.querySelector(".scroll_box");
+        // scroll.onscroll = function(){
+        //   console.log(this.scrollTop);
+        // }
+
+        // window.onscroll = function(){
+        //   console.log(document.documentElement.clientHeight);
+        //   console.log(document.documentElement.scrollHeight);
+        // }
+      </script>
+
+
+      <pre>
+        在确定文档高度时，必须取得scrollWidth/clientWidth he scrollHeight/clientHeight中最大的的一个；
+        因为不同浏览器不同的版本，他们的返回值可能相反
+
+        var docHeight = Math.max(
+            document.documentElement.scrollHeigth,
+            document.documentElement.clientHeight
+          );
+        var docWidth = Math.max(
+            document.documentElement.scrollWidth,
+            document.documentElement.clientWidth
+          );
+
+        在ie 混杂模式下
+          document.body.clientWidth/scrollWidth/clientHeigth/scrollHeight
+          中进行选择
+      </pre>
+
+      <p class="fz18">
+        使用scrollLeft/scrollTop设置元素的滚动的位置<br>
+      </p>
+      <style>
+        .scroll_bottom {
+          width:300px;
+          height:400px;
+          background: #e4393c;
+          margin: 0 auto;
+          overflow-y: scroll;
+        }
+        .long_elem {
+          width:200px;
+          margin: 0 auto;
+          background:#f5f5f5;
+          overflow: hidden;
+        }
+        .small_part {
+          height: 50px;
+          background :#aaa;
+          margin-bottom: 10px;
+        }
+      </style>
+      <div class="scroll_bottom">
+        <div class="long_elem">
+          
+        </div>
+      </div>
+      <pre>
+        元素滚动到最顶端
+
+        function scrollToTop(element){
+          element.scrollTop != 0 ? element.scrollTop = 0 : 0;
+        }
+
+      </pre>
+      <script>
+        function useScrollIntoView(){
+          var countParent = document.querySelector(".scroll_bottom");
+          var smallElemParent = document.querySelector(".long_elem");
+          var createSmallElem = document.createElement("div");
+          createSmallElem.className = "small_part";
+          smallElemParent.appendChild( createSmallElem );
+          smallElemParent.scrollIntoView();
+        }
+
+        function useScroll(){
+          var countParent = document.querySelector(".scroll_bottom");
+          var smallElemParent = document.querySelector(".long_elem");
+          var createSmallElem = document.createElement("div");
+          createSmallElem.className = "small_part";
+          smallElemParent.appendChild( createSmallElem );
+          console.log(countParent.scrollTop);
+          console.log(countParent.scrollHeight);
+          countParent.scrollTop = countParent.scrollHeight;
+        }
+      </script>
+      <button onclick="useScrollIntoView()">向元素中添加元素，使用scrollIntoView(),让添加的元素在可见范围内,可见区域始终保持在顶部</button>
+      <br>
+      <button onclick="useScroll()">向元素中添加元素,让元素始终保持滚动在底部，可见区域始终保持在底部</button>
+
+      <pre>
+        让元素自动滚动到底部
+        scrollIntoView() 方法让元素滚动到浏览器可见区域 字节滚动到最上方
+        function useScrollIntoView(){
+          var countParent = document.querySelector(".scroll_bottom");
+          var smallElemParent = document.querySelector(".long_elem");
+          var createSmallElem = document.createElement("div");
+          createSmallElem.className = "small_part";
+          smallElemParent.appendChild( createSmallElem );
+          smallElemParent.scrollIntoView();
+        }
+
+        function useScroll(){
+          var countParent = document.querySelector(".scroll_bottom");
+          var smallElemParent = document.querySelector(".long_elem");
+          var createSmallElem = document.createElement("div");
+          createSmallElem.className = "small_part";
+          smallElemParent.appendChild( createSmallElem );
+          console.log(countParent.scrollTop);
+          console.log(countParent.scrollHeight);
+          countParent.scrollTop = countParent.scrollHeight;
+        }
+      </pre>
+      
+
+
+    </div>
+
+    <div class="independent_block">
+      <p class="fz20">确定元素的大小</p>
+      <p class="fz16 ti2em">
+        该方法返回一个矩形对象，包含四个属性 left top right bottom。这些属性给出了，元素在页面中相对于视口的位置。
+      </p>
+       
+      <pre>
+
+        function getBoundingClientRect01(element){
+          //debugger;
+          if(typeof arguments.callee.offset != 'number'){
+            var scrollTop = document.documentElement.scrollTop;  //
+            var temp = document.createElement("div");
+            temp.style.cssText = "position:absolute;left:0;top:0";
+            document.body.appendChild(temp);
+            arguments.callee.offset = temp.getBoundingClientRect();
+            //书上边的
+            //arguments.callee.offset = -temp.getBoundingClientRect().top - scrollTop;
+
+            
+            /*
+              arguments.callee.offset = {
+                bottom:0,
+                height:0,
+                left:0,
+                right:0,
+                top:0,
+                width:0
+              }
+            */
+            document.body.removeChild(temp);
+            temp = null;
+
+          }
+
+          var rect = element.getBoundingClientRect();
+          var offset = arguments.callee.offset;
+          /* 书上边的 
+          console.log(
+            {
+              left : rect.left + offset,
+              right : rect.right + offset,
+              top : rect.top + offset,
+              bottom : rect.bottom + offset
+            }
+          );
+          */
+
+          // 我认为的
+          return {
+            left : rect.left + (-offset.left),   //应该是不用加的吧
+            right : rect.right + (-offset.left), //应该是不用加的吧
+            top : rect.top + (-offset.top),
+            bottom : rect.bottom + (-offset.top)
+          }
+        }
+
+      </pre>
+      
+      <script>
+        function getBoundingClientRect01(element){
+          //debugger;
+          if(typeof arguments.callee.offset != 'number'){
+            var scrollTop = document.documentElement.scrollTop;  //
+            var temp = document.createElement("div");
+            temp.style.cssText = "position:absolute;left:0;top:0";
+            document.body.appendChild(temp);
+            arguments.callee.offset = temp.getBoundingClientRect();
+            //书上边的
+            //arguments.callee.offset = -temp.getBoundingClientRect().top - scrollTop;
+
+            
+            /*
+              arguments.callee.offset = {
+                bottom:0,
+                height:0,
+                left:0,
+                right:0,
+                top:0,
+                width:0
+              }
+            */
+            document.body.removeChild(temp);
+            temp = null;
+
+          }
+
+          var rect = element.getBoundingClientRect();
+          var offset = arguments.callee.offset;
+          /* 书上边的 
+          console.log(
+            {
+              left : rect.left + offset,
+              right : rect.right + offset,
+              top : rect.top + offset,
+              bottom : rect.bottom + offset
+            }
+          );
+          */
+
+          // 我认为的
+          return {
+            left : rect.left + (-offset.left),   //应该是不用加的吧
+            right : rect.right + (-offset.left), //应该是不用加的吧
+            top : rect.top + (-offset.top),
+            bottom : rect.bottom + (-offset.top)
+          }
+        }
+        var cc = getBoundingClientRect01(document.querySelector(".test_div"));
+      </script>
+      <pre>
+        getBoundingClientRect()方法，夸浏览器的使用使用
+
+        function getBoundingClientRect(element){
+
+          var scrollTop = document.documentElement.scrollTop;
+          var scrollLeft = document.documentElement.scrollLeft;
+
+          function getElementBounding(element){
+            var actualLeft = element.offsetLeft;
+            var actualTop = element.offsetTop;
+            var parentElem = element.offsetParent;
+            while(parentElem){
+              actualLeft += parentElem.offsetLeft;
+              actualTop += parentEleme.offsetTop;
+              parentElem = parentElem.offsetParent;
+            }
+            return {
+              left : actualLeft,
+              top : actualTop
+            };
+          }
+
+          if(element.getBoundingClientRect){
+            if(typeof arguments.callee.offset != 'number'){
+              var temp = document.createElement("div");
+              temp.style.cssText = "position:absolute;left:0;top:0;";
+              document.body.appendChild(temp);
+              /*
+              书上边的 为什么只加一个scrollTop
+              arguments.callee.offset = -temp.getBoundingClientRect().top - scrollTop;
+              */
+              arguments.callee.offset = temp.getBoundingClientRect();
+              document.body.removeChild(temp);
+              temp = null;
+            }
+
+            var rect = element.getBoundingClientRect();
+            var offset = arguments.callee.offset;
+
+            return {
+              left : rect.left + (-offset.left),
+              right : rect.right + (-offset.left),
+              top : rect.top + (-offset.top),
+              bottom : rect.bottom + (-offset.top)
+            };
+          }else{
+            var boundingObj = getElementBounding(element);
+            return {
+              left : boundingObj.left - scrollLeft,
+              right : boundingObj.left + element.offsetWidth - scrollLeft,
+              top : boundingObj.top - scrollTop,
+              bottom : boundingObj.top + element.offsetHeight - scrollTop
+            };
+          }
+
+        }
+      </pre>
+      <script type="text/javascript" src="getBoundingClientRect.js"></script>
+      <script>
+      /**/
+        
+        var test02 = getBoundingClientRect01(document.querySelector(".test_div"));
+      </script>
+
+    </div>
+
+
+
+
+
+
+
+
+
+  </div>
+  <a href="javascript:;" onclick="document.documentElement.scrollIntoView()" class="back_top">返回顶部</a>
+</body>
+</html>

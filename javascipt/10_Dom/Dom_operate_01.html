@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>Dom_operate_01</title>
+</head>
+<body>
+  <div class="box">
+    <h3 class="mb25 fz20 tac">DOM操作技术</h3>
+
+    <div class="independent_block">
+      <p class="fz18">动态脚本</p>
+      <p class="fz16">通过修改dom动态添加的脚本</p>
+      <pre>
+        1.使用Dom创建脚本；
+        var script = document.createElement("script");
+        2.属性节点赋值
+        script.type = "text/javascript";
+        script.src = "write.js";
+        3.将创建的dom节点添加到文档中
+        document.body.appendChild(script);
+      </pre>
+      <script type="text/javascript">
+        function createOneJs(){
+          var script = document.createElement("script");
+          script.type = "text/javascript";
+          script.src = "createOneJs.js";
+          document.body.appendChild(script);
+        }
+      </script>
+      <button onclick="createOneJs()">以上述的方式在DOM中动态添加一个脚本</button><br /><br />
+      <pre>
+        通过函数来添加
+        function loadScript(url){
+          var script = document.createElement("script");
+          script.type = "text/javascript";
+          script.src = url;
+          document.body.appendChild(script);
+        }
+      </pre>
+      <script type="text/javascript">
+        function loadScript(url){
+          var script = document.createElement("script");
+          script.type = "text/javascript";
+          script.src = url;
+          document.body.appendChild(script);
+        }
+      </script>
+      <button onclick="loadScript('funcCreateJS.js')">通过上边方式动态添加</button><br /><br />
+      <pre>
+        如动态添加下边的代码
+          &lt;script type="text/javascript">
+            function sayHi(){alert("hi")}
+          &lt;/script>
+
+          var script = document.createElement("script");
+          script.type = "text/javascript";
+          script.appendChild(document.createTextNode("function sayHi(){alert('hi')}"));
+          document.body.appendChild(script);
+
+          出ie意外都能执行，在ie中使用script的text属性
+          
+          function activeAddScript(){
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            var code = "function sayHi(){alert('hello')}";
+            try{
+              script.appendChild(document.createTextNode("function sayHi(){alert('hello')}"));
+            }catch(e){ 
+            
+              script.text = code;
+            }
+            document.body.appendChild(script);
+          }
+      </pre>
+      <script type="text/javascript">
+        function activeAddScript(){
+          var script = document.createElement("script");
+          script.type = "text/javascript";
+          var code = "function sayHi(){alert('hello')}";
+          try{
+            script.appendChild(document.createTextNode("function sayHi(){alert('hello')}"));
+          }catch(e){ 
+            script.text = code;
+          }
+          document.body.appendChild(script);
+        }
+      </script>
+      <button onclick="activeAddScript()">试试上边的代码</button>   <br /><br />
+      <pre>
+        loadScript()函数可以写成  
+          function reLoadScript(code){
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            try{
+              script.appendChild(document.createTextNode(code))
+            }catch(e){
+              script.text = code;
+            }
+            document.body.appendChild(script);
+          }
+          reLoadScript("function sayHi(){alert('hello')}");
+      </pre>
+      <script type="text/javascript">
+        function reLoadScript(code){
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            try{
+              script.appendChild(document.createTextNode(code))
+            }catch(e){
+              script.text = code;
+            }
+            document.body.appendChild(script);
+          }
+          
+      </script>
+      <button onclick="reLoadScript('function sayHi(){alert(666)}')">reLoadScript()</button>
+      <p class="fz16">
+        script <br />
+        有type,src属性<br />
+        有text属性，在ie中动态添加脚本是有可能要使用
+      </p>
+    </div>
+
+
+    <div class="independent_block">
+      <p class="fz20 mb25">动态样式表</p>
+      <pre>
+        &lt;link rel="stylesheet" type="text/css" href="style.css" />
+
+        var link = document.createElement(link);
+        link.rel = "styleSheet";
+        link.type = "text/css";
+        link.href = "style.css";
+        document.getElementsByTagName("head")[0].appendChild(link);
+
+        主流浏览器都可以执行，可以改成函数
+
+        function loadStyles(url){
+          var link = document.createElement("link");
+          link.rel = "styleSheet";
+          link.type = "text/css";
+          link.href = url;
+          document.getElementsByTagName("head")[0].appendChild(link);
+        }
+
+        loadStyles("style.css")
+      </pre>
+      <script type="text/javascript">
+        function loadStyles(url){
+          var link = document.createElement("link");
+          link.rel = "styleSheet";
+          link.type = "text/css";
+          link.href = url;
+          document.getElementsByTagName("head")[0].appendChild(link);
+        }
+      </script>
+      <button onclick="loadStyles('style.css')">以上的代码</button>
+      <pre>
+        可以使用style元素来添加样式
+        &lt;style type="text/css">
+          body { background:#f0f0f0; }
+        &lt;/style>
+
+        function loadStyle(){
+          var style = document.createElement("style");
+          style.type = "text/css";
+          style.appendChild(document.createTextNode("body { background:#f0f0f0; }"));
+          document.getElementsByTagName("head")[0].appendChild(style);
+        }
+        在ie下回报错，因为ie将style与script开成特殊标签不允许访问其他节点，
+        解决ie中script的方法，使用了script的text属性
+        解决ie中style的方法，使用了style的styleSheet属性的cssText属性
+
+        function reloadStyles(cssText){
+          var style = document.createElement("style");
+          style.type = "text/css";
+          try{
+            style.appendChild(document.createTextNode(cssText));
+          }catch(e){
+            style.styleSheet.cssText = cssText;
+          }
+          
+          document.getElementsByTagName("head")[0].appendChild(style);
+          
+        }
+      </pre>
+      <script type="text/javascript">
+        function reLoadStyles(cssText){
+          var style = document.createElement("style");
+          style.type = "text/css";
+          try{
+            style.appendChild(document.createTextNode(cssText));
+          }catch(e){
+            style.styleSheet.cssText = cssText;
+          }
+          
+          document.getElementsByTagName("head")[0].appendChild(style);
+          
+        }
+      </script>
+      <button onclick="reLoadStyles('body{background:#aaa}')">上边的代码</button>
+      <p class="fz16">
+        style<br />
+        有type属性<br />
+        有styleSheet属性<br />
+          styleSheet属性有cssText属性 在ie中使用style动态添加样式时使用
+      </p>
+    </div>
+
+
+    <div class="independent_block">
+      <p class="fz20">动态创建表格</p>
+      <p class="fz16">p301</p>
+    </div>
+
+    <div class="independent_block">
+      <p class="fz20">使用NodeList</p>
+      <p class="ti2em fz14">
+        NodeList,NameNodeMap,HTMLCollection都是动态的，每当文档结构发生变化是，都会得到更新。所有NodeList对象都是在访问DOM文档时时时运行查询的。
+      </p>
+      <pre>
+        死循环函数
+          var divs = document.getElementsByTagName("div"),
+              i,
+              div;
+          for(i = 0; i < divs.length; i++){
+            div = document.createElement("div");
+            document.body.appendChild(div);
+          }
+
+          由上可知NodeList，NameNodeMap，HTMLCollection是动态的，时时运行更新的，所以divs.length是时时更新的
+      </pre>
+      <script type="text/javascript">
+        function cir(){
+          var divs = document.getElementsByTagName("div"),
+              i,
+              div;
+          for(i = 0; i < divs.length; i++){
+            div = document.createElement("div");
+            document.body.appendChild(div);
+          }
+        }
+      </script>
+      <button onclick="cir()" disabled>上述函数</button>
+    </div>
+
+
+
+
+
+
+  </div>  
+</body>
+</html>

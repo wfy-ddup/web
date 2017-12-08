@@ -1,0 +1,42 @@
+<!DOCTYPE doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+            <meta content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" name="viewport"/>
+            <link href="css/style.css" rel="stylesheet">
+                <title>
+                    2048
+                </title>
+            </link>
+        </meta>
+    </head>
+    <body>
+        <div class="chooseMode" id="chooseMode">
+            <div class="contentBox">
+                <div class="title">
+                    2048Game
+                </div>
+                <div class="twoMode">
+                    <a class="fourGrids" href="javascript:;" onclick="twoMode('4')">
+                        4x4格
+                    </a>
+                    <a class="sixGrids" href="javascript:;" onclick="twoMode('6')">
+                        6x6格
+                    </a>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+          (function(){
+            var windowHeight= window.innerHeight,
+            box = document.getElementById("chooseMode");
+            box.style.height = windowHeight + 'px';
+            box.style.lineHeight = windowHeight + 'px';
+          })();
+          function twoMode( num ){
+            window.sessionStorage.setItem("game2048Grids",num);
+            setTimeout(function(){window.location.href="2048game_test/2048.htm"},200);
+          }
+    </script>
+</html>

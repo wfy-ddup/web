@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<link rel="stylesheet" href="../css/testStyle.css" />
+<title>Dom2_Dom3</title>
+</head>
+<body>
+  <div class="box">
+    <div class="independent_block">
+      <p class="fz20">访问元素的样式表</p>
+      <p class="fz16">正常访问，注意float是javascript中的关键字</p>
+      <p class="fz16">在fireFox,safari,Opera,Chrome中使用<span class="cor_error">cssFloat</span>设置对象的属性</p>
+      <p class="fz16">在ie中使用<span class="cor_error">styleFloat</span>设置对象的属性</p>
+      <style type="text/css">
+        #testFloat{
+          width:50px;
+          margin:10px auto;
+          background:#e4393c;
+          padding:25px 30px;
+          float:auto;
+        }
+      </style>
+      <div id="testFloat" style="height:50px;"></div>
+      <pre>
+        document.querySelector("#testFloat").style.cssFloat = "left"; ff chrome safari opera
+        document.querySelector("#testFloat").style.styleFloat = "left"; ie
+      </pre>
+      <pre>
+        function getStyle(){
+          console.log(testFloat.style.background+"\n");
+          console.log(testFloat.style.width+"\n");
+          console.log(testFloat.style.height+"\n");
+          //console.log(testFloat.style.float);   
+          console.log(testFloat.style.marginTop);
+          console.log(testFloat.style.marginLeft);
+          //console.log(testFloat.style.paddingTop)
+        }
+      </pre>
+      <p class="fz16">通过style属性同样可以取到属性，但只能获取标签style属性中的值，内联与外联样式都不能获取</p>
+      <p class="fz16">有点想data- <br />document.dataset.num </p>
+      <script type="text/javascript">
+        function getStyle(){
+          console.log(testFloat.style.background+"\n");
+          console.log(testFloat.style.width+"\n");
+          console.log(testFloat.style.height+"\n");
+          //console.log(testFloat.style.float);   
+          console.log(testFloat.style.marginTop);
+          console.log(testFloat.style.marginLeft);
+          //console.log(testFloat.style.paddingTop)
+        }
+      </script>
+      <button onclick="getStyle()">通过style属性得到属性值</button>
+    </div>
+    
+    <div class="independent_block">
+      <p class="fz16">Dom样式属性和方法</p>
+      <pre>
+        cssText  通过这个能够访问到style特性中的css代码
+        length   应用给元素的css属性的数量
+        parentRule css信息的CSSRull对象
+        getPropertyCSSValue(propertyName)  返回包含给定属性的CSSValue对象
+        getProPertyPriority(properName) 如属性设置了!important则返回important,否则返回空字符
+        getProPertyValue(properName)  返回给定属性字符串值
+        item(index)  给定位置的Css属性名称
+        removeProperty(propertyName)  从样式中删除给定特性
+        setProperty(propertyName,value,priority)  将给定属性设置相应的值，并加上优先权
+      </pre>
+      <div id="testStyle_01" style="float:auto;width:50px;margin:10px auto;background-color:#e4393c;padding:25px 30px;"></div>
+      <pre>
+        cssText  同样也只能获取元素的style属性中的属性  || 在设置属性时会整体覆盖style中的样式
+        length   同样也只能获取style属性中属性的length
+      </pre>
+
+      <pre>
+        style特性中的样式的读取与写入
+
+        function testStyle2(){
+          //遍历每一个属性时，如果是综合类属性，则会逐一分解看来
+          //如 margin  => margin-top/margin-bottom/margin-left/margin-bottom
+          for(var i = 0; i < testStyle_01.style.length; i++){
+            console.log(testStyle_01.style.item(i)); // testStyle_01.style[i]
+          }   
+          
+          alert(testStyle_01.style.cssText);
+          alert(testStyle_01.style.length);
+          testStyle_01.style.cssText = "width:100px;height:100px;background:#4396c8;padding:10px;";
+        }
+
+      </pre>
+      <script type="text/javascript">
+        function testStyle2(){
+          for(var i = 0; i < testStyle_01.style.length; i++){
+            console.log(testStyle_01.style.item(i)); // testStyle_01.style[i]
+          }
+          alert(testStyle_01.style.cssText);
+          alert(testStyle_01.style.length);
+          testStyle_01.style.cssText = "width:100px;height:100px;background:#4396c8;padding:10px;";
+        }
+      </script>
+      <pre>
+        //取得始终都是Css属性值的字符串表示
+        obj.style.getPropertyValue(properName);  // 同上任然是标签内style特性中属性才能访问到
+
+
+        var elem =document.getElementById("testStyle_01");
+        for(var i = 0; i < elem.style.length; i++){
+          var proper = elem.style[i];
+          value = elem.style.getPropertyValue(proper);
+          console.log(proper +" : "+ value);
+        }
+      </pre>
+      <script type="text/javascript">
+        function testStyle3(){
+          var elem =document.getElementById("testStyle_01");
+          for(var i = 0; i < elem.style.length; i++){
+            var proper = elem.style[i];
+            value = elem.style.getPropertyValue(proper);
+            console.log(proper +" : "+ value);
+          }
+        }
+      </script>
+      <pre>
+        obj.style.getPropertyCSSValue(prop);
+
+        var elem = document.querySelector("#testStyle_01");
+
+        for(var i = 0;i < elem.style.length; i++){
+          prop = elem.style.item(i);
+          value = elem.style.getPropertyCSSValue(prop);
+          console.log(prop + " : " + value.cssText + "( " + value.cssValueType + " )");
+        }
+      </pre>
+      <script type="text/javascript">
+        function testStyle4(){
+          var elem = document.querySelector("#testStyle_01");
+          for(var i = 0;i < elem.style.length; i++){
+            prop = elem.style.item(i);
+            value = elem.style.getPropertyCSSValue(prop);
+            console.log(prop + " : " + value.cssText + "( " + value.cssValueType + " )");
+          }
+        }
+      </script>
+      <button onclick="testStyle2()">style特性中的样式的读取与写入</button><br />
+      <button onclick="testStyle3()">elem.style.getPropertyValue() 获取对象的某个属性值</button><br />
+      <button onclick="testStyle4()">elem.style.getPropertyCSSValue() 获取对象的某个属性的CSSValue对象</button>
+      <p class="">ie9+</p>
+    </div>
+
+    <div class="independent_block">
+      <p class="fz20">样式的计算</p>
+      <p class="ti2em">style对象能够提供支持style特性的任何 元素的样式信息，但是不包含从其他样式表层叠而来并影响到当前元素的样式信息。</p>
+      <p class="ti2em">DOM2样式级 增强了 document.defaultView,提供了getComputedStyle()方法，此方法接受两个参数：要计算样式的元素和一个为元素的字符窜，如果不需要伪类元素，第二个参数为null。</p>
+      <p class="ti2em">document.defaultView.getComputedStyle()返回一个CSSStyleDeclaration对象，其中包含当前元素的所有计算的样式。</p>
+      
+      <div id="myTestDiv" class="myTestDiv current"></div>
+      <pre>
+        &lt;div id="myTestDiv" class="myTestDiv current">&lt;/div>
+        function calcuStyle(){
+          var elem = document.querySelector("#myTestDiv"),
+              value = document.defaultView.getComputedStyle();  // 返回CSSStyleDeclaration对象
+              console.log(computedStyle.width);
+              console.log(computedStyle.border);
+              console.log(computedStyle.marginRight);
+              console.log(computedStyle.borderLeftWidth);
+              console.log(computedStyle.backgroundColor);
+
+          CSSStyleDeclaration  //css 样式 宣布
+        }
+      </pre>
+      <script type="text/javascript">
+        function calcuStyle(){
+          var elem = document.getElementById("myTestDiv");
+          /*
+          computedStyle = typeof document.defaultView.getComputedStyle == "function" ? document.defaultView.getComputedStyle(elem,null) : elem.currentStyle;
+          */
+          
+          try{
+            computedStyle = document.defaultView.getComputedStyle(elem,null);
+            console.log(computedStyle);
+          }catch(e){
+            computedStyle = elem.currentStyle;
+            console.log(computedStyle);
+          }
+            
+          console.log(computedStyle.width);
+          console.log(computedStyle.border);
+          console.log(computedStyle.marginRight);
+          console.log(computedStyle.borderLeftWidth);
+          console.log(computedStyle.backgroundColor);
+        }
+      </script>
+      <button onclick="calcuStyle()">document.defaultView.getComputedStyle(),获取样式</button>
+      <p class="fz18 cor_error">document.defaultView.getComputedStype() ie9-不支持</p>
+      <p class="ti2em fz18">ie中每个元素都有一个currentStyle属性，这个属性是CSSStyleDeclaration的实例，包含当前元素的全部计算样式</p>
+
+      <p class="fz18">只读样式，不能修改</p>
+    </div>
+
+    <div class="independent_block">
+      <p class="fz20 tac">操作样式表</p>
+      <p class="fz16">CSSStyleSheet对象则是一组只读接口</p>
+      <p class="fz16">document.implementation.hasFeature("StyleSheet","2.0")</p>
+
+      <pre>
+        CSSStyleSheet从StyleSheet接口继承而来的属性有
+
+        disabled     表示样式被禁用
+        href     样式表的URL
+        media    当前样式表支持的所哟媒体类型集合，这个集合也有length属性
+        如果集合是空则表示所有媒体都使用
+
+        ownerNode 样式表可能是通过link或style引入的，如果是@import
+        导入的则值为null ie不支持这个属性
+
+        parentStyleSheet  当前样式表是通过@import引入的情况下，这属性指向导入它的样式表的指针
+
+        title   ownerNode 中的 title属性的值
+        Type    type/css
+
+        cssRules  样式表中样式规则的集合，ie不支持这个属性，但ie有个类似的rules属性
+
+        ownerRules 这个属性是一个指针，表示通过@import导入的样式表的规则，否则为null ie不支持
+
+        deleteRule 删除cssRules集合中指定位置的规则，ie不支持，ie有个类似的removeRule()方法
+
+        insertRule 向cssRules集合中指定位置插入rule字符串，ie不支持，ie有个类似的addRule()方法
+
+      </pre>
+      <pre>
+        var sheet = null;
+        for(var i =, len < document.styleSheets.length; i < len; i++){
+          sheet = document.styleSheets[i];
+          alert(sheet.href);
+        }
+        
+        document.styleSheets.length => 3 ，有三个
+
+        在head,body中的style标签中的样式也算一个
+
+        在body中style标签中的样式 是没有href的
+
+      </pre>
+      <script type="text/javascript">
+        function StyleSheet(){
+          var sheet = null;
+          console.log(document.styleSheets);
+          for(var i = 0,len = document.styleSheets.length; i < len ; i++){
+            sheet = document.styleSheets[i];
+            alert(sheet.href);
+          }
+
+        }
+
+      </script>
+      <button onclick="StyleSheet()">document.styleSheets属性一点都不懂</button>
+      
+
+      <pre>
+        在不同浏览器中都能取得样式表对象，
+
+        function getStyleSheet(element){
+          return element.sheet || element.styleSheet;
+        }
+        
+        var link = document.getElementsByTagName("link")[0];
+        var sheet = getStyleSheet(link);
+
+      </pre>
+      
+      <script>
+        function getStyleSheet(){
+          return function (element){return element.sheet || element.StyleSheet;}(document.querySelector("link"));
+        }
+        
+
+      </script>
+      <button onclick="console.log(getStyleSheet())">获取CSSStyleSheet对象的StyleSheet对象</button>
+    </div>
+
+    <div class="independent_block">
+      <p class="fz20">CSS规则</p>
+      
+    </div>
+
+
+
+
+
+
+  </div>
+</body>
+</html>

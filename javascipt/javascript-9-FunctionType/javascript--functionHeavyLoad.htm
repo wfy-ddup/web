@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="Generator" content="EditPlus®">
+<meta name="Author" content="">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<link rel="stylesheet" href="../css/simple.css" />
+<title>javascript没有重载</title>
+<style type="text/css">
+</style>
+</head>
+<body>
+ <h3>函数没有重载</h3>
+ <p class="ti2em">函数名是指针</p>
+ <button onclick="noHeavyLoad()">函数没有重载</button>
+ <pre>
+    function addSomeNumber(num){
+      return num + 100;
+    }
+    function addSomeNumber(num){
+      return num + 200;
+    }
+    var result = addSomeNumber(300);//500
+ </pre>
+ <p class="ti2em">两个同名函数，结果是后面的函数覆盖了前面的函数。</p>
+ <pre>
+    如：
+      var addSomeNumber = function(num){
+        return num + 100;
+      }
+      addSomeNumber = function(num){
+        return num + 200;
+      }
+      var result = addSomeNumber(300); //500
+ </pre>
+ <script type="text/javascript">
+  function noHeavyLoad(){
+    var addSomeNumber = function(num){
+      return num + 100;
+    }
+    addSomeNumber = function (num){
+      return num +200;
+    }
+
+    alert( addSomeNumber(300) +"\n,函数的重载：是在创建第二个函数时，实际上覆盖了应用第一个函数的变量addSomeNumber" );
+  }
+ </script>
+ <p class="ti2em">在创建第二个函数时，实际上覆盖了引用第一个函数的变量addSomeNumber</p>
+ <br />
+ <h3>函数的声明 与 函数表达式</h3>
+ <button onclick="FunStatement()">函数的声明 与 函数表达式</button>
+ <p>解析器在向执行环境中加载数据是，对函数的声明与函数的表达式并非一样的。</p>
+ <p class="ti2em">1.先读取函数声明，并使其在执行任何代码之前</p>
+ <p class="ti2em">2.函数表达式，在解析器执行到它所在的位置，才会真正的呗解释执行。</p>
+ <pre>
+    alert(sum(10,10));
+    function sum(num1,num2){
+      return num1 + num2;
+    }
+   以上函数执行的步骤：
+
+   1.解析器先读取函数声明   var  sum = 指针（函数的引用）  到 function (num1,num2){ return num1 + num2; }
+   2.alert(sum(10,10));   调用sum函数 可以执行  
+代码可以正常的执行
+ </pre>
+ <script type="text/javascript">
+    function FunStatement(){
+      alert(sum(10,10));
+      function sum(num1,num2){
+        return num1 + num2;
+      }
+    }
+ </script>
+ <br />
+ <p class="ti2em">不能正常执行的写法 会报错</p>
+ <button onclick="errorFunStatment()">错误的方式</button> 
+ <pre>
+    alert(sum(10,10));
+    var sum = function(num1,num2){
+      return num1 + num2;
+    }
+ </pre>
+ <script type="text/javascript">
+    function errorFunStatment(){
+      try{
+        alert(sum(10,10));
+        var sum = function(num1,num2){ return num1 + num2; }
+      }catch(e){
+        alert("错误类型："+e.message);
+      }
+    }
+ </script>
+ <p class="ti2em">错误原因：函数位于一个初始化语句中，而不是函数的声明，所以，在执行到调用函数语句（ alert(sum(10,10)) ）,sum中没有保存函数的引用</p>
+ <pre>
+    以上代码利用声明提前进行解释：
+      源代码：(function(){
+        alert(sum(10,10));
+        var sum = function(num1,num2){
+          return num1 + num2;
+        }
+      })();
+      解析过后的代码：
+      (function(){
+        var sum;
+        alert(sum(10,10)); //  sum is not defined
+        sum = function(num1,num2){
+          return num1 + num2;
+        }
+      })();
+ </pre>
+ <p class="ti2em">个人理解上面连个函数的不同原因：</p>
+ <pre>
+
+    1.函数在声明时：
+        如： function sum(num1,num2){return num1 + num2}
+        此时的 sum 是引用类型 sum中保存的是 function sum(){} 的引用（指针）
+
+        所以：alert(sum(10,10));                能正常执行
+              function sum(num1,num2){
+                return num1 + num2;
+              }
+     2.函数的初始化：
+         如：var sum = function(num1,num2){return num1 + num2}
+         此时的 sum 是变量的初始化，需要声明提前，sum = null;
+
+         所以：alert(sum(10,10));                         
+               var sum = function(num1,num2){
+                 return num1 + num2;
+               }                                            
+        解析成：var sum;                                                   
+                alert(sum(10,10)); //  sum is not defined                                             
+                sum = function(num1,num2){                                           
+                     return num1 + num2;
+                }
+
+注意函数的声明 与 函数的初始化
+ </pre>
+</body>
+</html>

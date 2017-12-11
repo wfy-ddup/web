@@ -49,6 +49,7 @@
       </ul>
     </div>
     <div class="content">
+    <p ref="outsidedomref" @click="consoleRef">123456</p>
       <ul>
         <li v-for="(data,index) in listData" :key="index">
           <img width="100px" :src="data.goodsListImg" alt="">
@@ -79,6 +80,10 @@
           this.listData = res.data;
         });
       },
+      consoleRef:function(){
+        console.log(this);
+        console.log(this.$refs.outsidedomref.innerHTML);
+      }
     }
   });
 </script>

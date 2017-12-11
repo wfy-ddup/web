@@ -11,7 +11,8 @@
   <div id="app"  class="box">
     firstName:<input type="text" v-model="firstName"><br>
     lastName:<input type="text" v-model="lastName"><br>
-    fullName:<p v-text="fullName"></p>
+    <hr>
+    fullName:<p :style="[{'display':isInline?'inline':'block'},styObj1]" v-text="fullName"></p>
   </div>
 
 <script>
@@ -23,7 +24,11 @@
     data:{
       firstName:"",
       lastName:"",
-      fullName:""
+      fullName:"",
+      isInline:true,
+      styObj1:{
+        color:'#ff0'
+      }
     },
     watch:{
       firstName:function(){

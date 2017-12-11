@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <link rel="stylesheet" href="../animate/animate.min.css">
+  <!-- <script type="text/javascript" src="../js/vue-resource.js"></script> -->
+  <style>
+    .text {
+      width: 100px;
+      height: 100px;
+      background: red;
+    }
+  </style>
+</head>
+<body>
+  <div id="box-wrap">
+    <button @click="show=!show">隐藏/显示</button>
+    <transition 
+      enter-active-class="animated lightSpeedIn"
+      leave-active-class="animated flipOutY"
+    >
+      <p v-show="show" class="text">this is content</p>
+    </transition>
+  </div>
+<script>
+  new Vue({
+    el:"#box-wrap",
+    data:{
+      show:true
+    }
+  })
+</script>
+</body>
+
+</html>

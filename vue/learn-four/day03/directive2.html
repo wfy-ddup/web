@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <!-- <script type="text/javascript" src="../js/vue-resource.js"></script> -->
+  <style>
+    .area{
+      width: 100px;
+      height: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div id="box-wrap">
+    <input type="text" v-auto-focus> <input type="text">
+  </div>
+<script>
+  Vue.directive("auto-focus",{
+    inserted:function(el,bunding){
+      el.focus();
+    }
+  });
+  new Vue({
+    el:"#box-wrap",
+  })
+</script>
+</body>
+
+</html>

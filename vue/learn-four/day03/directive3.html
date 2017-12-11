@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <!-- <script type="text/javascript" src="../js/vue-resource.js"></script> -->
+  <style>
+    .area{
+      width: 100px;
+      height: 100px;
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <div id="box-wrap">
+    <div class="area"
+      v-drag
+      v-for="(el,index) in listData"
+      v-bind:key="index"
+      v-bind:style="{'background':el.color}"
+    >
+      
+    </div>
+  </div>
+<script>
+  Vue.directive("drag",{
+    bind:function(el,bunding){
+      el.addEventListener("mousedown",function(ev){
+
+        var disX = ev.offsetX;
+        var disY = ev.offsetY;
+
+        function mousemove(ev){
+          el.style.left = ev.clientX - disX + "px";
+          el.style.top = ev.clientY - disY + "px";
+        }
+
+        document.addEventListener("mousemove",mousemove,false);
+        document.addEventListener("mouseup",function(){
+          document.removeEventListener("mousemove",mousemove,false)
+        },false)
+
+
+      },false)
+    }
+  });
+  new Vue({
+    el:"#box-wrap",
+    data:{
+      listData:[{
+        color:"red"
+      },
+      {
+        color:"blue"
+      },{
+        color:"skyblue"
+      }]
+    }
+  })
+</script>
+</body>
+
+</html>

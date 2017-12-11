@@ -12,7 +12,7 @@
   <div id="app"  class="box">
     <div @click="divClick">
       <!-- vue 中需要主动传递 $event 事件对象 -->
-      <button v-on:click="btnClick($event)" data-name="wfy">事件</button>
+      <button v-on:click="btnClick($event)" data-name="{'wfy':''wfy}">事件</button>
     </div>
   </div>
 <script>
@@ -28,7 +28,8 @@
       btnClick:function(ev){
         console.log(ev);       // target属性中含有 标签中的 自定义属性
         ev.cancelBubble=true;  // 阻止事件冒泡
-        console.log(11);
+        var dataset = ev.target.dataset.name;
+        console.log(dataset);
       },
       divClick:function(){
         alert(22);

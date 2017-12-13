@@ -1,3 +1,4 @@
+// 获取数组的前几项排名
 Array.prototype.getTopN = function getTopN(n) {
   var n = this.length > n ? n : this.length;
   var cn = this.concat();

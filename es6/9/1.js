@@ -205,3 +205,5 @@ class B extends A {
 var b = new B();
 b.m();
 console.log(b);
+
+

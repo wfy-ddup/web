@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <h1>对象的扩展</h1>
+  <input type="text" id="num">:num
+  <p id="view"></p>
+  <pre>
+    // mm    数据改变数据
+    var o = {};
+    Object.defineProperty(o,"a",{
+      value:37,
+      configurable:true,
+      enumerable:true,
+      writable:true
+    });
+    var bValue = 38;
+    Object.defineProperty(o,"b",{
+      get:function(){
+        return bValue;
+      },
+      set:function(newVaule){
+        bValue = newValue
+      }
+    });
+
+
+
+    // mv  数据改变  视图改变
+    var userInfo = {
+      num:10
+    };
+    Object.defineProperty(userInfo,"num",{
+      get:function(){
+        console.log(document.getElementById("num").value);
+        return document.getElementById("num").value;
+      },
+      set:function(num){
+        console.log(num);
+        document.getElementById("num").value = num;
+      },
+      configurable:true,
+      enumerable:true
+    });
+
+  </pre>
+  <!-- <script src="1.js"></script> -->
+  <script src="2.js"></script>
+  <!-- <script src="3.js"></script> -->
+</body>
+</html>

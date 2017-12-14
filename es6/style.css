@@ -1,0 +1,21 @@
+body,div,p,li,a,dt,dd,span{
+  padding: 0;
+  margin: 0;
+  line-height: 1.2;
+  font-family: '微软雅黑';
+}
+
+body {
+  background: #f9f9f9;
+  font-size: 14px;
+  color: #333;
+}
+
+.wrap_area {
+  width: 94%;
+  padding: 10px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #fff;
+}

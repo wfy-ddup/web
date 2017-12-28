@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <!-- <script type="text/javascript" src="../js/vue-resource.js"></script> -->
+  <style>
+    .box{
+      width: 100px;
+      height: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div id="box-wrap">
+    <div class="box" v-bg="'red'"></div>
+    <div class="box" v-bg="'blue'"></div>
+    <div class="box" v-bg="'skyblue'"></div>
+  </div>
+<script>
+  // 自定义指令
+  Vue.directive("bg",function(el,bunding){
+    console.log(el);
+    console.log(bunding);
+    el.style.background=bunding.value;
+  })
+  new Vue({
+    el:"#box-wrap",
+  })
+</script>
+</body>
+
+</html>

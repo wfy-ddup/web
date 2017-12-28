@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>es6对象的扩展</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <div class="wrap_area"></div>
+</body>
+<script>
+  (function(){
+    // 对象的赋值
+    const foo = 'bar';
+    const baz = { foo }; // {foo:foo}
+    console.log(baz);
+
+
+    // 函数的赋值
+    function f1(x,y){
+      console.log({x,y}); // {x:x,y:y}
+    } 
+    f1(5,10);
+
+
+    // 属性的简写
+    const o = {
+      method(){
+        return 'hello';
+      }
+    }
+    /**
+     * const o = {
+     *   method : function(){
+     *     return 'hello';
+     *   }
+     * }
+     */
+    console.log( o.method() );
+
+    let birth = '2000/01/01';
+    const Person = {
+      name : '张三',
+      birth,
+      hello(){
+        console.log(this.name,this.birth)
+      }
+    }
+    Person.hello();
+
+    function getPoint(){
+      const x = 1;
+      const y = 10;
+      console.log({x,y});
+    }
+    getPoint();
+  })();
+</script>
+</html>

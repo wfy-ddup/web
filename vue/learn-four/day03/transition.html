@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <!-- <script type="text/javascript" src="../js/vue-resource.js"></script> -->
+  <style>
+    .fade-enter{
+      opacity: 0;
+    }
+    .fade-enter-active{
+      transition: opacity 1.5s;
+    }
+
+    .fade-leave {}
+    .fade-leave-active {
+      opacity: 0;
+      transition: opacity 1.5s;
+      
+    }
+  </style>
+</head>
+<body>
+  <div id="box-wrap">
+    <button @click="show=!show">隐藏/显示</button>
+    <transition name="fade">
+      <p v-show="show">this is content</p>
+    </transition>
+  </div>
+<script>
+  new Vue({
+    el:"#box-wrap",
+    data:{
+      show:true
+    }
+  })
+</script>
+</body>
+
+</html>

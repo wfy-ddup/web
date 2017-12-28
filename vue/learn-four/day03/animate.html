@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <!-- <script type="text/javascript" src="../js/vue-resource.js"></script> -->
+  <style>
+    .text {
+      width: 100px;
+      height: 100px;
+      background: red;
+    }
+    .bounce-enter-active{
+      animation: bounceIn 1s;
+    }
+    .bounce-leave-active{
+      animation: bounceOut 1s;
+    }
+    @keyframes bounceIn {
+      0%{ transform: scale(0); }
+      40%{ transform: scale(1.5); }
+      80%{ transform: scale(0.5); }
+      100%{ transform: scale(1); }
+    }
+    @keyframes bounceOut {
+      0%{ transform: scale(1); }
+      40%{ transform: scale(0.5); }
+      80%{ transform: scale(1.5); }
+      100%{ transform: scale(0); }
+    }
+  </style>
+</head>
+<body>
+  <div id="box-wrap">
+    <button @click="show=!show">隐藏/显示</button>
+    <transition name="bounce">
+      <p v-show="show" class="text">this is content</p>
+    </transition>
+  </div>
+<script>
+  new Vue({
+    el:"#box-wrap",
+    data:{
+      show:true
+    }
+  })
+</script>
+</body>
+
+</html>

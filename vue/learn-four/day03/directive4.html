@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="../day01/lianxi01.css">
+  <script type="text/javascript" src="../js/vue.js"></script>
+  <link rel="stylesheet" href="../animate/animate.min.css">
+  <!-- <script type="text/javascript" src="../js/vue-resource.js"></script> -->
+  <style>
+    .area{
+      width: 100px;
+      height: 100px;
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <div id="box-wrap">
+    <input type="text" v-model="title"><br><br>
+    <textarea v-model="cont"></textarea><br><br>
+    <button @click="addBox">添加盒子</button><br><br>
+
+    <transition-group
+      enter-active-class="zoomInDown animated"
+      leave-active-class="rotateOutDownLeft animated"
+    >
+      <div class="area" 
+        v-for="(data,index) in listData" 
+        v-if="data.x"
+        :style="{'background':data.color,'left':data.x,'top':data.y,}" 
+        :key="index"
+        v-drag>
+        <span style="position: absolute;left:100%;right:0;color:'red'" @click="fnClose(index)">x</span>
+        <h1>{{data.title}}</h1>
+        <p>{{data.cont}}</p>
+      </div>
+    </transition-group>
+    
+  </div>
+<script>
+  Vue.directive("drag",function(el,bunding){
+    // 鼠标按下事件
+    el.addEventListener("mousedown",function(e){
+      var disX = e.offsetX;
+      var disY = e.offsetY;
+      console.log(disX,disY);
+
+      // 防止点击的不是 .area  产生的误差
+      if(e.target.className != "area"){
+        disX += e.target.offsetLeft;
+        disY += e.target.offsetTop;
+      }
+      function mouseMove(e){
+        el.style.left = e.clientX - disX + "px";
+        el.style.top = e.clientY - disY + "px";
+      }
+      document.addEventListener("mousemove",mouseMove,false)
+      document.addEventListener("mouseup",()=>{
+       document.removeEventListener("mousemove",mouseMove,false)
+      },false)
+    },false);
+  });
+  new Vue({
+    el:"#box-wrap",
+    data:{
+      listData:[],
+      title:'',
+      cont:''
+    },
+    methods:{
+      addBox(){
+        var maxW = document.documentElement.clientWidth - 100;
+        var maxH = document.documentElement.clientHeight - 100;
+        var r = Math.round(Math.random()*255);
+        var g = Math.round(Math.random()*255);
+        var b = Math.round(Math.random()*255);
+        var a = Math.random();
+        var disX = Math.random()*maxW;
+        var disY = Math.random()*maxH;
+        this.listData.push({
+          color:`rgba(${r},${g},${b},0.8)`,
+          x:disX+'px',
+          y:disY+'px',
+          title:this.title,
+          cont:this.cont
+        })
+      },
+      fnClose(index){
+        // 这样直接删除会 导致一个bug
+        // 在有多个移动后  当删除其中一个后  剩余的位置可能会发生没变化
+        // 室友虚拟节点导致的  当虚拟节点删除时  其余节点位置会改变
+        //  this.listData.splice(index,1)
+        // 
+        // this.listData.splice(index,1,{})
+        this.$set(this.listData,index,{})
+      }
+    }
+  })
+</script>
+</body>
+
+</html>

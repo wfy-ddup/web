@@ -1,0 +1,36 @@
+{ 
+  "success": true,
+  "titleImg": "src/assets/intru.png",
+  "scrollImgs": [
+    "src/assets/intru.png",
+    "src/assets/intru.png",
+    "src/assets/intru.png",
+    "src/assets/intru.png"
+  ],
+  "list":[
+    {
+      "userImage":"src/assets/intru.png",
+      "msgTime":"2017/07/12 13:50",
+      "userName":"熊大",
+      "userMsg":"很幸运我能抢到试穿名额很幸运我能抢到试穿名额很幸运我能抢到试穿名额很幸运我能抢到试穿名额很幸运我能抢到试穿名额很幸运我能抢到试穿名额很幸运我能抢到试穿名额"    
+    },
+    {
+      "userImage":"src/assets/intru.png",
+      "msgTime":"2017/07/12 13:50",
+      "userName":"熊二",
+      "userMsg":"吃货的天堂吃货的天堂吃货的天堂吃货的天堂吃货的天堂吃货的天堂吃货的天堂吃货的天堂吃货的天堂"
+    },
+    {
+      "userImage":"src/assets/intru.png",
+      "msgTime":"2017/07/12 13:50",
+      "userName":"光头强",
+      "userMsg":"很幸运我能抢到试穿名额很幸运我能抢到试穿名额很幸运我能抢到试穿名额很幸运我能抢到试穿名额很幸运我能抢到试穿名额很幸运我能抢到试穿名额很幸运我能抢到试穿名额"
+    },
+    {
+      "userImage":"src/assets/intru.png",
+      "msgTime":"2017/07/12 13:50",
+      "userName":"涂涂",
+      "userMsg":"我是一个粉刷匠，粉刷本领强我是一个粉刷匠，粉刷本领强我是一个粉刷匠，粉刷本领强我是一个粉刷匠，粉刷本领强我是一个粉刷匠，粉刷本领强我是一个粉刷匠，粉刷本领强我是一个粉刷匠，粉刷本领强"
+    }
+  ]
+}
